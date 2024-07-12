@@ -1,5 +1,6 @@
 [workspace]
 members = ["src-tauri", "frontend", "ubi-crates/*"]
+resolver = "2"
 
 [workspace.package]
 version = "0.4.0"
@@ -12,7 +13,6 @@ edition = "2021"
 panic = "abort"
 codegen-units = 1
 lto = true
-opt-level = "z"
 
 [workspace.dependencies]
 ron = "0.8"

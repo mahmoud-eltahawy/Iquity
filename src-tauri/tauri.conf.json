@@ -1,63 +1,65 @@
 {
-    "build": {
-        "beforeBuildCommand": "cd frontend && npx tailwindcss -i ./css/input.css -o ./css/output.css --minify && trunk build --release index.desktop.html",
-        "beforeDevCommand": "cd frontend && trunk serve --release index.desktop.html",
-        "devPath": "http://127.0.0.1:8080",
-        "distDir": "../frontend/dist",
-        "withGlobalTauri": true
+  "build": {
+    "beforeBuildCommand": "cd frontend && bunx tailwindcss -i ./css/input.css -o ./css/output.css --minify && trunk build --release index.desktop.html",
+    "beforeDevCommand": "cd frontend && trunk serve --release index.desktop.html",
+    "devPath": "http://127.0.0.1:8080",
+    "distDir": "../frontend/dist",
+    "withGlobalTauri": true
+  },
+  "package": {
+    "productName": "ubiquity",
+    "version": "0.4.0"
+  },
+  "tauri": {
+    "allowlist": {
+      "clipboard": {
+        "writeText": true
+      }
     },
-    "package": {
-        "productName": "ubiquity",
-        "version": "0.4.0"
+    "bundle": {
+      "active": true,
+      "category": "DeveloperTool",
+      "copyright": "",
+      "deb": {
+        "depends": []
+      },
+      "externalBin": [],
+      "icon": [
+        "icons/32x32.png",
+        "icons/128x128.png",
+        "icons/128x128@2x.png",
+        "icons/icon.icns",
+        "icons/icon.ico"
+      ],
+      "identifier": "com.winston69.ubiquity",
+      "longDescription": "",
+      "macOS": {
+        "entitlements": null,
+        "exceptionDomain": "",
+        "frameworks": [],
+        "providerShortName": null,
+        "signingIdentity": null
+      },
+      "resources": [],
+      "shortDescription": "",
+      "targets": "all",
+      "windows": {
+        "certificateThumbprint": null,
+        "digestAlgorithm": "sha256",
+        "timestampUrl": ""
+      }
     },
-    "tauri": {
-        "allowlist": {
-            "clipboard": {
-                "writeText": true
-            }
-        },
-        "bundle": {
-            "active": true,
-            "category": "DeveloperTool",
-            "copyright": "",
-            "deb": {
-                "depends": []
-            },
-            "externalBin": [],
-            "icon": [
-                "icons/32x32.png",
-                "icons/128x128.png",
-                "icons/128x128@2x.png",
-                "icons/icon.icns",
-                "icons/icon.ico"
-            ],
-            "identifier": "com.winston69.ubiquity",
-            "longDescription": "",
-            "macOS": {
-                "entitlements": null,
-                "exceptionDomain": "",
-                "frameworks": [],
-                "providerShortName": null,
-                "signingIdentity": null
-            },
-            "resources": [],
-            "shortDescription": "",
-            "targets": "all",
-            "windows": {
-                "certificateThumbprint": null,
-                "digestAlgorithm": "sha256",
-                "timestampUrl": ""
-            }
-        },
-        "security": {
-            "csp": "default-src blob: data: filesystem: ws: wss: http: https: tauri: 'wasm-unsafe-eval' 'self'; script-src blob: data: filesystem: ws: wss: http: https: tauri: 'wasm-unsafe-eval' 'self'"
-        },
-        "windows": [{
-            "fullscreen": false,
-            "height": 1000,
-            "resizable": true,
-            "title": "ubiquity",
-            "width": 1600
-        }]
-    }
+    "security": {
+      "csp": "default-src blob: data: filesystem: ws: wss: http: https: tauri: 'wasm-unsafe-eval' 'self'; script-src blob: data: filesystem: ws: wss: http: https: tauri: 'wasm-unsafe-eval' 'self'"
+    },
+    "windows": [
+      {
+        "fullscreen": false,
+        "height": 1000,
+        "resizable": true,
+        "title": "ubiquity",
+        "width": 1600
+      }
+    ]
+  }
 }
