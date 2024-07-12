@@ -1,4 +1,4 @@
-use tokenize::Token;
+use crate::tokenize::Token;
 
 /// Represents an AST type
 #[derive(Debug, Clone, PartialEq)]

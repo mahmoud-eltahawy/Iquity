@@ -1,4 +1,4 @@
-use parse::{Ast, Node};
+use crate::parse::{Ast, Node};
 
 static SPACE: &str = " ";
 static COLON: &str = ":";

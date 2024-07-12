@@ -1,7 +1,7 @@
 [package]
 name = "frontend"
-version = "0.0.1"
-edition = "2021"
+version = { workspace = true }
+edition = { workspace = true }
 
 [features]
 web = []
@@ -29,7 +29,6 @@ web-sys = { version = "0.3.63", features=["DataTransfer", "Element", "Navigator"
 "HtmlDivElement", "HtmlDocument", "HtmlInputElement", "HtmlLabelElement", "HtmlTextAreaElement", "HtmlParagraphElement", "Event", "EventTarget", "MouseEvent", "InputEvent", "KeyEvent", "KeyboardEvent", "KeyboardEventInit",
 "TouchEvent", "TouchList", "Touch", "DomTokenList"]}
 wasm-bindgen = "=0.2.89"
-wasm-bindgen-cli = "=0.2.89"
 wasm-bindgen-futures = "=0.4.39"
 js-sys = "0.3.63"
 serde-wasm-bindgen = "0.5.0"

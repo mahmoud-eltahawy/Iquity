@@ -3,7 +3,7 @@ name = "Ubiquity"
 license = "GPL"
 repository = ""
 default-run = "Ubiquity"
-edition = "2021"
+edition = { workspace = true }
 version = "0.4.0"
 
 [build-dependencies]

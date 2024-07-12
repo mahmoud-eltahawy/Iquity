@@ -9,6 +9,7 @@ readme = "./README.md"
 keywords = ["markdown", "table", "terminal", "bnf"]
 categories = ["command-line-utilities", "parser-implementations", "text-processing"]
 license = "MIT"
+edition = { workspace = true }
 
 [dependencies]
 error = { workspace = true }
