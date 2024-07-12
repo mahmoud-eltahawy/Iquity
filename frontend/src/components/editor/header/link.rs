@@ -1,7 +1,10 @@
+use crate::{
+    components::{modals::add_link::ADD_LINK_MODAL_ID, tooltip::Tooltip},
+    icons::LinkIcon,
+};
 use yew::prelude::*;
-use crate::{components::{tooltip::Tooltip, modals::add_link::ADD_LINK_MODAL_ID}, icons::LinkIcon};
 
-use super::header::HeaderBtnProps;
+use super::HeaderBtnProps;
 
 #[function_component(AddLinkBtn)]
 pub fn add_link_btn(props: &HeaderBtnProps) -> Html {

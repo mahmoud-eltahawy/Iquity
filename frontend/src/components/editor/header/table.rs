@@ -1,9 +1,9 @@
-use yew::prelude::*;
 use crate::components::modals::table::TABLE_MODAL_ID;
 use crate::components::tooltip::Tooltip;
 use crate::icons::TableIcon;
+use yew::prelude::*;
 
-use super::header::HeaderBtnProps;
+use super::HeaderBtnProps;
 
 #[function_component(AddTableBtn)]
 pub fn add_table_btn(props: &HeaderBtnProps) -> Html {

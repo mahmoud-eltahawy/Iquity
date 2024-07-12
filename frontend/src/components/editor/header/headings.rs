@@ -8,7 +8,7 @@ use wasm_bindgen::JsCast;
 use web_sys::HtmlTextAreaElement;
 use yew::prelude::*;
 
-use super::header::HeaderBtnProps;
+use super::HeaderBtnProps;
 
 #[function_component(HeadingsDropdown)]
 pub fn headings_dropdown(props: &HeaderBtnProps) -> Html {

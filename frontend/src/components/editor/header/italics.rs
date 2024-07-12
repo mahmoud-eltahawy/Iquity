@@ -9,7 +9,7 @@ use wasm_bindgen::JsCast;
 use web_sys::HtmlTextAreaElement;
 use yew::prelude::*;
 
-use super::header::HeaderBtnProps;
+use super::HeaderBtnProps;
 
 #[function_component(ItalicsBtn)]
 pub fn italics_btn(props: &HeaderBtnProps) -> Html {

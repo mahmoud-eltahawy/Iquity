@@ -7,7 +7,7 @@ use wasm_bindgen::JsCast;
 use web_sys::HtmlTextAreaElement;
 use yew::prelude::*;
 
-use super::header::HeaderBtnProps;
+use super::HeaderBtnProps;
 
 #[function_component(FormattingDropdown)]
 pub fn bold_btn(props: &HeaderBtnProps) -> Html {

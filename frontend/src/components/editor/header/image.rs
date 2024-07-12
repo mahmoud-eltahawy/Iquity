@@ -1,9 +1,9 @@
-use yew::prelude::*;
 use crate::components::modals::add_image::ADD_IMAGE_MODAL_ID;
 use crate::components::tooltip::Tooltip;
 use crate::icons::AddImageIcon;
+use yew::prelude::*;
 
-use super::header::HeaderBtnProps;
+use super::HeaderBtnProps;
 
 #[function_component(AddImageBtn)]
 pub fn add_image_btn(props: &HeaderBtnProps) -> Html {

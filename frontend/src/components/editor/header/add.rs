@@ -1,11 +1,11 @@
-use yew::prelude::*;
 use crate::components::modals::add_image::ADD_IMAGE_MODAL_ID;
 use crate::components::modals::add_link::ADD_LINK_MODAL_ID;
 use crate::components::modals::table::TABLE_MODAL_ID;
 use crate::contexts::config::use_config;
-use crate::icons::{LinkIcon, ImageIcon, TableIcon, PlusIcon};
+use crate::icons::{ImageIcon, LinkIcon, PlusIcon, TableIcon};
+use yew::prelude::*;
 
-use super::header::HeaderBtnProps;
+use super::HeaderBtnProps;
 
 #[function_component(AddDropdown)]
 pub fn add_dropdown_btn(props: &HeaderBtnProps) -> Html {

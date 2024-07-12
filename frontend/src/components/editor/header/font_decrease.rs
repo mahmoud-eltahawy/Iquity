@@ -1,10 +1,10 @@
-use yew::prelude::*;
-use crate::contexts::config::use_config;
 use crate::components::tooltip::Tooltip;
-use crate::contexts::toasts::{use_toaster, err_modal};
+use crate::contexts::config::use_config;
+use crate::contexts::toasts::{err_modal, use_toaster};
 use crate::icons::FontDecreaseIcon;
+use yew::prelude::*;
 
-use super::header::HeaderBtnProps;
+use super::HeaderBtnProps;
 
 #[function_component(FontDecreaseBtn)]
 pub fn font_decrease_btn(props: &HeaderBtnProps) -> Html {
@@ -12,7 +12,9 @@ pub fn font_decrease_btn(props: &HeaderBtnProps) -> Html {
     let toaster = use_toaster();
     let decrease_font_size = Callback::from(move |_| {
         let toaster = toaster.clone();
-        config_ctx.decrease_font_size().unwrap_or_else(|err| err_modal(err, toaster));
+        config_ctx
+            .decrease_font_size()
+            .unwrap_or_else(|err| err_modal(err, toaster));
     });
 
     html! {

@@ -1,8 +1,8 @@
-use crate::components::{welcome_hero::WelcomeHero, drawer::Drawer};
-use yew::prelude::*;
-use crate::pages::background::Background;
-use crate::components::modals::modals::Modals;
+use crate::components::modals::Modals;
 use crate::components::toasts::Toaster;
+use crate::components::{drawer::Drawer, welcome_hero::WelcomeHero};
+use crate::pages::background::Background;
+use yew::prelude::*;
 
 #[function_component(Welcome)]
 pub fn welcome() -> Html {

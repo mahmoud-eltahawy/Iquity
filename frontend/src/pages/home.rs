@@ -1,15 +1,14 @@
 use crate::components::drawer::Drawer;
 use crate::components::dual_view::DualView;
 use crate::components::footer::Footer;
-use crate::components::header::header::Header;
-use crate::components::modals::modals::Modals;
+use crate::components::header::Header;
+use crate::components::modals::Modals;
+use crate::components::pdf::Pdf;
 use crate::components::single_view::SingleView;
 use crate::components::toasts::Toaster;
 use crate::contexts::config::use_config;
 use crate::pages::background::Background;
-use crate::components::pdf::Pdf;
 use yew::prelude::*;
-
 
 #[function_component(Home)]
 pub fn home() -> Html {

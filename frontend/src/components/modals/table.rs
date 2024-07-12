@@ -1,5 +1,5 @@
 use crate::{
-    components::{editor::textarea::textarea::EDITOR_ID, modals::utils::close_modal},
+    components::{editor::textarea::EDITOR_ID, modals::utils::close_modal},
     contexts::{
         markdown::{use_markdown, Markdown},
         toasts::{err_modal, use_toaster},

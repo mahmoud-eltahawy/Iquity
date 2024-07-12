@@ -1,11 +1,11 @@
-use wasm_bindgen::JsCast;
-use web_sys::HtmlDocument;
-use yew::prelude::*;
 use crate::components::tooltip::Tooltip;
 use crate::icons::RedoIcon;
 use gloo::utils::document;
+use wasm_bindgen::JsCast;
+use web_sys::HtmlDocument;
+use yew::prelude::*;
 
-use super::header::HeaderBtnProps;
+use super::HeaderBtnProps;
 
 #[function_component(RedoBtn)]
 pub fn redo_btn(props: &HeaderBtnProps) -> Html {

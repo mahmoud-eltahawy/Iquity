@@ -1,6 +1,6 @@
 use crate::pages::background::Background;
 use crate::{
-    components::{drawer::Drawer, header::header::Header, link_btn::LinkBtn},
+    components::{drawer::Drawer, header::Header, link_btn::LinkBtn},
     contexts::config::use_config,
     icons::{BitcoinQr, MoneroQr},
 };

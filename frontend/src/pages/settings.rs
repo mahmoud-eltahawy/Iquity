@@ -1,5 +1,5 @@
 use crate::components::drawer::Drawer;
-use crate::components::{header::header::Header, theme_card::ThemeCard};
+use crate::components::{header::Header, theme_card::ThemeCard};
 use crate::contexts::config::{use_config, THEMES};
 use crate::pages::background::Background;
 use yew::prelude::*;
