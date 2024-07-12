@@ -1,7 +1,15 @@
+use markdown::{self, CompileOptions, Options, ParseOptions};
 use yew::prelude::*;
-use markdown::{self, Options, ParseOptions, CompileOptions};
 
-use crate::{contexts::{markdown::use_markdown, config::use_config, toasts::{use_toaster, err_modal}}, icons::*, components::tooltip::Tooltip};
+use crate::{
+    components::tooltip::Tooltip,
+    contexts::{
+        config::use_config,
+        markdown::use_markdown,
+        toasts::{err_modal, use_toaster},
+    },
+    icons::*,
+};
 
 /// A HTML preview of the user's markdown.
 #[function_component(MarkdownPreview)]
@@ -37,24 +45,24 @@ pub fn markdown_preview() -> Html {
         "print:block"
     );
 
-    let btn_classes = classes!(
-        "btn",
-        "btn-sm",
-        "btn-ghost"
-    );
+    let btn_classes = classes!("btn", "btn-sm", "btn-ghost");
 
     let config_ctx = use_config();
     let toaster_ctx = use_toaster();
     let increase_prose_size = Callback::from(move |_| {
         let toaster_ctx = toaster_ctx.clone();
-        config_ctx.increase_preview_font_size().unwrap_or_else(|err| err_modal(err, toaster_ctx));
+        config_ctx
+            .increase_preview_font_size()
+            .unwrap_or_else(|err| err_modal(err, toaster_ctx));
     });
 
     let config_ctx = use_config();
     let toaster_ctx = use_toaster();
     let decrease_prose_size = Callback::from(move |_| {
         let toaster_ctx = toaster_ctx.clone();
-        config_ctx.decrease_preview_font_size().unwrap_or_else(|err| err_modal(err, toaster_ctx));
+        config_ctx
+            .decrease_preview_font_size()
+            .unwrap_or_else(|err| err_modal(err, toaster_ctx));
     });
 
     html! {

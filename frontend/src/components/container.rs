@@ -9,11 +9,10 @@ pub struct ContainerProps {
 
 #[function_component(Container)]
 pub fn container(props: &ContainerProps) -> Html {
-    
     let mut container_classes = classes!(
         "my-auto",
-        "border", 
-        "border-base-content", 
+        "border",
+        "border-base-content",
         "rounded-xl",
         "p-4",
         "pb-8",

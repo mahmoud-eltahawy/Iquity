@@ -1,7 +1,10 @@
 use config::View;
 use yew::prelude::*;
 
-use crate::{icons::{PreviewDisabledIcon, PreviewEnabledIcon}, contexts::config::use_config};
+use crate::{
+    contexts::config::use_config,
+    icons::{PreviewDisabledIcon, PreviewEnabledIcon},
+};
 
 #[function_component(Footer)]
 pub fn footer() -> Html {
@@ -32,18 +35,9 @@ pub fn footer() -> Html {
         "self-center"
     );
 
-    let footer_item_classes = classes!(
-        "focus:neutral-focus",
-        "flex",
-        "flex-col",
-        "items-center"
-    );
-    
-    let footer_item_text_classes = classes!(
-        "font-sans",
-        "text-xs",
-        "text-center"
-    );
+    let footer_item_classes = classes!("focus:neutral-focus", "flex", "flex-col", "items-center");
+
+    let footer_item_text_classes = classes!("font-sans", "text-xs", "text-center");
 
     html! {
         <div class={footer_classes}>

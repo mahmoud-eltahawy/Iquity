@@ -10,7 +10,7 @@ pub fn toaster() -> Html {
     let toasts = use_toaster().state().toasts;
 
     let mut toasts_html: Vec<Html> = Vec::new();
-    
+
     toasts.iter().for_each(|toast| {
         toasts_html.push(html!(<Toast ..toast.clone()/>));
     });
@@ -35,7 +35,7 @@ pub struct ToastProps {
     pub toast_type: ToastType,
     pub title: AttrValue,
     pub description: AttrValue,
-    pub verbose: Option<String>
+    pub verbose: Option<String>,
 }
 
 impl From<UbiquityError> for ToastProps {
@@ -45,10 +45,14 @@ impl From<UbiquityError> for ToastProps {
         let description: AttrValue = error.human_description.into();
         let verbose = error.verbose_description;
 
-        ToastProps { toast_type, title, description, verbose }
+        ToastProps {
+            toast_type,
+            title,
+            description,
+            verbose,
+        }
     }
 }
-
 
 #[function_component(Toast)]
 pub fn toast(props: &ToastProps) -> Html {
@@ -76,10 +80,10 @@ pub fn toast(props: &ToastProps) -> Html {
         "w-[97.5%]"
     );
     match props.toast_type {
-        ToastType::Default => {alert_classes.push("")},
-        ToastType::Success => {alert_classes.push("bg-success")},
-        ToastType::Error => {alert_classes.push("bg-error")},
-        ToastType::Info => {alert_classes.push("bg-info")},
+        ToastType::Default => alert_classes.push(""),
+        ToastType::Success => alert_classes.push("bg-success"),
+        ToastType::Error => alert_classes.push("bg-error"),
+        ToastType::Info => alert_classes.push("bg-info"),
     }
 
     match &props.verbose {

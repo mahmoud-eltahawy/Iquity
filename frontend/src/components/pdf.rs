@@ -1,6 +1,6 @@
-use yew::prelude::*;
-use markdown::{self, Options, ParseOptions, CompileOptions};
 use crate::contexts::markdown::use_markdown;
+use markdown::{self, CompileOptions, Options, ParseOptions};
+use yew::prelude::*;
 
 #[function_component(Pdf)]
 pub fn pdf() -> Html {
@@ -16,7 +16,7 @@ pub fn pdf() -> Html {
 
     let md = markdown::to_html_with_options(&markdown.text, options).unwrap();
     let md_html = Html::from_html_unchecked(AttrValue::from(md));
-    
+
     let classes = classes!(
         "prose",
         "prose-img:rounded-xl",
@@ -34,7 +34,7 @@ pub fn pdf() -> Html {
         "hidden",
         "bg-base-100"
     );
-    
+
     html! {
         <article data-theme={"light"} id="preview" class={classes}>
             { md_html }

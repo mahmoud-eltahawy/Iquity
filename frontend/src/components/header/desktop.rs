@@ -1,27 +1,29 @@
+use crate::components::tooltip::Tooltip;
+use urlencoding::encode;
 use yew::prelude::*;
 use yew_router::prelude::use_navigator;
-use urlencoding::encode;
-use crate::components::tooltip::Tooltip;
 
 use crate::{
-    components::{theme_card::ThemeDropdownItem, header::{save_btn::SaveBtn, add_dropdown::AddFileDropdown}},
+    components::{
+        header::{add_dropdown::AddFileDropdown, save_btn::SaveBtn},
+        theme_card::ThemeDropdownItem,
+    },
+    contexts::markdown::use_markdown,
     icons::{EllipsisIcon, PaletteIcon, RESPONSIVE_ICON_LG},
-    Page, contexts::markdown::use_markdown,
+    Page,
 };
-
 
 pub const DOWNLOAD_ANCHOR_ID: AttrValue = AttrValue::Static("dl");
 pub const PDF_DOWNLOAD_ANCHOR_ID: AttrValue = AttrValue::Static("pdf_dl");
 
-
 #[function_component(DesktopHeader)]
 pub fn desktop_header() -> Html {
     let nav = use_navigator().unwrap();
-    let home_cb= Callback::from(move |_| nav.replace(&Page::Home));
+    let home_cb = Callback::from(move |_| nav.replace(&Page::Home));
 
     let nav = use_navigator().unwrap();
     let settings_cb = Callback::from(move |_| nav.push(&Page::Settings));
-    
+
     let nav = use_navigator().unwrap();
     let about_cb = Callback::from(move |_| nav.push(&Page::About));
 

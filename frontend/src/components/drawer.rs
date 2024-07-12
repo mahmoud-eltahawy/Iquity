@@ -8,7 +8,6 @@ pub struct DrawerProps {
     pub children: Children,
 }
 
-
 #[function_component(Drawer)]
 pub fn drawer(props: &DrawerProps) -> Html {
     let theme = use_config().state().theme;
@@ -55,8 +54,8 @@ pub fn drawer(props: &DrawerProps) -> Html {
 #[function_component(Home)]
 pub fn home() -> Html {
     let nav = use_navigator().unwrap();
-    let home = Callback::from(move |_| {nav.replace(&Page::Home)});
-    
+    let home = Callback::from(move |_| nav.replace(&Page::Home));
+
     html! {
         <li>
             <div onclick={home}>
@@ -74,8 +73,8 @@ pub fn home() -> Html {
 #[function_component(Settings)]
 pub fn home() -> Html {
     let nav = use_navigator().unwrap();
-    let settings = Callback::from(move |_| {nav.push(&Page::Settings)});
-    
+    let settings = Callback::from(move |_| nav.push(&Page::Settings));
+
     html! {
         <li>
             <div onclick={settings}>
@@ -91,8 +90,8 @@ pub fn home() -> Html {
 #[function_component(About)]
 pub fn about() -> Html {
     let nav = use_navigator().unwrap();
-    let about = Callback::from(move |_| {nav.push(&Page::About)});
-    
+    let about = Callback::from(move |_| nav.push(&Page::About));
+
     html! {
         <li>
             <div onclick={about}>

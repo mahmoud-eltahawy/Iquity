@@ -1,14 +1,16 @@
-use yew::prelude::*;
-use crate::contexts::{markdown::{use_markdown, Markdown}, toasts::{use_toaster, err_modal}};
-use web_sys::HtmlInputElement;
+use crate::contexts::{
+    markdown::{use_markdown, Markdown},
+    toasts::{err_modal, use_toaster},
+};
 use gloo::utils::document;
 use wasm_bindgen::JsCast;
+use web_sys::HtmlInputElement;
+use yew::prelude::*;
 
 pub const SAVE_MODAL_ID: AttrValue = AttrValue::Static("save-modal");
 
-const TEXTBOX_ID: AttrValue = AttrValue::Static("name_input"); 
+const TEXTBOX_ID: AttrValue = AttrValue::Static("name_input");
 const PLACEHOLDER_NAME: AttrValue = AttrValue::Static("superdupercoolfile.md");
-
 
 #[function_component(SelectNameModal)]
 pub fn select_name_modal() -> Html {
@@ -18,16 +20,28 @@ pub fn select_name_modal() -> Html {
 
     let set_name = Callback::from(move |_| {
         let text = text.clone();
-        
-        let file_name_textbox: HtmlInputElement = document().get_element_by_id(&TEXTBOX_ID).unwrap().dyn_into().unwrap();
+
+        let file_name_textbox: HtmlInputElement = document()
+            .get_element_by_id(&TEXTBOX_ID)
+            .unwrap()
+            .dyn_into()
+            .unwrap();
         let file_name = file_name_textbox.value();
         let key = Some(AttrValue::from(file_name));
 
         let markdown = Markdown::from(text, key);
-        markdown_ctx.add_markdown(markdown.clone()).unwrap_or_else(|err| err_modal(err, toaster.clone()));
-        markdown_ctx.set_markdown(markdown).unwrap_or_else(|err| err_modal(err, toaster.clone()));
-        
-        let modal: HtmlInputElement = document().get_element_by_id(&SAVE_MODAL_ID).unwrap().dyn_into().unwrap();
+        markdown_ctx
+            .add_markdown(markdown.clone())
+            .unwrap_or_else(|err| err_modal(err, toaster.clone()));
+        markdown_ctx
+            .set_markdown(markdown)
+            .unwrap_or_else(|err| err_modal(err, toaster.clone()));
+
+        let modal: HtmlInputElement = document()
+            .get_element_by_id(&SAVE_MODAL_ID)
+            .unwrap()
+            .dyn_into()
+            .unwrap();
         modal.set_checked(false);
     });
 

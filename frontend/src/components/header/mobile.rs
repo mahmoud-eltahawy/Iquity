@@ -1,11 +1,14 @@
+use urlencoding::encode;
 use yew::prelude::*;
 use yew_router::prelude::use_navigator;
-use urlencoding::encode;
 
 use crate::{
-    components::header::{save_btn::SaveBtn, add_dropdown::AddFileDropdown, desktop::DOWNLOAD_ANCHOR_ID},
+    components::header::{
+        add_dropdown::AddFileDropdown, desktop::DOWNLOAD_ANCHOR_ID, save_btn::SaveBtn,
+    },
+    contexts::markdown::use_markdown,
     icons::{HamburgerIcon, WrenchIcon, RESPONSIVE_ICON_LG},
-    Page, contexts::markdown::use_markdown,
+    Page,
 };
 
 #[function_component(MobileHeader)]

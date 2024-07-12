@@ -1,10 +1,10 @@
 use yew_router::prelude::*;
 
 pub mod about;
+pub mod background;
 pub mod home;
 pub mod settings;
 pub mod welcome;
-pub mod background;
 
 #[derive(Clone, PartialEq, Routable)]
 pub enum Page {

@@ -1,6 +1,9 @@
 use yew::prelude::*;
 
-use crate::contexts::{config::{use_config, ConfigContext}, toasts::{use_toaster, err_modal}};
+use crate::contexts::{
+    config::{use_config, ConfigContext},
+    toasts::{err_modal, use_toaster},
+};
 
 #[derive(Properties, PartialEq)]
 pub struct ThemeCardProps {
@@ -14,11 +17,13 @@ pub fn theme_card_button(props: &ThemeCardProps) -> Html {
 
     let toaster = use_toaster();
     let switch_theme = Callback::from(move |_| {
-        config_context.set_theme(card_theme.clone()).unwrap_or_else(|err| err_modal(err, toaster.clone()));
+        config_context
+            .set_theme(card_theme.clone())
+            .unwrap_or_else(|err| err_modal(err, toaster.clone()));
     });
 
-    let mut card_classes = classes!( 
-        "lg:w-96", 
+    let mut card_classes = classes!(
+        "lg:w-96",
         "w-64",
         "overflow-hidden",
         "rounded-lg",
@@ -31,7 +36,6 @@ pub fn theme_card_button(props: &ThemeCardProps) -> Html {
         card_classes.push("outline-primary");
         card_classes.push("outline-8");
         card_classes.push("outline-offset-8");
-        
     } else {
         card_classes.push("border-base-content/20");
         card_classes.push("hover:border-base-content/40");
@@ -77,7 +81,9 @@ pub fn theme_dropdown_item(props: &ThemeCardProps) -> Html {
     let card_theme = props.name.to_string();
 
     let switch_theme = Callback::from(move |_| {
-        config_context.set_theme(card_theme.clone()).unwrap_or_else(|err| err_modal(err, toaster.clone()));
+        config_context
+            .set_theme(card_theme.clone())
+            .unwrap_or_else(|err| err_modal(err, toaster.clone()));
     });
 
     html! {

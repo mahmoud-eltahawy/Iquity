@@ -1,10 +1,9 @@
+use crate::contexts::config::use_config;
 use gloo::utils::document;
 use log::debug;
 use wasm_bindgen::{JsCast, UnwrapThrowExt};
 use web_sys::HtmlInputElement;
-use crate::contexts::config::use_config;
 use yew::prelude::*;
-
 
 #[derive(Properties, PartialEq)]
 pub struct BackgroundProps {
@@ -44,18 +43,28 @@ pub fn background(props: &BackgroundProps) -> Html {
         let start_y = *touch_start_y_clone.borrow();
         let end_y = *touch_end_y_clone.borrow();
 
-        let drawer: HtmlInputElement = document().get_element_by_id("drawer-input").unwrap().dyn_into().unwrap();
+        let drawer: HtmlInputElement = document()
+            .get_element_by_id("drawer-input")
+            .unwrap()
+            .dyn_into()
+            .unwrap();
         if end_x > (start_x + 50) && (start_y <= end_y + 50 && start_y >= end_y - 50) {
             drawer.set_checked(true);
         }
     });
 
     // let mut classes = classes!("flex", "flex-col", "justify-between", "min-h-[calc(100svh)]", "max-h-[calc(100svh)]", "min-w-[calc(100svw)]", "max-w-[calc(100svw)]");
-    let mut classes = classes!("flex", "flex-col", "justify-between", "max-w-[calc(100svw)]", "print:hidden");
-    
+    let mut classes = classes!(
+        "flex",
+        "flex-col",
+        "justify-between",
+        "max-w-[calc(100svw)]",
+        "print:hidden"
+    );
+
     match mobile_ui {
         true => classes.push("min-h-[calc(100svh)]"),
-        false => classes.push("min-h-screen")
+        false => classes.push("min-h-screen"),
     }
 
     html! {
