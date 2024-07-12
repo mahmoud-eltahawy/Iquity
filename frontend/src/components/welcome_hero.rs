@@ -1,22 +1,28 @@
-use error::UbiquityError;
+use crate::{contexts::config::use_config, pages::Page};
 use yew::prelude::*;
 use yew_router::prelude::use_navigator;
-use crate::{pages::Page, components::toasts::ToastProps, contexts::{config::use_config, toasts::use_toaster}};
 
 #[function_component(WelcomeHero)]
 pub fn welcome_hero() -> Html {
     let navigator = use_navigator().unwrap();
-    
+
     let open_home = Callback::from(move |_| {
         navigator.push(&Page::Home);
     });
 
-    let mut classes = classes!("w-screen", "flex", "flex-col", "justify-center", "justify-center", "w-screen");
+    let mut classes = classes!(
+        "w-screen",
+        "flex",
+        "flex-col",
+        "justify-center",
+        "justify-center",
+        "w-screen"
+    );
     match use_config().state().mobile_ui {
         true => classes.push("min-h-[calc(100svh)]"),
-        false => classes.push("min-h-screen")
+        false => classes.push("min-h-screen"),
     }
-    
+
     html! {
         <div class={classes}>
             <div class="flex flex-col items-center space-y-14">
@@ -29,7 +35,7 @@ pub fn welcome_hero() -> Html {
                 <button onclick={open_home} class="btn btn-lg btn-wide btn-primary btn-outline">{"Get Started"}</button>
             </div>
         </div>
-                
+
 
         //     <div class="alert alert-info flex flex-col items-start">
         //         <span class="font-bold text-xl">{"Save Error"}</span>

@@ -1,7 +1,11 @@
+use crate::pages::background::Background;
+use crate::{
+    components::{drawer::Drawer, header::header::Header, link_btn::LinkBtn},
+    contexts::config::use_config,
+    icons::{BitcoinQr, MoneroQr},
+};
 use wasm_bindgen_futures::spawn_local;
 use yew::prelude::*;
-use crate::{contexts::config::use_config, components::{header::header::Header, link_btn::LinkBtn, drawer::Drawer}, icons::{MoneroQr, BitcoinQr}};
-use crate::pages::background::Background;
 
 #[function_component(About)]
 pub fn about() -> Html {
@@ -13,35 +17,19 @@ pub fn about() -> Html {
     let daisyui_link = "https://daisyui.com";
     let tailwind_link = "https://tailwindcss.com";
 
-    let mut hero_classes = classes!(        
-        "hero",
-        "self-center",
-        "w-full",
-    );
+    let mut hero_classes = classes!("hero", "self-center", "w-full",);
 
     match mobile_ui {
         true => hero_classes.push("h-[calc(100svh)]"),
-        false => hero_classes.push("h-[calc(100vh-4rem)]")
+        false => hero_classes.push("h-[calc(100vh-4rem)]"),
     }
 
     let hero_content_classes = classes!("hero-content", "font-mono");
 
-    let article_classes = classes!(
-        "prose-xl",
-        "prose-a:text-primary",
-        "hover:prose-a:text-primary-focus",
-        "font-mono",
-        "cursor-default"
-    );
-
     let header_classes = classes!("font-display", "lg:text-5xl", "text-4xl", "font-medium");
     let subheader_classes = classes!("font-display", "lg:text-4xl", "text-3xl", "font-medium");
 
-    let text_classes = classes!(        
-        "lg:text-2xl",
-        "text-xl",
-        "font-mono"
-    );
+    let text_classes = classes!("lg:text-2xl", "text-xl", "font-mono");
 
     let links_container_classes = classes!(
         "not-prose",
@@ -117,7 +105,7 @@ pub fn copy_address_btn(props: &CopyAddressBtnProps) -> Html {
     let copy = Callback::from(move |_| {
         let address = address.clone();
         spawn_local(async move {
-            tauri_sys::clipboard::write_text(&address).await; 
+            let _ = tauri_sys::clipboard::write_text(&address).await;
         });
     });
 
@@ -170,7 +158,7 @@ pub fn paypal_donation_btn() -> Html {
 }
 
 #[function_component(MoneroDonationBtn)]
-pub fn monero_donation_btn() -> Html { 
+pub fn monero_donation_btn() -> Html {
     html! {
         <>
             <div data-tip={"Monero Donation Address"} class="tooltip tooltip-bottom tooltip-info">
@@ -202,7 +190,7 @@ pub fn monero_donation_btn() -> Html {
 }
 
 #[function_component(BitcoinDonationBtn)]
-pub fn bitcoin_donation_btn() -> Html {  
+pub fn bitcoin_donation_btn() -> Html {
     html! {
         <>
             <div data-tip={"Bitcoin Donation Address"} class="tooltip tooltip-bottom tooltip-info">

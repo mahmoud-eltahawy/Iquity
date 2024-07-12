@@ -1,8 +1,10 @@
-use std::ops::Deref;
-use std::path::PathBuf;
 use config::{Config, View};
 use error::UbiquityError;
-use gloo::{storage::{LocalStorage, Storage}, utils::window};
+use gloo::{
+    storage::{LocalStorage, Storage},
+    utils::window,
+};
+use std::ops::Deref;
 use web_sys::Navigator;
 use yew::prelude::*;
 
@@ -54,29 +56,11 @@ impl ConfigContext {
         Ok(())
     }
 
-
-    pub fn toggle_view(&self) -> Result<(), UbiquityError> {
-        let mut new_config = self.state();
-        match &self.state().view {
-            View::Dual => new_config.view = View::Input,
-            View::Input | View::Preview => new_config.view = View::Dual,
-        };
-        self.set(new_config)?;
-        Ok(())
-    }
-
     pub fn set_view(&self, view: View) -> Result<(), UbiquityError> {
         let mut new_config = self.state();
         new_config.view = view;
         self.set(new_config)?;
         Ok(())
-    }
-
-    pub fn is_single_view(&self) -> bool {
-        match &self.state().view {
-            View::Dual => false,
-            View::Input | View::Preview => true,
-        }
     }
 
     pub fn is_mobile_ui(&self) -> bool {
@@ -106,12 +90,12 @@ impl ConfigContext {
             "text-7xl" => "text-8xl",
             "text-8xl" => "text-9xl",
             "text-9xl" => "text-9xl",
-            _ => "text-base"
+            _ => "text-base",
         };
         self.set_md_input_font_size(new_size.to_owned())?;
         Ok(())
     }
-    
+
     pub fn decrease_font_size(&self) -> Result<(), UbiquityError> {
         let current_size = self.state().md_input_font_size;
         let new_size = match current_size.as_str() {
@@ -128,7 +112,7 @@ impl ConfigContext {
             "text-7xl" => "text-6xl",
             "text-8xl" => "text-7xl",
             "text-9xl" => "text-8xl",
-            _ => "text-base"
+            _ => "text-base",
         };
         self.set_md_input_font_size(new_size.to_owned())?;
         Ok(())
@@ -142,19 +126,19 @@ impl ConfigContext {
     }
 
     pub fn increase_preview_font_size(&self) -> Result<(), UbiquityError> {
-        let current_size = self.state().md_preview_font_size; 
+        let current_size = self.state().md_preview_font_size;
         let new_size = match current_size.as_str() {
             "prose-sm" => "prose-base",
             "prose-base" => "prose-lg",
             "prose-lg" => "prose-xl",
             "prose-xl" => "prose-2xl",
             "prose-2xl" => "prose-2xl",
-            _ => "prose-base"
+            _ => "prose-base",
         };
         self.set_md_preview_font_size(new_size.to_owned())?;
         Ok(())
     }
-    
+
     pub fn decrease_preview_font_size(&self) -> Result<(), UbiquityError> {
         let current_size = self.state().md_preview_font_size;
         let new_size = match current_size.as_str() {
@@ -163,16 +147,9 @@ impl ConfigContext {
             "prose-lg" => "prose-base",
             "prose-xl" => "prose-lg",
             "prose-2xl" => "prose-xl",
-            _ => "prose-base"
+            _ => "prose-base",
         };
         self.set_md_preview_font_size(new_size.to_owned())?;
-        Ok(())
-    }
-
-    pub fn set_data_path(&mut self, path: PathBuf) -> Result<(), UbiquityError> {
-        let mut new_config = self.state();
-        new_config.data_path = Some(path);
-        self.set(new_config)?;
         Ok(())
     }
 }
@@ -203,7 +180,7 @@ pub(crate) fn ConfigProvider(props: &ConfigProviderProps) -> Html {
 
     let config_state = use_state(|| config);
     let config_context = ConfigContext::new(config_state);
-    
+
     html! {
         <ContextProvider<ConfigContext> context={config_context}>
             {props.children.clone()}
