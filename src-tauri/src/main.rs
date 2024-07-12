@@ -1,5 +1,3 @@
-#![feature(let_chains)]
-
 use std::{fs, path::PathBuf};
 
 use error::UbiquityError;
@@ -21,28 +19,29 @@ fn main() {
 
 #[tauri::command]
 fn save_file(path: Option<String>, contents: String) -> Result<String, UbiquityError> {
-    if let Some(path_key) = path
-        && !path_key.eq(&DOCS_KEY)
-    {
-        let path = PathBuf::from(path_key.clone());
+    match path {
+        Some(path_key) if !path_key.eq(&DOCS_KEY) => {
+            let path = PathBuf::from(path_key.clone());
 
-        match save_to_fs(path, contents) {
-            Ok(_) => Ok(path_key),
-            Err(err) => Err(err),
-        }
-    } else {
-        let mut dir = PathBuf::from("/");
-        if let Some(docs_dir) = dirs::document_dir() {
-            dir = docs_dir;
-        }
-        let file_dialog = FileDialog::new().set_directory(dir).save_file();
-
-        match file_dialog {
-            Some(file_handle) => {
-                fs::write(file_handle.clone(), contents)?;
-                Ok(file_handle.to_str().unwrap().to_string())
+            match save_to_fs(path, contents) {
+                Ok(_) => Ok(path_key),
+                Err(err) => Err(err),
             }
-            None => Err(UbiquityError::no_save_path_selected()),
+        }
+        _ => {
+            let mut dir = PathBuf::from("/");
+            if let Some(docs_dir) = dirs::document_dir() {
+                dir = docs_dir;
+            }
+            let file_dialog = FileDialog::new().set_directory(dir).save_file();
+
+            match file_dialog {
+                Some(file_handle) => {
+                    fs::write(file_handle.clone(), contents)?;
+                    Ok(file_handle.to_str().unwrap().to_string())
+                }
+                None => Err(UbiquityError::no_save_path_selected()),
+            }
         }
     }
 }

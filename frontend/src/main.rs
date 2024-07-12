@@ -1,9 +1,7 @@
-#![feature(let_chains)]
-
-pub mod pages;
+pub mod components;
 pub mod contexts;
 pub mod icons;
-pub mod components;
+pub mod pages;
 pub mod tauri;
 
 use contexts::config::ConfigProvider;

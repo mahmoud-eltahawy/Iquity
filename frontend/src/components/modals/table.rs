@@ -121,12 +121,12 @@ pub fn table_modal() -> Html {
                 .dyn_into()
                 .unwrap();
 
-            if !col_textbox.value().is_empty()
-                && let Ok(cols) = col_textbox.value().parse::<i8>()
-            {
-                let mut new_columns_state = columns_state.to_vec();
-                new_columns_state.resize(cols as usize, Column::from(Alignment::Center));
-                columns_state.set(new_columns_state);
+            if let Ok(cols) = col_textbox.value().parse::<i8>() {
+                if !col_textbox.value().is_empty() {
+                    let mut new_columns_state = columns_state.to_vec();
+                    new_columns_state.resize(cols as usize, Column::from(Alignment::Center));
+                    columns_state.set(new_columns_state);
+                }
             }
         }
     });
@@ -141,10 +141,10 @@ pub fn table_modal() -> Html {
                 .dyn_into()
                 .unwrap();
 
-            if !row_textbox.value().is_empty()
-                && let Ok(rows) = row_textbox.value().parse::<u32>()
-            {
-                row_amount.set(rows);
+            if let Ok(rows) = row_textbox.value().parse::<u32>() {
+                if !row_textbox.value().is_empty() {
+                    row_amount.set(rows);
+                }
             }
         }
     });

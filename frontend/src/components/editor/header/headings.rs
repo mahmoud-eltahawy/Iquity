@@ -22,9 +22,10 @@ pub fn headings_dropdown(props: &HeaderBtnProps) -> Html {
             .unwrap();
         let mut current_value = text_area.value();
 
-        if let Some(start) = text_area.selection_start().unwrap()
-            && let Some(end) = text_area.selection_end().unwrap()
-        {
+        if let (Some(start), Some(end)) = (
+            text_area.selection_start().unwrap(),
+            text_area.selection_end().unwrap(),
+        ) {
             let start_usize = start as usize;
             let _end_usize = end as usize;
 
@@ -51,9 +52,10 @@ pub fn headings_dropdown(props: &HeaderBtnProps) -> Html {
             .unwrap();
         let mut current_value = text_area.value();
 
-        if let Some(start) = text_area.selection_start().unwrap()
-            && let Some(end) = text_area.selection_end().unwrap()
-        {
+        if let (Some(start), Some(end)) = (
+            text_area.selection_start().unwrap(),
+            text_area.selection_end().unwrap(),
+        ) {
             let start_usize = start as usize;
             let _end_usize = end as usize;
 
@@ -82,9 +84,10 @@ pub fn headings_dropdown(props: &HeaderBtnProps) -> Html {
             .unwrap();
         let mut current_value = text_area.value();
 
-        if let Some(start) = text_area.selection_start().unwrap()
-            && let Some(end) = text_area.selection_end().unwrap()
-        {
+        if let (Some(start), Some(end)) = (
+            text_area.selection_start().unwrap(),
+            text_area.selection_end().unwrap(),
+        ) {
             let start_usize = start as usize;
             let _end_usize = end as usize;
 
@@ -113,9 +116,10 @@ pub fn headings_dropdown(props: &HeaderBtnProps) -> Html {
             .unwrap();
         let mut current_value = text_area.value();
 
-        if let Some(start) = text_area.selection_start().unwrap()
-            && let Some(end) = text_area.selection_end().unwrap()
-        {
+        if let (Some(start), Some(end)) = (
+            text_area.selection_start().unwrap(),
+            text_area.selection_end().unwrap(),
+        ) {
             let start_usize = start as usize;
             let _end_usize = end as usize;
 
@@ -144,9 +148,10 @@ pub fn headings_dropdown(props: &HeaderBtnProps) -> Html {
             .unwrap();
         let mut current_value = text_area.value();
 
-        if let Some(start) = text_area.selection_start().unwrap()
-            && let Some(end) = text_area.selection_end().unwrap()
-        {
+        if let (Some(start), Some(end)) = (
+            text_area.selection_start().unwrap(),
+            text_area.selection_end().unwrap(),
+        ) {
             let start_usize = start as usize;
             let _end_usize = end as usize;
 
@@ -175,9 +180,10 @@ pub fn headings_dropdown(props: &HeaderBtnProps) -> Html {
             .unwrap();
         let mut current_value = text_area.value();
 
-        if let Some(start) = text_area.selection_start().unwrap()
-            && let Some(end) = text_area.selection_end().unwrap()
-        {
+        if let (Some(start), Some(end)) = (
+            text_area.selection_start().unwrap(),
+            text_area.selection_end().unwrap(),
+        ) {
             let start_usize = start as usize;
             let _end_usize = end as usize;
 
