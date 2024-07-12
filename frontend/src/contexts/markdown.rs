@@ -1,38 +1,38 @@
-use std::collections::HashMap;
-use std::ops::Deref;
 use error::UbiquityError;
-use md::{DOCS_STR, DOCS_KEY};
-use serde::Deserialize;
-use serde_json::Value;
-use yew::prelude::*;
 use gloo::storage::LocalStorage;
 use gloo::storage::Storage;
+use md::{DOCS_KEY, DOCS_STR};
+use serde::Deserialize;
+use serde_json::Value;
+use std::collections::HashMap;
+use std::ops::Deref;
+use yew::prelude::*;
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct Markdown {
     pub text: AttrValue,
-    pub key: Option<AttrValue>
+    pub key: Option<AttrValue>,
 }
 
 impl Default for Markdown {
     fn default() -> Self {
         let text = AttrValue::from(DOCS_STR);
         let key = Some(AttrValue::from(DOCS_KEY));
-        Self { text, key }    
+        Self { text, key }
     }
 }
 
-impl Markdown {    
+impl Markdown {
     pub fn from(text: AttrValue, key: Option<AttrValue>) -> Self {
         Self { text, key }
     }
 
     pub fn current(&self) -> &Self {
-        &self
+        self
     }
 
     pub fn read_all_markdown_keys() -> Vec<AttrValue> {
-        let storage_vec: HashMap<String, Value>  = LocalStorage::get_all().unwrap();
+        let storage_vec: HashMap<String, Value> = LocalStorage::get_all().unwrap();
         let mut markdown_keys_vec: Vec<AttrValue> = Vec::new();
         storage_vec.iter().for_each(|storage_item| {
             if !storage_item.0.eq("config") && !storage_item.0.eq("ubiquity_about.md") {
@@ -54,10 +54,8 @@ impl Markdown {
 
     pub fn load_latest_from_storage() -> Option<Markdown> {
         let vec = Self::read_all_markdown_keys();
-        match vec.last() {
-            Some(key) => Some(Markdown::load_from_storage(key.clone())),
-            None => None,
-        }
+        vec.last()
+            .map(|key| Markdown::load_from_storage(key.clone()))
     }
 
     pub fn save_to_browser_storage(&self) -> Result<(), UbiquityError> {
@@ -92,12 +90,11 @@ impl MarkdownContext {
         Ok(())
     }
 
-
     pub fn update_key(&self, key: AttrValue) {
         let text = self.text.clone();
         let key = Some(key);
         let new_md = Markdown::from(text, key);
-        
+
         self.inner.remove_from_browser_storage();
         self.inner.set(new_md);
     }
@@ -129,7 +126,7 @@ impl PartialEq for MarkdownContext {
 
 #[derive(Debug, Clone)]
 pub(crate) struct MarkdownContext {
-   inner: UseStateHandle<Markdown>,
+    inner: UseStateHandle<Markdown>,
 }
 
 #[derive(Debug, PartialEq, Properties)]
@@ -140,7 +137,7 @@ pub(crate) struct MarkdownProviderProps {
 #[function_component]
 pub(crate) fn MarkdownProvider(props: &MarkdownProviderProps) -> Html {
     let markdown = Markdown::load_latest_from_storage().unwrap_or_default();
- 
+
     let markdown_state = use_state(|| markdown);
     let markdown_context = MarkdownContext::new(markdown_state);
 

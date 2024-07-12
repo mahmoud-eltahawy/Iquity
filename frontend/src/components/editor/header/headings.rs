@@ -1,10 +1,12 @@
-use web_sys::HtmlTextAreaElement;
-use yew::prelude::*;
+use crate::contexts::markdown::{use_markdown, Markdown};
+use crate::contexts::toasts::{err_modal, use_toaster};
+use crate::icons::{
+    Heading1Icon, Heading2Icon, Heading3Icon, Heading4Icon, Heading5Icon, Heading6Icon, HeadingIcon,
+};
 use gloo::utils::document;
 use wasm_bindgen::JsCast;
-use crate::contexts::markdown::{use_markdown, Markdown};
-use crate::contexts::toasts::{use_toaster, err_modal};
-use crate::icons::{HeadingIcon, Heading1Icon, Heading2Icon, Heading3Icon, Heading4Icon, Heading5Icon, Heading6Icon};
+use web_sys::HtmlTextAreaElement;
+use yew::prelude::*;
 
 use super::header::HeaderBtnProps;
 
@@ -13,33 +15,45 @@ pub fn headings_dropdown(props: &HeaderBtnProps) -> Html {
     let md_state = use_markdown();
     let toaster = use_toaster();
     let heading_1 = Callback::from(move |_mouse_event: MouseEvent| {
-        let text_area: HtmlTextAreaElement = document().get_element_by_id("editor").unwrap().dyn_into().unwrap();
+        let text_area: HtmlTextAreaElement = document()
+            .get_element_by_id("editor")
+            .unwrap()
+            .dyn_into()
+            .unwrap();
         let mut current_value = text_area.value();
 
-        if let Some(start) = text_area.selection_start().unwrap() &&
-        let Some(end) = text_area.selection_end().unwrap() {
+        if let Some(start) = text_area.selection_start().unwrap()
+            && let Some(end) = text_area.selection_end().unwrap()
+        {
             let start_usize = start as usize;
             let _end_usize = end as usize;
 
             current_value.insert_str(start_usize, "# ");
             text_area.set_selection_end(Some(start + 2)).unwrap();
         } else {
-            current_value.push_str("#");
+            current_value.push('#');
             text_area.set_selection_end(Some(2)).unwrap();
         }
         let key = md_state.state().key;
         let md = Markdown::from(AttrValue::from(current_value), key);
-        md_state.update_markdown(md).unwrap_or_else(|err| err_modal(err, toaster.clone()));
+        md_state
+            .update_markdown(md)
+            .unwrap_or_else(|err| err_modal(err, toaster.clone()));
     });
 
     let md_state = use_markdown();
     let toaster = use_toaster();
     let heading_2 = Callback::from(move |_mouse_event: MouseEvent| {
-        let text_area: HtmlTextAreaElement = document().get_element_by_id("editor").unwrap().dyn_into().unwrap();
+        let text_area: HtmlTextAreaElement = document()
+            .get_element_by_id("editor")
+            .unwrap()
+            .dyn_into()
+            .unwrap();
         let mut current_value = text_area.value();
 
-        if let Some(start) = text_area.selection_start().unwrap() &&
-        let Some(end) = text_area.selection_end().unwrap() {
+        if let Some(start) = text_area.selection_start().unwrap()
+            && let Some(end) = text_area.selection_end().unwrap()
+        {
             let start_usize = start as usize;
             let _end_usize = end as usize;
 
@@ -47,26 +61,33 @@ pub fn headings_dropdown(props: &HeaderBtnProps) -> Html {
             text_area.set_value(&current_value);
             text_area.set_selection_end(Some(start + 3)).unwrap();
         } else {
-            current_value.push_str("#");
+            current_value.push('#');
             text_area.set_value(&current_value);
             text_area.set_selection_end(Some(3)).unwrap();
         }
         let key = md_state.state().key;
         let md = Markdown::from(AttrValue::from(current_value), key);
-        md_state.update_markdown(md).unwrap_or_else(|err| err_modal(err, toaster.clone()));
+        md_state
+            .update_markdown(md)
+            .unwrap_or_else(|err| err_modal(err, toaster.clone()));
     });
 
     let md_state = use_markdown();
     let toaster = use_toaster();
     let heading_3 = Callback::from(move |_mouse_event: MouseEvent| {
-        let text_area: HtmlTextAreaElement = document().get_element_by_id("editor").unwrap().dyn_into().unwrap();
+        let text_area: HtmlTextAreaElement = document()
+            .get_element_by_id("editor")
+            .unwrap()
+            .dyn_into()
+            .unwrap();
         let mut current_value = text_area.value();
 
-        if let Some(start) = text_area.selection_start().unwrap() &&
-        let Some(end) = text_area.selection_end().unwrap() {
+        if let Some(start) = text_area.selection_start().unwrap()
+            && let Some(end) = text_area.selection_end().unwrap()
+        {
             let start_usize = start as usize;
             let _end_usize = end as usize;
-            
+
             current_value.insert_str(start_usize, "### ");
             text_area.set_value(&current_value);
             text_area.set_selection_end(Some(start + 4)).unwrap();
@@ -77,17 +98,24 @@ pub fn headings_dropdown(props: &HeaderBtnProps) -> Html {
         }
         let key = md_state.state().key;
         let md = Markdown::from(AttrValue::from(current_value), key);
-        md_state.update_markdown(md).unwrap_or_else(|err| err_modal(err, toaster.clone()));
+        md_state
+            .update_markdown(md)
+            .unwrap_or_else(|err| err_modal(err, toaster.clone()));
     });
 
     let md_state = use_markdown();
     let toaster = use_toaster();
     let heading_4 = Callback::from(move |_mouse_event: MouseEvent| {
-        let text_area: HtmlTextAreaElement = document().get_element_by_id("editor").unwrap().dyn_into().unwrap();
+        let text_area: HtmlTextAreaElement = document()
+            .get_element_by_id("editor")
+            .unwrap()
+            .dyn_into()
+            .unwrap();
         let mut current_value = text_area.value();
 
-        if let Some(start) = text_area.selection_start().unwrap() &&
-        let Some(end) = text_area.selection_end().unwrap() {
+        if let Some(start) = text_area.selection_start().unwrap()
+            && let Some(end) = text_area.selection_end().unwrap()
+        {
             let start_usize = start as usize;
             let _end_usize = end as usize;
 
@@ -101,17 +129,24 @@ pub fn headings_dropdown(props: &HeaderBtnProps) -> Html {
         }
         let key = md_state.state().key;
         let md = Markdown::from(AttrValue::from(current_value), key);
-        md_state.update_markdown(md).unwrap_or_else(|err| err_modal(err, toaster.clone()));
+        md_state
+            .update_markdown(md)
+            .unwrap_or_else(|err| err_modal(err, toaster.clone()));
     });
 
     let md_state = use_markdown();
     let toaster = use_toaster();
     let heading_5 = Callback::from(move |_mouse_event: MouseEvent| {
-        let text_area: HtmlTextAreaElement = document().get_element_by_id("editor").unwrap().dyn_into().unwrap();
+        let text_area: HtmlTextAreaElement = document()
+            .get_element_by_id("editor")
+            .unwrap()
+            .dyn_into()
+            .unwrap();
         let mut current_value = text_area.value();
 
-        if let Some(start) = text_area.selection_start().unwrap() &&
-        let Some(end) = text_area.selection_end().unwrap() {
+        if let Some(start) = text_area.selection_start().unwrap()
+            && let Some(end) = text_area.selection_end().unwrap()
+        {
             let start_usize = start as usize;
             let _end_usize = end as usize;
 
@@ -125,17 +160,24 @@ pub fn headings_dropdown(props: &HeaderBtnProps) -> Html {
         }
         let key = md_state.state().key;
         let md = Markdown::from(AttrValue::from(current_value), key);
-        md_state.update_markdown(md).unwrap_or_else(|err| err_modal(err, toaster.clone()));
+        md_state
+            .update_markdown(md)
+            .unwrap_or_else(|err| err_modal(err, toaster.clone()));
     });
 
     let md_state = use_markdown();
     let toaster = use_toaster();
     let heading_6 = Callback::from(move |_mouse_event: MouseEvent| {
-        let text_area: HtmlTextAreaElement = document().get_element_by_id("editor").unwrap().dyn_into().unwrap();
+        let text_area: HtmlTextAreaElement = document()
+            .get_element_by_id("editor")
+            .unwrap()
+            .dyn_into()
+            .unwrap();
         let mut current_value = text_area.value();
 
-        if let Some(start) = text_area.selection_start().unwrap() &&
-        let Some(end) = text_area.selection_end().unwrap() {
+        if let Some(start) = text_area.selection_start().unwrap()
+            && let Some(end) = text_area.selection_end().unwrap()
+        {
             let start_usize = start as usize;
             let _end_usize = end as usize;
 
@@ -149,9 +191,11 @@ pub fn headings_dropdown(props: &HeaderBtnProps) -> Html {
         }
         let key = md_state.state().key;
         let md = Markdown::from(AttrValue::from(current_value), key);
-        md_state.update_markdown(md).unwrap_or_else(|err| err_modal(err, toaster.clone()));
+        md_state
+            .update_markdown(md)
+            .unwrap_or_else(|err| err_modal(err, toaster.clone()));
     });
-    
+
     html! {
         <div class="dropdown">
             <label tabindex="0" class={props.btn_classes}>

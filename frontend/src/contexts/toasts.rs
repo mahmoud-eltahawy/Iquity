@@ -1,11 +1,11 @@
 use error::UbiquityError;
 use gloo::utils::document;
+use std::ops::Deref;
 use wasm_bindgen::JsCast;
 use web_sys::HtmlDivElement;
 use yew::prelude::*;
-use std::ops::Deref;
 
-use crate::components::toasts::{TOASTER_ID, ToastProps};
+use crate::components::toasts::{ToastProps, TOASTER_ID};
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct Toast {
@@ -14,11 +14,19 @@ pub struct Toast {
 
 impl From<UbiquityError> for Toast {
     fn from(error: UbiquityError) -> Self {
-        let toast_id= error.title.clone();
+        let toast_id = error.title.clone();
 
         let close = Callback::from(move |_| {
-            let toaster: HtmlDivElement = document().get_element_by_id(TOASTER_ID).unwrap().dyn_into().unwrap();
-            let toast: HtmlDivElement = document().get_element_by_id(&toast_id).unwrap().dyn_into().unwrap();
+            let toaster: HtmlDivElement = document()
+                .get_element_by_id(TOASTER_ID)
+                .unwrap()
+                .dyn_into()
+                .unwrap();
+            let toast: HtmlDivElement = document()
+                .get_element_by_id(&toast_id)
+                .unwrap()
+                .dyn_into()
+                .unwrap();
             toaster.remove_child(&toast).unwrap();
         });
 
@@ -58,9 +66,6 @@ impl From<UbiquityError> for Toast {
     }
 }
 
-
-
-
 // pub fn add_toast(toast: Toast)  {
 //     let toaster: HtmlDivElement = document().get_element_by_id(TOASTER_ID).unwrap().dyn_into().unwrap();
 //     let toast: HtmlDivElement = document().get_element_by_id(&toast_id).unwrap().dyn_into().unwrap();
@@ -73,15 +78,14 @@ impl From<UbiquityError> for Toast {
 //     toaster.remove_child(&toast);
 // }
 
-
 #[derive(Default, PartialEq, Clone)]
 pub struct Toaster {
-    pub toasts: Vec<ToastProps>
+    pub toasts: Vec<ToastProps>,
 }
 
 impl Toaster {
     pub fn current(&self) -> &Self {
-        &self
+        self
     }
 
     pub fn from(toasts: Vec<ToastProps>) -> Self {
@@ -91,7 +95,7 @@ impl Toaster {
 
 #[derive(Clone)]
 pub struct ToasterContext {
-   inner: UseStateHandle<Toaster>,
+    inner: UseStateHandle<Toaster>,
 }
 
 impl ToasterContext {
@@ -110,7 +114,10 @@ impl ToasterContext {
     pub fn remove_toast(&self, toast: ToastProps) {
         let old_toaster = self.toasts.clone();
         let mut new_toaster = old_toaster.clone();
-        let toast = new_toaster.iter().position(|popped_toast| popped_toast.to_owned() == toast).unwrap();
+        let toast = new_toaster
+            .iter()
+            .position(|popped_toast| *popped_toast == toast)
+            .unwrap();
         new_toaster.remove(toast);
         self.inner.set(Toaster::from(new_toaster));
     }
@@ -158,7 +165,11 @@ pub(crate) fn use_toaster() -> ToasterContext {
 }
 
 pub fn err_modal(err: UbiquityError, toaster_ctx: ToasterContext) {
-    gloo::console::debug!("Err Title: {}/nErr description", &err.title, &err.human_description);
+    gloo::console::debug!(
+        "Err Title: {}/nErr description",
+        &err.title,
+        &err.human_description
+    );
     let toast_props = ToastProps::from(err);
     toaster_ctx.add_toast(toast_props);
 }

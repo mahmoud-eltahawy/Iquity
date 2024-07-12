@@ -1,9 +1,8 @@
 /// UI Icons from https://lucide.dev
-
 use yew::prelude::*;
 
-pub static RESPONSIVE_ICON_LG: &'static str = "h-5 w-5 lg:h-6 lg:w-6 2xl:h-7 2xl:w-7";
-pub static RESPONSIVE_ICON: &'static str = "h-4 w-4 lg:h-5 lg:w-5 2xl:h-6 2xl:w-6";
+pub static RESPONSIVE_ICON_LG: &str = "h-5 w-5 lg:h-6 lg:w-6 2xl:h-7 2xl:w-7";
+pub static RESPONSIVE_ICON: &str = "h-4 w-4 lg:h-5 lg:w-5 2xl:h-6 2xl:w-6";
 
 const STROKE: AttrValue = AttrValue::Static("currentColor");
 const STROKE_WIDTH: AttrValue = AttrValue::Static("1.5");
@@ -13,14 +12,14 @@ const LCAP: AttrValue = AttrValue::Static("round");
 const LJOIN: AttrValue = AttrValue::Static("round");
 
 #[derive(Debug, PartialEq, Properties)]
-pub struct SvgProps {    
+pub struct SvgProps {
     #[prop_or(RESPONSIVE_ICON)]
     pub classes: &'static str,
-    pub children: Children
+    pub children: Children,
 }
 
 #[derive(Debug, PartialEq, Properties)]
-pub struct IconProps {    
+pub struct IconProps {
     #[prop_or(RESPONSIVE_ICON)]
     pub classes: &'static str,
 }
@@ -28,13 +27,13 @@ pub struct IconProps {
 #[function_component(Svg)]
 pub fn svg(props: &SvgProps) -> Html {
     html! {
-        <svg 
+        <svg
             class={props.classes}
-            viewBox={BOX} 
-            fill={FILL} 
-            stroke={STROKE} 
+            viewBox={BOX}
+            fill={FILL}
+            stroke={STROKE}
             stroke-width={STROKE_WIDTH}
-            stroke-linecap={LCAP} 
+            stroke-linecap={LCAP}
             stroke-linejoin={LJOIN}>
             { props.children.clone() }
         </svg>
@@ -447,8 +446,8 @@ pub fn monero_qr() -> Html {
     }
 }
 
- #[function_component(BitcoinQr)]
- pub fn bitcoin_qr() -> Html {
+#[function_component(BitcoinQr)]
+pub fn bitcoin_qr() -> Html {
     // (https://fukuchi.org/works/qrencode/index.html)
 
     html! {
@@ -461,4 +460,4 @@ pub fn monero_qr() -> Html {
             </g>
         </svg>
     }
- }
+}

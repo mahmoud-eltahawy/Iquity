@@ -2,16 +2,15 @@ use std::io;
 use thiserror::Error;
 
 #[derive(Error, Debug)]
-pub enum ConfigError {    
+pub enum ConfigError {
     #[error(transparent)]
-    IoError(#[from] io::Error),
+    Io(#[from] io::Error),
 
     // #[error("Error deserialising RON to string.")]
     // RonToStringError(#[from] ron::de::Error),
-
     #[error("Error deserialising RON to string.")]
-    RonToStringError(#[from] ron::de::SpannedError),
+    RonToString(#[from] ron::de::SpannedError),
 
     #[error("An error occured with RON.")]
-    RonError(#[from] ron::Error)
+    Ron(#[from] ron::Error),
 }

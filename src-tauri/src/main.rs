@@ -71,7 +71,7 @@ fn read_file(path: String) -> Result<String, UbiquityError> {
 }
 
 fn read_from_fs(path: PathBuf) -> Result<String, UbiquityError> {
-    Ok(fs::read_to_string(PathBuf::from(path))?)
+    Ok(fs::read_to_string(path)?)
 }
 
 fn save_to_fs(path: PathBuf, contents: String) -> Result<(), UbiquityError> {

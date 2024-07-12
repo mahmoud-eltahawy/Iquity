@@ -2,7 +2,7 @@ use tokenize::Token;
 
 /// Represents an AST type
 #[derive(Debug, Clone, PartialEq)]
-pub enum AST {
+pub enum Ast {
     Column(usize),
     Row(usize),
     Position(char),
@@ -14,12 +14,12 @@ pub enum AST {
 #[derive(Debug, Clone, PartialEq)]
 pub struct Node {
     pub children: Vec<Node>,
-    pub item: AST,
+    pub item: Ast,
 }
 
 impl Node {
     /// Create a new `Node` using a given item
-    pub fn new(item: AST) -> Node {
+    pub fn new(item: Ast) -> Node {
         Node {
             children: Vec::new(),
             item,
@@ -65,7 +65,7 @@ fn parse_table(tokens: &mut Vec<Token>) -> Result<Node, String> {
     let cross_node = parse_cross(tokens)?;
     let rows_node = parse_rows(tokens)?;
 
-    let mut table_node = Node::new(AST::Table);
+    let mut table_node = Node::new(Ast::Table);
 
     table_node.add_children(&[columns_node, cross_node, rows_node]);
 
@@ -76,24 +76,20 @@ fn parse_columns(tokens: &mut Vec<Token>) -> Result<Node, String> {
     let tok = tokens.pop();
 
     fn is_position(tok: &Token) -> bool {
-        if let Token::Position(_) = tok {
-            true
-        } else {
-            false
-        }
+        matches!(tok, Token::Position(_))
     }
 
     if let Some(Token::Num(n)) = tok {
-        let mut columns_node = Node::new(AST::Column(n));
+        let mut columns_node = Node::new(Ast::Column(n));
 
         while tokens.last().map_or(false, is_position) {
             if let Some(Token::Position(p)) = tokens.pop() {
-                let position_node = Node::new(AST::Position(p));
+                let position_node = Node::new(Ast::Position(p));
                 columns_node.add_children(&[position_node]);
             }
         }
 
-        if columns_node.children.len() > n as usize {
+        if columns_node.children.len() > n {
             Err("Number of positions exceed number of columns".to_string())
         } else {
             Ok(columns_node)
@@ -107,7 +103,7 @@ fn parse_cross(tokens: &mut Vec<Token>) -> Result<Node, String> {
     let tok = tokens.pop();
 
     if let Some(Token::Cross) = tok {
-        Ok(Node::new(AST::Cross))
+        Ok(Node::new(Ast::Cross))
     } else {
         Err("Expected 'x'".to_string())
     }
@@ -117,7 +113,7 @@ fn parse_rows(tokens: &mut Vec<Token>) -> Result<Node, String> {
     let tok = tokens.pop();
 
     if let Some(Token::Num(n)) = tok {
-        Ok(Node::new(AST::Row(n)))
+        Ok(Node::new(Ast::Row(n)))
     } else {
         Err("Expected a row number".to_string())
     }
@@ -131,10 +127,10 @@ mod tests {
     fn test_simple_table() {
         let tokens = vec![Token::Num(3), Token::Cross, Token::Num(5)];
 
-        let mut table_node = Node::new(AST::Table);
-        let column_node = Node::new(AST::Column(3));
-        let cross_node = Node::new(AST::Cross);
-        let row_node = Node::new(AST::Row(5));
+        let mut table_node = Node::new(Ast::Table);
+        let column_node = Node::new(Ast::Column(3));
+        let cross_node = Node::new(Ast::Cross);
+        let row_node = Node::new(Ast::Row(5));
 
         table_node.add_children(&[column_node, cross_node, row_node]);
 
@@ -152,14 +148,14 @@ mod tests {
             Token::Num(2),
         ];
 
-        let mut table_node = Node::new(AST::Table);
-        let mut column_node = Node::new(AST::Column(6));
-        let cross_node = Node::new(AST::Cross);
-        let row_node = Node::new(AST::Row(2));
+        let mut table_node = Node::new(Ast::Table);
+        let mut column_node = Node::new(Ast::Column(6));
+        let cross_node = Node::new(Ast::Cross);
+        let row_node = Node::new(Ast::Row(2));
 
-        let left_position_node = Node::new(AST::Position('l'));
-        let center_position_node = Node::new(AST::Position('c'));
-        let right_position_node = Node::new(AST::Position('r'));
+        let left_position_node = Node::new(Ast::Position('l'));
+        let center_position_node = Node::new(Ast::Position('c'));
+        let right_position_node = Node::new(Ast::Position('r'));
 
         column_node.add_children(&[
             left_position_node,

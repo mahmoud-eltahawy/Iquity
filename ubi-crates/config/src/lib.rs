@@ -1,9 +1,9 @@
-use dirs::{config_dir, data_dir};
 use ::error::UbiquityError;
+use dirs::{config_dir, data_dir};
 use ron::ser::PrettyConfig;
 
-use std::fs;
 use serde::{Deserialize, Serialize};
+use std::fs;
 use std::path::PathBuf;
 
 mod error;
@@ -15,7 +15,7 @@ pub struct Config {
     pub md_preview_font_size: String,
     pub mobile_ui: bool,
     pub data_path: Option<PathBuf>,
-    pub view: View
+    pub view: View,
 }
 
 impl Default for Config {
@@ -31,13 +31,11 @@ impl Default for Config {
     }
 }
 
-
-
 #[derive(Clone, Deserialize, Serialize, Debug, PartialEq)]
 pub enum View {
     Dual,
     Input,
-    Preview
+    Preview,
 }
 
 impl Config {
@@ -59,8 +57,8 @@ impl Config {
         Ok(())
     }
 
-    pub fn from_str(ron_str: &str) -> Result<Self, UbiquityError> {
-        let config: Config = ron::from_str(&ron_str)?;
+    pub fn from_ron_str(ron_str: &str) -> Result<Self, UbiquityError> {
+        let config: Config = ron::from_str(ron_str)?;
         Ok(config)
     }
 
@@ -82,7 +80,7 @@ impl Config {
     }
 
     pub fn current(&self) -> &Self {
-        &self
+        self
     }
 }
 
@@ -105,8 +103,8 @@ pub fn get_config_file() -> Result<PathBuf, UbiquityError> {
     match path.exists() {
         true => Ok(path),
         false => {
-             fs::write(path.clone(), "")?;
-             Ok(path)
+            fs::write(path.clone(), "")?;
+            Ok(path)
         }
     }
 }
@@ -117,7 +115,7 @@ pub fn get_config_folder() -> Result<PathBuf, UbiquityError> {
             path.push("ubiquity/");
             fs::create_dir(&path)?;
             Ok(path)
-        },
+        }
         None => Err(UbiquityError::no_config_folder()),
     }
 }

@@ -9,21 +9,16 @@ pub struct TooltipProps {
     #[prop_or_default]
     pub onclick: Callback<MouseEvent>,
     #[prop_or_default]
-    pub position: TooltipPosition
+    pub position: TooltipPosition,
 }
 
-#[derive(PartialEq, Clone, Copy)]
+#[derive(PartialEq, Default, Clone, Copy)]
 pub enum TooltipPosition {
     Top,
+    #[default]
     Bottom,
     Left,
-    Right
-}
-
-impl Default for TooltipPosition {
-    fn default() -> Self {
-        TooltipPosition::Bottom
-    }
+    Right,
 }
 
 #[function_component(Tooltip)]

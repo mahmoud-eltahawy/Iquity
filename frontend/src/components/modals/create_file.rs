@@ -1,16 +1,17 @@
 use crate::components::modals::utils::close_modal;
-use yew::prelude::*;
-use crate::contexts::{markdown::{use_markdown, Markdown}, toasts::{use_toaster, err_modal}};
-use web_sys::HtmlInputElement;
+use crate::contexts::{
+    markdown::{use_markdown, Markdown},
+    toasts::{err_modal, use_toaster},
+};
 use gloo::utils::document;
 use wasm_bindgen::JsCast;
-
+use web_sys::HtmlInputElement;
+use yew::prelude::*;
 
 pub const CREATE_FILE_MODAL_ID: AttrValue = AttrValue::Static("create_file_modal");
 
-const NAME_TEXTBOX_ID: AttrValue = AttrValue::Static("create_file_name_input"); 
+const NAME_TEXTBOX_ID: AttrValue = AttrValue::Static("create_file_name_input");
 const PLACEHOLDER_NAME: AttrValue = AttrValue::Static("superdupercoolfile.md");
-
 
 #[function_component(CreateFileModal)]
 pub fn create_file_modal() -> Html {
@@ -18,13 +19,21 @@ pub fn create_file_modal() -> Html {
     let toaster = use_toaster();
 
     let create = Callback::from(move |_| {
-        let input: HtmlInputElement = document().get_element_by_id(&NAME_TEXTBOX_ID).unwrap().dyn_into().unwrap();
-        if input.value().len() > 0 {
+        let input: HtmlInputElement = document()
+            .get_element_by_id(&NAME_TEXTBOX_ID)
+            .unwrap()
+            .dyn_into()
+            .unwrap();
+        if !input.value().is_empty() {
             let text = AttrValue::from("");
             let key = Some(AttrValue::from(input.value()));
             let markdown = Markdown::from(text, key);
-            markdown_ctx.add_markdown(markdown.clone()).unwrap_or_else(|err| err_modal(err, toaster.clone()));
-            markdown_ctx.set_markdown(markdown).unwrap_or_else(|err| err_modal(err, toaster.clone()));
+            markdown_ctx
+                .add_markdown(markdown.clone())
+                .unwrap_or_else(|err| err_modal(err, toaster.clone()));
+            markdown_ctx
+                .set_markdown(markdown)
+                .unwrap_or_else(|err| err_modal(err, toaster.clone()));
         }
         close_modal(&CREATE_FILE_MODAL_ID);
     });

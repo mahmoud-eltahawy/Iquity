@@ -8,7 +8,7 @@ use std::ops::Deref;
 use web_sys::Navigator;
 use yew::prelude::*;
 
-static CONFIG_STORAGE_KEY: &'static str = "config";
+static CONFIG_STORAGE_KEY: &str = "config";
 
 #[derive(Debug, Clone, PartialEq)]
 pub(crate) struct ConfigContext {
@@ -45,7 +45,7 @@ impl ConfigContext {
 
     pub fn load_from_storage() -> Result<Config, UbiquityError> {
         let ron_str: String = LocalStorage::get(CONFIG_STORAGE_KEY)?;
-        let config: Config = Config::from_str(&ron_str)?;
+        let config: Config = Config::from_ron_str(&ron_str)?;
         Ok(config)
     }
 
@@ -193,7 +193,7 @@ pub(crate) fn use_config() -> ConfigContext {
     use_context::<ConfigContext>().unwrap()
 }
 
-pub const THEMES: &'static [&'static str] = &[
+pub const THEMES: &[&str] = &[
     "light",
     "dark",
     "cupcake",

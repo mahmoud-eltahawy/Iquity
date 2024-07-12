@@ -38,12 +38,7 @@ pub fn table_modal() -> Html {
                 columns_alignment_string.push(alignment);
             });
 
-            format!(
-                "{}{} x {}",
-                deps.0,
-                columns_alignment_string,
-                deps.1.to_string()
-            )
+            format!("{}{} x {}", deps.0, columns_alignment_string, *deps.1)
         },
         (col_amount, row_amount.clone(), columns_state.clone()),
     );
@@ -114,7 +109,7 @@ pub fn table_modal() -> Html {
         };
 
         col_alignment_html.push(html);
-        i = i + 1;
+        i += 1;
     }
 
     let on_col_amount_change = Callback::from({

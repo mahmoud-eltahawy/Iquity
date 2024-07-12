@@ -3,16 +3,16 @@ use serde::{Deserialize, Serialize};
 #[derive(Deserialize, Serialize)]
 pub struct MarkdownFile {
     pub path: Option<String>,
-    pub contents: String
+    pub contents: String,
 }
 
 #[derive(Deserialize, Serialize)]
 pub struct MarkdownPath {
-    pub path: String
+    pub path: String,
 }
 
-pub const DOCS_KEY: &'static str = "ubiquity_about.md";
-pub const DOCS_STR: &'static str = r#"# Ubiquity
+pub const DOCS_KEY: &str = "ubiquity_about.md";
+pub const DOCS_STR: &str = r#"# Ubiquity
 
 Ubiquity is a free and [open-source](https://github.com/opensourcecheemsburgers/ubiquity) markdown editor.
 
