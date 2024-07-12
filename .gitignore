@@ -1,6 +1,5 @@
 target/
 *.iml
-Cargo.lock
 .vscode/
 target/
 node_modules/
