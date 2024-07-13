@@ -5,43 +5,9 @@
     "frontendDist": "../frontend/dist",
     "devUrl": "http://127.0.0.1:8080"
   },
-  "bundle": {
-    "active": true,
-    "category": "DeveloperTool",
-    "copyright": "",
-    "targets": "all",
-    "externalBin": [],
-    "icon": [
-      "icons/32x32.png",
-      "icons/128x128.png",
-      "icons/128x128@2x.png",
-      "icons/icon.icns",
-      "icons/icon.ico"
-    ],
-    "windows": {
-      "certificateThumbprint": null,
-      "digestAlgorithm": "sha256",
-      "timestampUrl": ""
-    },
-    "longDescription": "",
-    "macOS": {
-      "entitlements": null,
-      "exceptionDomain": "",
-      "frameworks": [],
-      "providerShortName": null,
-      "signingIdentity": null
-    },
-    "resources": [],
-    "shortDescription": "",
-    "linux": {
-      "deb": {
-        "depends": []
-      }
-    }
-  },
   "productName": "ubiquity",
   "version": "0.4.0",
-  "identifier": "com.winston69.ubiquity",
+  "identifier": "com.eltahawy.ubiquity",
   "plugins": {},
   "app": {
     "withGlobalTauri": true,
