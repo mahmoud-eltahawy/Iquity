@@ -2,56 +2,50 @@
   "build": {
     "beforeBuildCommand": "cd frontend && bunx tailwindcss -i ./css/input.css -o ./css/output.css --minify && trunk build --release index.desktop.html",
     "beforeDevCommand": "cd frontend && trunk serve --release index.desktop.html",
-    "devPath": "http://127.0.0.1:8080",
-    "distDir": "../frontend/dist",
-    "withGlobalTauri": true
+    "frontendDist": "../frontend/dist",
+    "devUrl": "http://127.0.0.1:8080"
   },
-  "package": {
-    "productName": "ubiquity",
-    "version": "0.4.0"
-  },
-  "tauri": {
-    "allowlist": {
-      "clipboard": {
-        "writeText": true
-      }
+  "bundle": {
+    "active": true,
+    "category": "DeveloperTool",
+    "copyright": "",
+    "targets": "all",
+    "externalBin": [],
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "windows": {
+      "certificateThumbprint": null,
+      "digestAlgorithm": "sha256",
+      "timestampUrl": ""
     },
-    "bundle": {
-      "active": true,
-      "category": "DeveloperTool",
-      "copyright": "",
+    "longDescription": "",
+    "macOS": {
+      "entitlements": null,
+      "exceptionDomain": "",
+      "frameworks": [],
+      "providerShortName": null,
+      "signingIdentity": null
+    },
+    "resources": [],
+    "shortDescription": "",
+    "linux": {
       "deb": {
         "depends": []
-      },
-      "externalBin": [],
-      "icon": [
-        "icons/32x32.png",
-        "icons/128x128.png",
-        "icons/128x128@2x.png",
-        "icons/icon.icns",
-        "icons/icon.ico"
-      ],
-      "identifier": "com.winston69.ubiquity",
-      "longDescription": "",
-      "macOS": {
-        "entitlements": null,
-        "exceptionDomain": "",
-        "frameworks": [],
-        "providerShortName": null,
-        "signingIdentity": null
-      },
-      "resources": [],
-      "shortDescription": "",
-      "targets": "all",
-      "windows": {
-        "certificateThumbprint": null,
-        "digestAlgorithm": "sha256",
-        "timestampUrl": ""
       }
     },
-    "security": {
-      "csp": "default-src blob: data: filesystem: ws: wss: http: https: tauri: 'wasm-unsafe-eval' 'self'; script-src blob: data: filesystem: ws: wss: http: https: tauri: 'wasm-unsafe-eval' 'self'"
-    },
+    "createUpdaterArtifacts": "v1Compatible"
+  },
+  "productName": "ubiquity",
+  "version": "0.4.0",
+  "identifier": "com.winston69.ubiquity",
+  "plugins": {},
+  "app": {
+    "withGlobalTauri": true,
     "windows": [
       {
         "fullscreen": false,
@@ -60,6 +54,9 @@
         "title": "ubiquity",
         "width": 1600
       }
-    ]
+    ],
+    "security": {
+      "csp": "default-src blob: data: filesystem: ws: wss: http: https: tauri: 'wasm-unsafe-eval' 'self'; script-src blob: data: filesystem: ws: wss: http: https: tauri: 'wasm-unsafe-eval' 'self'; connect-src ipc: http://ipc.localhost"
+    }
   }
 }

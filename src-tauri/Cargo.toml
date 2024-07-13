@@ -7,11 +7,11 @@ edition = { workspace = true }
 version = "0.4.0"
 
 [build-dependencies]
-tauri-build = { version = "1.5.3", features = [] }
+tauri-build = { version = "2.0.0-beta", features = [] }
 
 [dependencies.tauri]
-version = "1.7.1"
-features = ["clipboard-write-text"]
+version = "2.0.0-beta"
+features = []
 
 [dependencies]
 serde = { workspace = true }
@@ -23,7 +23,8 @@ config = { workspace = true }
 error = { workspace = true }
 md = { workspace = true }
 
-rfd = "0.10.0"
+rfd = "0.14.1"
+tauri-plugin-clipboard-manager = "2.1.0-beta.6"
 
 [features]
 # by default Tauri runs in production mode
