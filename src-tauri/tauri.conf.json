@@ -1,7 +1,7 @@
 {
   "build": {
-    "beforeBuildCommand": "cd frontend && bunx tailwindcss -i ./css/input.css -o ./css/output.css --minify && trunk build --release index.desktop.html",
-    "beforeDevCommand": "cd frontend && trunk serve --release index.desktop.html",
+    "beforeBuildCommand": "cd frontend && bunx tailwindcss -i ./css/input.css -o ./css/output.css --minify && trunk build --release index.html",
+    "beforeDevCommand": "cd frontend && trunk serve --release index.html",
     "frontendDist": "../frontend/dist",
     "devUrl": "http://127.0.0.1:8080"
   },
