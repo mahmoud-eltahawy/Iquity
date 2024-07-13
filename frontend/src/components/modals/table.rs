@@ -26,6 +26,7 @@ pub fn table_modal() -> Html {
     let row_amount: UseStateHandle<u32> = use_state_eq(|| 1);
 
     let table_input = use_memo(
+        (col_amount, row_amount.clone(), columns_state.clone()),
         |deps| {
             let mut columns_alignment_string = String::from("");
 
@@ -40,24 +41,20 @@ pub fn table_modal() -> Html {
 
             format!("{}{} x {}", deps.0, columns_alignment_string, *deps.1)
         },
-        (col_amount, row_amount.clone(), columns_state.clone()),
     );
 
-    let table = use_memo(
-        |table| {
-            let table_result = mdtg::get_table(table.to_string());
-            if let Ok(table) = table_result {
-                table
-            } else {
-                debug!(
-                    "Error making table: {}",
-                    table_result.unwrap_err().to_string()
-                );
-                "".to_string()
-            }
-        },
-        table_input.clone(),
-    );
+    let table = use_memo(table_input.clone(), |table| {
+        let table_result = mdtg::get_table(table.to_string());
+        if let Ok(table) = table_result {
+            table
+        } else {
+            debug!(
+                "Error making table: {}",
+                table_result.unwrap_err().to_string()
+            );
+            "".to_string()
+        }
+    });
 
     let mut col_alignment_html: Vec<Html> = Vec::new();
 
