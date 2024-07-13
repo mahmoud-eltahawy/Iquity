@@ -37,8 +37,7 @@
       "deb": {
         "depends": []
       }
-    },
-    "createUpdaterArtifacts": "v1Compatible"
+    }
   },
   "productName": "ubiquity",
   "version": "0.4.0",
