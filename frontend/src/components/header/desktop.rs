@@ -24,9 +24,6 @@ pub fn desktop_header() -> Html {
     let nav = use_navigator().unwrap();
     let settings_cb = Callback::from(move |_| nav.push(&Page::Settings));
 
-    let nav = use_navigator().unwrap();
-    let about_cb = Callback::from(move |_| nav.push(&Page::About));
-
     let markdown = use_markdown().state();
     let encoded_md = encode(&markdown.text).to_string();
 
@@ -73,7 +70,6 @@ pub fn desktop_header() -> Html {
                     </label>
                     <ul tabindex="0" class="menu dropdown-content p-2 shadow bg-base-200 rounded-box w-52">
                         <li><a onclick={settings_cb}>{"Settings"}</a></li>
-                        <li><a onclick={about_cb}>{"About"}</a></li>
                     </ul>
                 </div>
             </div>

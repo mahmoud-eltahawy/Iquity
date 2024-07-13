@@ -6,10 +6,8 @@ pub mod tauri;
 
 use contexts::config::ConfigProvider;
 
-use pages::about::About;
 use pages::home::Home;
 use pages::settings::Settings;
-use pages::welcome::Welcome;
 
 use yew::prelude::*;
 use yew_router::prelude::*;
@@ -28,9 +26,7 @@ fn app() -> Html {
                     <BrowserRouter>
                         <Switch<Page> render={move |page| {
                             match page {
-                                Page::Welcome => html!(<Welcome />),
                                 Page::Home => html!(<Home />),
-                                Page::About => html!(<About />),
                                 Page::Settings => html!(<Settings />),
                             }
                         }} />
