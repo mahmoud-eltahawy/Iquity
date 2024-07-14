@@ -6,6 +6,8 @@ pub mod tauri;
 
 use contexts::config::ConfigProvider;
 
+use leptos::context::provide_context;
+use leptos::reactive_graph::signal::RwSignal;
 use pages::home::Home;
 use pages::settings::Settings;
 
@@ -19,8 +21,10 @@ use crate::contexts::toasts::ToasterProvider;
 
 #[function_component(App)]
 fn app() -> Html {
+    provide_context(RwSignal::new(config::Config::default()));
+
     html! {
-        <ConfigProvider>
+        <ConfigProvider>//DONE
             <ToasterProvider>
                 <MarkdownProvider>
                     <BrowserRouter>
