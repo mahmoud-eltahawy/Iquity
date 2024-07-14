@@ -8,6 +8,4 @@ pub mod settings;
 pub enum Page {
     #[at("/")]
     Home,
-    #[at("/settings")]
-    Settings,
 }

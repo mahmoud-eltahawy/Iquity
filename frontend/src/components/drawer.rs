@@ -113,7 +113,6 @@ pub fn drawer(props: &DrawerProps) -> Html {
                 <div class="h-full flex flex-col justify-between">
                     <ul class="menu menu-lg bg-base-200 w-full">
                         <Home />
-                        <Settings />
                     </ul>
                 </div>
             </div>
@@ -136,23 +135,6 @@ pub fn home() -> Html {
                         d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                 </svg>
                 {"Home"}
-            </div>
-        </li>
-    }
-}
-
-#[function_component(Settings)]
-pub fn home() -> Html {
-    let nav = use_navigator().unwrap();
-    let settings = Callback::from(move |_| nav.push(&Page::Settings));
-
-    html! {
-        <li>
-            <div onclick={settings}>
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 fill-base-200 stroke-base-content stroke-[1.5px]" viewBox="0 0 24 24">
-                <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/>
-            </svg>
-                {"Settings"}
             </div>
         </li>
     }

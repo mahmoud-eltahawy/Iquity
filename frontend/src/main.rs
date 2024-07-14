@@ -8,7 +8,6 @@ use contexts::config::ConfigProvider;
 
 use leptos::context::provide_context;
 use pages::home::Home;
-use pages::settings::Settings;
 
 use yew::prelude::*;
 use yew_router::prelude::*;
@@ -35,7 +34,6 @@ fn app() -> Html {
                         <Switch<Page> render={move |page| {
                             match page {
                                 Page::Home => html!(<Home />),
-                                Page::Settings => html!(<Settings />),
                             }
                         }} />
                     </BrowserRouter>

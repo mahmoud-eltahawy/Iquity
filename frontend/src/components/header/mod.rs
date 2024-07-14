@@ -13,7 +13,7 @@ use crate::{
         theme_card::ThemeDropdownItem,
     },
     contexts::markdown::use_markdown,
-    icons::{EllipsisIcon, PaletteIcon, RESPONSIVE_ICON_LG},
+    icons::{PaletteIcon, RESPONSIVE_ICON_LG},
     Page,
 };
 
@@ -24,9 +24,6 @@ pub const PDF_DOWNLOAD_ANCHOR_ID: AttrValue = AttrValue::Static("pdf_dl");
 pub fn header() -> Html {
     let nav = use_navigator().unwrap();
     let home_cb = Callback::from(move |_| nav.replace(&Page::Home));
-
-    let nav = use_navigator().unwrap();
-    let settings_cb = Callback::from(move |_| nav.push(&Page::Settings));
 
     let markdown = use_markdown().state();
     let encoded_md = encode(&markdown.text).to_string();
@@ -62,18 +59,6 @@ pub fn header() -> Html {
                         <ThemeDropdownItem name={"night"} />
                         <ThemeDropdownItem name={"synthwave"} />
                         <ThemeDropdownItem name={"winter"} />
-                        <li>
-                            <a onclick={settings_cb.clone()}>{"More..."}</a>
-                        </li>
-                    </ul>
-                </div>
-
-                <div class={dropdown_classes}>
-                    <label tabindex="0" class="btn btn-ghost rounded-btn">
-                        <EllipsisIcon />
-                    </label>
-                    <ul tabindex="0" class="menu dropdown-content p-2 shadow bg-base-200 rounded-box w-52">
-                        <li><a onclick={settings_cb}>{"Settings"}</a></li>
                     </ul>
                 </div>
             </div>
