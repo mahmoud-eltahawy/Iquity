@@ -16,17 +16,19 @@ use yew_router::prelude::*;
 use pages::Page;
 
 use crate::contexts::config::config_provider;
+use crate::contexts::markdown::leptos_version::markdown_provider;
 use crate::contexts::markdown::MarkdownProvider;
 use crate::contexts::toasts::ToasterProvider;
 
 #[function_component(App)]
 fn app() -> Html {
     provide_context(config_provider());
+    provide_context(markdown_provider());
 
     html! {
         <ConfigProvider>//DONE
             <ToasterProvider>
-                <MarkdownProvider>
+                <MarkdownProvider>//DONE
                     <BrowserRouter>
                         <Switch<Page> render={move |page| {
                             match page {
