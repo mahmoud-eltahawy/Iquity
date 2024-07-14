@@ -13,7 +13,6 @@ pub struct Config {
     pub theme: String,
     pub md_input_font_size: String,
     pub md_preview_font_size: String,
-    pub mobile_ui: bool,
     pub data_path: Option<PathBuf>,
     pub view: View,
 }
@@ -25,7 +24,6 @@ impl Default for Config {
             data_path: data_dir(),
             md_input_font_size: String::from("text-base"),
             md_preview_font_size: String::from("prose-base"),
-            mobile_ui: false,
             view: View::Dual,
         }
     }
@@ -39,17 +37,6 @@ pub enum View {
 }
 
 impl Config {
-    pub fn mobile() -> Self {
-        Self {
-            theme: "synthwave".to_string(),
-            data_path: data_dir(),
-            md_input_font_size: String::from("text-base"),
-            md_preview_font_size: String::from("prose-base"),
-            mobile_ui: true,
-            view: View::Input,
-        }
-    }
-
     pub fn save(&self) -> Result<(), UbiquityError> {
         let pretty_ron_config = PrettyConfig::default();
         let ron_string = ron::ser::to_string_pretty(self, pretty_ron_config)?;

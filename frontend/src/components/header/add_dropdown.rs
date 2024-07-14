@@ -1,7 +1,6 @@
 use crate::components::toasts::ToastProps;
 use crate::components::tooltip::Tooltip;
 use crate::contexts::{
-    config::use_config,
     markdown::{use_markdown, Markdown},
     toasts::{err_modal, use_toaster},
 };
@@ -66,10 +65,7 @@ pub fn add_file_dropdown() -> Html {
         recent_files_html.push(html);
     });
 
-    let mut dropdown_classes = classes!("dropdown");
-    if use_config().is_mobile_ui() {
-        dropdown_classes.push("dropdown-end");
-    }
+    let dropdown_classes = classes!("dropdown");
 
     html! {
         <div class={dropdown_classes}>

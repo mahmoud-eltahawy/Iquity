@@ -1,12 +1,8 @@
 use config::{Config, View};
 use error::UbiquityError;
-use gloo::{
-    storage::{LocalStorage, Storage},
-    utils::window,
-};
+use gloo::storage::{LocalStorage, Storage};
 use leptos::reactive_graph::signal::RwSignal;
 use std::ops::Deref;
-use web_sys::Navigator;
 use yew::prelude::*;
 
 static CONFIG_STORAGE_KEY: &str = "config";
@@ -50,22 +46,11 @@ impl ConfigContext {
         Ok(config)
     }
 
-    pub fn toggle_mobile_ui(&self) -> Result<(), UbiquityError> {
-        let mut new_config = self.state();
-        new_config.mobile_ui = !self.inner.mobile_ui;
-        self.set(new_config)?;
-        Ok(())
-    }
-
     pub fn set_view(&self, view: View) -> Result<(), UbiquityError> {
         let mut new_config = self.state();
         new_config.view = view;
         self.set(new_config)?;
         Ok(())
-    }
-
-    pub fn is_mobile_ui(&self) -> bool {
-        self.state().mobile_ui
     }
 
     pub fn set_md_input_font_size(&self, size: String) -> Result<(), UbiquityError> {
@@ -170,14 +155,7 @@ pub(crate) struct ConfigProviderProps {
 
 #[function_component]
 pub(crate) fn ConfigProvider(props: &ConfigProviderProps) -> Html {
-    let mut config = ConfigContext::load_from_storage().unwrap_or_default();
-
-    let nav: Navigator = window().navigator();
-    let user_agent = nav.user_agent().unwrap();
-
-    if user_agent.contains("Android") || user_agent.contains("iPhone") {
-        config = Config::mobile();
-    }
+    let config = ConfigContext::load_from_storage().unwrap_or_default();
 
     let config_state = use_state(|| config);
     let config_context = ConfigContext::new(config_state);
@@ -190,14 +168,7 @@ pub(crate) fn ConfigProvider(props: &ConfigProviderProps) -> Html {
 }
 
 pub fn config_provider() -> RwSignal<Config> {
-    let mut config = ConfigContext::load_from_storage().unwrap_or_default();
-
-    let nav: Navigator = window().navigator();
-    let user_agent = nav.user_agent().unwrap();
-
-    if user_agent.contains("Android") || user_agent.contains("iPhone") {
-        config = Config::mobile();
-    }
+    let config = ConfigContext::load_from_storage().unwrap_or_default();
 
     let config_state = leptos::prelude::RwSignal::new(config);
 

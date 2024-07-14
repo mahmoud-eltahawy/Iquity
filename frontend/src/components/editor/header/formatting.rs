@@ -1,4 +1,3 @@
-use crate::contexts::config::use_config;
 use crate::contexts::markdown::{use_markdown, Markdown};
 use crate::contexts::toasts::{err_modal, use_toaster};
 use crate::icons::{BoldIcon, FormatIcon, ItalicsIcon, QuoteIcon};
@@ -11,10 +10,7 @@ use super::HeaderBtnProps;
 
 #[function_component(FormattingDropdown)]
 pub fn bold_btn(props: &HeaderBtnProps) -> Html {
-    let mut dropdown_classes = classes!("dropdown");
-    if use_config().is_mobile_ui() {
-        dropdown_classes.push("dropdown-end");
-    }
+    let dropdown_classes = classes!("dropdown");
 
     html! {
         <div class={dropdown_classes}>

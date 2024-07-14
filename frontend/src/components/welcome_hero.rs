@@ -1,4 +1,4 @@
-use crate::{contexts::config::use_config, pages::Page};
+use crate::pages::Page;
 use yew::prelude::*;
 use yew_router::prelude::use_navigator;
 
@@ -10,18 +10,15 @@ pub fn welcome_hero() -> Html {
         navigator.push(&Page::Home);
     });
 
-    let mut classes = classes!(
+    let classes = classes!(
         "w-screen",
         "flex",
         "flex-col",
         "justify-center",
         "justify-center",
-        "w-screen"
+        "w-screen",
+        "min-h-screen"
     );
-    match use_config().state().mobile_ui {
-        true => classes.push("min-h-[calc(100svh)]"),
-        false => classes.push("min-h-screen"),
-    }
 
     html! {
         <div class={classes}>

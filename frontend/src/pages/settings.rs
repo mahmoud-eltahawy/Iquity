@@ -1,6 +1,6 @@
 use crate::components::drawer::Drawer;
 use crate::components::{header::Header, theme_card::ThemeCard};
-use crate::contexts::config::{use_config, THEMES};
+use crate::contexts::config::THEMES;
 use crate::pages::background::Background;
 use yew::prelude::*;
 
@@ -13,7 +13,6 @@ pub fn settings() -> Html {
                 <SettingsPage>
                     <SettingsContainer>
                         <ThemeSettings />
-                        <LayoutSettings />
                     </SettingsContainer>
                 </SettingsPage>
             </Background>
@@ -28,14 +27,12 @@ pub struct SettingsPageProps {
 
 #[function_component(SettingsPage)]
 pub fn settings_page(props: &SettingsPageProps) -> Html {
-    let page_classes = classes!("flex", "justify-center", "bg-base-100");
-
-    let mut classes = classes!("flex", "flex-col");
-
-    match use_config().is_mobile_ui() {
-        true => classes.push("h-[calc(100svh)]"),
-        false => classes.push("h-[calc(100vh-4rem)]"),
-    }
+    let page_classes = classes!(
+        "flex",
+        "justify-center",
+        "bg-base-100",
+        "h-[calc(100vh-4rem)]"
+    );
 
     html! {
         <div class={page_classes}>
@@ -108,34 +105,5 @@ pub fn theme_settings() -> Html {
                 { for theme_btns_html }
             </div>
         </div>
-    }
-}
-
-#[function_component(LayoutSettings)]
-pub fn layout_settings() -> Html {
-    let config_context = use_config();
-    let config = config_context.state();
-    let mobile_ui = config.mobile_ui;
-
-    let toggle_mobile_ui = Callback::from(move |_| {
-        let _ = config_context.toggle_mobile_ui();
-    });
-
-    let classes = classes!("flex", "flex-col");
-
-    html! {
-        <div class={classes}>
-            <SettingsHeader text={"Layout"} />
-            <div class="divider" />
-            <div class="form-control w-full">
-                <label class="cursor-pointer label">
-                    <span class="font-mono text-2xl">{"Mobile UI"}</span>
-                    <input type="checkbox" class="toggle toggle-primary" checked={mobile_ui}
-                        onclick={toggle_mobile_ui} />
-                </label>
-                <div class="divider" />
-            </div>
-        </div>
-
     }
 }

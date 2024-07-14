@@ -11,8 +11,7 @@ use yew::prelude::*;
 #[function_component(SaveBtn)]
 pub fn save_btn() -> Html {
     use crate::{
-        components::toasts::ToastProps, contexts::config::use_config, icons::RESPONSIVE_ICON_LG,
-        tauri::save_markdown_to_fs,
+        components::toasts::ToastProps, icons::RESPONSIVE_ICON_LG, tauri::save_markdown_to_fs,
     };
     use error::UbiquityError;
     use gloo::utils::window;
@@ -76,10 +75,7 @@ pub fn save_btn() -> Html {
         window().print().unwrap();
     });
 
-    let mut dropdown_classes = classes!("dropdown");
-    if use_config().is_mobile_ui() {
-        dropdown_classes.push("dropdown-end");
-    }
+    let dropdown_classes = classes!("dropdown");
 
     html! {
         <div class={dropdown_classes}>

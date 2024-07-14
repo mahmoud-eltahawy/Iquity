@@ -13,7 +13,6 @@ pub struct BackgroundProps {
 #[function_component(Background)]
 pub fn background(props: &BackgroundProps) -> Html {
     let theme = use_config().state().theme;
-    let mobile_ui = use_config().state().mobile_ui;
 
     let touch_start_x = use_mut_ref(|| 0);
     let touch_start_y = use_mut_ref(|| 0);
@@ -54,18 +53,14 @@ pub fn background(props: &BackgroundProps) -> Html {
     });
 
     // let mut classes = classes!("flex", "flex-col", "justify-between", "min-h-[calc(100svh)]", "max-h-[calc(100svh)]", "min-w-[calc(100svw)]", "max-w-[calc(100svw)]");
-    let mut classes = classes!(
+    let classes = classes!(
         "flex",
         "flex-col",
         "justify-between",
         "max-w-[calc(100svw)]",
-        "print:hidden"
+        "print:hidden",
+        "min-h-screen"
     );
-
-    match mobile_ui {
-        true => classes.push("min-h-[calc(100svh)]"),
-        false => classes.push("min-h-screen"),
-    }
 
     html! {
         <div ontouchstart={on_touch_start} ontouchend={on_touch_end} data-theme={theme} class={classes}>
