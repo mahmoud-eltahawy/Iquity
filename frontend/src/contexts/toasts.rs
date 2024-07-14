@@ -12,6 +12,27 @@ pub struct Toast {
     pub html: Html,
 }
 
+pub mod leptos_version {
+    use leptos::prelude::*;
+
+    use crate::components::toasts::leptos_version::ToastProps;
+
+    #[derive(Default, PartialEq, Clone)]
+    pub struct Toaster {
+        pub toasts: Vec<ToastProps>,
+    }
+
+    impl Toaster {
+        pub fn remove_toast(&mut self, toast: &ToastProps) {
+            self.toasts.retain(|popped_toast| popped_toast != toast);
+        }
+    }
+
+    pub fn toaster_provider() -> RwSignal<Toaster> {
+        RwSignal::new(Toaster::default())
+    }
+}
+
 impl From<UbiquityError> for Toast {
     fn from(error: UbiquityError) -> Self {
         let toast_id = error.title.clone();

@@ -18,16 +18,18 @@ use pages::Page;
 use crate::contexts::config::config_provider;
 use crate::contexts::markdown::leptos_version::markdown_provider;
 use crate::contexts::markdown::MarkdownProvider;
+use crate::contexts::toasts::leptos_version::toaster_provider;
 use crate::contexts::toasts::ToasterProvider;
 
 #[function_component(App)]
 fn app() -> Html {
     provide_context(config_provider());
     provide_context(markdown_provider());
+    provide_context(toaster_provider());
 
     html! {
         <ConfigProvider>//DONE
-            <ToasterProvider>
+            <ToasterProvider>//DONE
                 <MarkdownProvider>//DONE
                     <BrowserRouter>
                         <Switch<Page> render={move |page| {
