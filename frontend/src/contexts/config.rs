@@ -4,6 +4,7 @@ use gloo::{
     storage::{LocalStorage, Storage},
     utils::window,
 };
+use leptos::reactive_graph::signal::RwSignal;
 use std::ops::Deref;
 use web_sys::Navigator;
 use yew::prelude::*;
@@ -186,6 +187,21 @@ pub(crate) fn ConfigProvider(props: &ConfigProviderProps) -> Html {
             {props.children.clone()}
         </ContextProvider<ConfigContext>>
     }
+}
+
+pub fn config_provider() -> RwSignal<Config> {
+    let mut config = ConfigContext::load_from_storage().unwrap_or_default();
+
+    let nav: Navigator = window().navigator();
+    let user_agent = nav.user_agent().unwrap();
+
+    if user_agent.contains("Android") || user_agent.contains("iPhone") {
+        config = Config::mobile();
+    }
+
+    let config_state = leptos::prelude::RwSignal::new(config);
+
+    config_state
 }
 
 #[hook]

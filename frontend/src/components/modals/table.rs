@@ -11,6 +11,10 @@ use wasm_bindgen::JsCast;
 use web_sys::{HtmlInputElement, HtmlParagraphElement, HtmlTextAreaElement};
 use yew::prelude::*;
 
+pub mod leptos_version {
+    pub const TABLE_MODAL_ID: &str = "table_modal";
+}
+
 pub const TABLE_MODAL_ID: AttrValue = AttrValue::Static("table_modal");
 
 const COLS_TEXTBOX_ID: AttrValue = AttrValue::Static("col_input");

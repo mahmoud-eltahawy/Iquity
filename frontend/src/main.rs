@@ -7,7 +7,6 @@ pub mod tauri;
 use contexts::config::ConfigProvider;
 
 use leptos::context::provide_context;
-use leptos::reactive_graph::signal::RwSignal;
 use pages::home::Home;
 use pages::settings::Settings;
 
@@ -16,12 +15,13 @@ use yew_router::prelude::*;
 
 use pages::Page;
 
+use crate::contexts::config::config_provider;
 use crate::contexts::markdown::MarkdownProvider;
 use crate::contexts::toasts::ToasterProvider;
 
 #[function_component(App)]
 fn app() -> Html {
-    provide_context(RwSignal::new(config::Config::default()));
+    provide_context(config_provider());
 
     html! {
         <ConfigProvider>//DONE

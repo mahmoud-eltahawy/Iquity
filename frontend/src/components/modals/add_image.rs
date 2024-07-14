@@ -8,6 +8,10 @@ use wasm_bindgen::JsCast;
 use web_sys::{HtmlInputElement, HtmlTextAreaElement};
 use yew::prelude::*;
 
+pub mod leptos_version {
+    pub const ADD_IMAGE_MODAL_ID: &str = "add_image_modal";
+}
+
 pub const ADD_IMAGE_MODAL_ID: AttrValue = AttrValue::Static("add_image_modal");
 
 const TITLE_TEXTBOX_ID: AttrValue = AttrValue::Static("image_title_input");
