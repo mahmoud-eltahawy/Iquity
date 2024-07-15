@@ -1,6 +1,5 @@
-
-use crate::components::container::leptos_version::HalfWidthContainer;
-use crate::components::editor::leptos_version::Editor;
+use crate::components::container::HalfWidthContainer;
+use crate::components::editor::Editor;
 use crate::components::markdown_preview::MarkdownPreview;
 use leptos::prelude::*;
 

@@ -1,4 +1,4 @@
-use crate::components::{editor::textarea::EDITOR_ID, modals::utils::close_modal};
+use crate::components::{editor::EDITOR_ID, modals::utils::close_modal};
 use crate::contexts::{
     markdown::{use_markdown, Markdown},
     toasts::{err_modal, use_toaster},

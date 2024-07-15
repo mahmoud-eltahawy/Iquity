@@ -4,13 +4,13 @@ pub mod icons;
 pub mod pages;
 pub mod tauri;
 
-use pages::home::Home;
-
 use leptos::prelude::*;
 
+use crate::components::dual_view::DualView;
 use crate::contexts::config::config_provider;
 use crate::contexts::markdown::leptos_version::markdown_provider;
 use crate::contexts::toasts::leptos_version::toaster_provider;
+use crate::pages::background::Background;
 
 #[component]
 fn App() -> impl IntoView {
@@ -19,7 +19,11 @@ fn App() -> impl IntoView {
     provide_context(toaster_provider());
 
     view! {
-        <Home />
+        <Background>
+            <div class="h-[calc(100vh-4rem)] flex flex-col content-center align-center items-center justify-center">
+                <DualView />
+            </div>
+        </Background>
     }
 }
 

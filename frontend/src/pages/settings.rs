@@ -1,24 +1,6 @@
-use crate::components::drawer::Drawer;
-use crate::components::{header::Header, theme_card::ThemeCard};
+use crate::components::theme_card::ThemeCard;
 use crate::contexts::config::THEMES;
-use crate::pages::background::Background;
 use yew::prelude::*;
-
-#[function_component(Settings)]
-pub fn settings() -> Html {
-    html! {
-        <Drawer>
-            <Background>
-                <Header />
-                <SettingsPage>
-                    <SettingsContainer>
-                        <ThemeSettings />
-                    </SettingsContainer>
-                </SettingsPage>
-            </Background>
-        </Drawer>
-    }
-}
 
 #[derive(Debug, PartialEq, Properties)]
 pub struct SettingsPageProps {

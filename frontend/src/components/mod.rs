@@ -1,7 +1,6 @@
 // pub mod btn;
 pub mod container;
 pub mod divider;
-pub mod drawer;
 pub mod dual_view;
 pub mod editor;
 pub mod header;
