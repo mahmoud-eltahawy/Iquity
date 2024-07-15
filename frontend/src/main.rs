@@ -8,8 +8,7 @@ use crate::components::dual_view::dual_view;
 use crate::contexts::config::config_provider;
 use crate::contexts::markdown::markdown_provider;
 
-#[component]
-fn App() -> impl IntoView {
+fn app() -> impl IntoView {
     let conf = config_provider();
     provide_context(conf);
     provide_context(markdown_provider());
@@ -26,5 +25,5 @@ fn App() -> impl IntoView {
 
 fn main() {
     wasm_logger::init(wasm_logger::Config::default());
-    mount_to_body(App);
+    mount_to_body(app);
 }
