@@ -14,7 +14,6 @@ pub struct Config {
     pub md_input_font_size: String,
     pub md_preview_font_size: String,
     pub data_path: Option<PathBuf>,
-    pub view: View,
 }
 
 impl Default for Config {
@@ -24,16 +23,8 @@ impl Default for Config {
             data_path: data_dir(),
             md_input_font_size: String::from("text-base"),
             md_preview_font_size: String::from("prose-base"),
-            view: View::Dual,
         }
     }
-}
-
-#[derive(Clone, Deserialize, Serialize, Debug, PartialEq)]
-pub enum View {
-    Dual,
-    Input,
-    Preview,
 }
 
 impl Config {

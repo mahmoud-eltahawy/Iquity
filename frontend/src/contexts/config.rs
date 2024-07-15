@@ -1,4 +1,4 @@
-use config::{Config, View};
+use config::Config;
 use error::UbiquityError;
 use gloo::storage::{LocalStorage, Storage};
 use leptos::reactive_graph::signal::RwSignal;
@@ -44,13 +44,6 @@ impl ConfigContext {
         let ron_str: String = LocalStorage::get(CONFIG_STORAGE_KEY)?;
         let config: Config = Config::from_ron_str(&ron_str)?;
         Ok(config)
-    }
-
-    pub fn set_view(&self, view: View) -> Result<(), UbiquityError> {
-        let mut new_config = self.state();
-        new_config.view = view;
-        self.set(new_config)?;
-        Ok(())
     }
 
     pub fn increase_font_size(&self) -> Result<(), UbiquityError> {
