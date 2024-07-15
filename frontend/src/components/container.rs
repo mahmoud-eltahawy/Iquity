@@ -16,11 +16,9 @@ pub mod leptos_version {
     }
     #[component]
     pub fn HalfWidthContainer(children: Children) -> impl IntoView {
-        view! {
-            <div class="w-[48%] flex-none h-[calc(100vh-8.25rem)] border border-base-content rounded-xl pt-4 pb-6 px-8">
-                { children() }
-            </div>
-        }
+        div()
+            .attr("class", "w-[48%] flex-none h-[calc(100vh-8.25rem)] border border-base-content rounded-xl pt-4 pb-6 px-8")
+            .child(children())
     }
 }
 

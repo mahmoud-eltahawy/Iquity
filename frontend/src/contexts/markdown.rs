@@ -38,6 +38,9 @@ pub mod leptos_version {
     }
 
     impl Markdown {
+        pub fn from(text: String, key: Option<String>) -> Self {
+            Self { text, key }
+        }
         pub fn load_latest_from_storage() -> Option<Markdown> {
             let vec = Self::read_all_markdown_keys();
             vec.last()
