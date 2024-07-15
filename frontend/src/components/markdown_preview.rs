@@ -5,7 +5,7 @@ use leptos::{
 };
 use markdown::{self, CompileOptions, Options, ParseOptions};
 
-use crate::contexts::markdown::leptos_version::Markdown;
+use crate::contexts::markdown::Markdown;
 
 #[component]
 pub fn MarkdownPreview() -> impl IntoView {

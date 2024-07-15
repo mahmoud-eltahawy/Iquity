@@ -8,7 +8,7 @@ use leptos::prelude::*;
 
 use crate::components::dual_view::DualView;
 use crate::contexts::config::config_provider;
-use crate::contexts::markdown::leptos_version::markdown_provider;
+use crate::contexts::markdown::markdown_provider;
 use crate::contexts::toasts::leptos_version::toaster_provider;
 use crate::pages::background::Background;
 

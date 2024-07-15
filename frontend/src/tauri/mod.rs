@@ -36,18 +36,3 @@ pub async fn create_new_markdown_file() -> Result<String, UbiquityError> {
         Err(tauri_error) => Err(UbiquityError::from(tauri_error)),
     }
 }
-
-pub async fn import_markdown_file() -> Result<Markdown, UbiquityError> {
-    let save_file: Result<MarkdownFile, tauri_sys::error::Error> =
-        invoke("open_file_dialog", &()).await;
-
-    match save_file {
-        Ok(markdown_file) => {
-            let key = Some(AttrValue::from(markdown_file.path.unwrap()));
-            let text = AttrValue::from(markdown_file.contents);
-            let markdown = Markdown { key, text };
-            Ok(markdown)
-        }
-        Err(tauri_error) => Err(UbiquityError::from(tauri_error)),
-    }
-}

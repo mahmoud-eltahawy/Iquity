@@ -1,6 +1,4 @@
-pub mod header;
-
-use crate::contexts::markdown::leptos_version::Markdown;
+use crate::contexts::markdown::Markdown;
 use config::Config;
 use gloo::utils::document;
 use leptos::ev::{Event, KeyboardEvent};
