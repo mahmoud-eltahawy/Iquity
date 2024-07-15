@@ -37,6 +37,66 @@ pub enum View {
 }
 
 impl Config {
+    pub fn increase_font_size(&mut self) {
+        self.md_input_font_size = match self.md_input_font_size.as_str() {
+            "text-xs" => "text-sm".to_string(),
+            "text-sm" => "text-base".to_string(),
+            "text-base" => "text-lg".to_string(),
+            "text-lg" => "text-xl".to_string(),
+            "text-xl" => "text-2xl".to_string(),
+            "text-2xl" => "text-3xl".to_string(),
+            "text-3xl" => "text-4xl".to_string(),
+            "text-4xl" => "text-5xl".to_string(),
+            "text-5xl" => "text-6xl".to_string(),
+            "text-6xl" => "text-7xl".to_string(),
+            "text-7xl" => "text-8xl".to_string(),
+            "text-8xl" => "text-9xl".to_string(),
+            "text-9xl" => "text-9xl".to_string(),
+            _ => "text-base".to_string(),
+        };
+    }
+
+    pub fn decrease_font_size(&mut self) {
+        self.md_input_font_size = match self.md_input_font_size.as_str() {
+            "text-xs" => "text-xs".to_string(),
+            "text-sm" => "text-xs".to_string(),
+            "text-base" => "text-sm".to_string(),
+            "text-lg" => "text-base".to_string(),
+            "text-xl" => "text-lg".to_string(),
+            "text-2xl" => "text-xl".to_string(),
+            "text-3xl" => "text-2xl".to_string(),
+            "text-4xl" => "text-3xl".to_string(),
+            "text-5xl" => "text-4xl".to_string(),
+            "text-6xl" => "text-5xl".to_string(),
+            "text-7xl" => "text-6xl".to_string(),
+            "text-8xl" => "text-7xl".to_string(),
+            "text-9xl" => "text-8xl".to_string(),
+            _ => "text-base".to_string(),
+        };
+    }
+
+    pub fn increase_preview_font_size(&mut self) {
+        self.md_preview_font_size = match self.md_preview_font_size.as_str() {
+            "prose-sm" => "prose-base".to_string(),
+            "prose-base" => "prose-lg".to_string(),
+            "prose-lg" => "prose-xl".to_string(),
+            "prose-xl" => "prose-2xl".to_string(),
+            "prose-2xl" => "prose-2xl".to_string(),
+            _ => "prose-base".to_string(),
+        };
+    }
+
+    pub fn decrease_preview_font_size(&mut self) {
+        self.md_preview_font_size = match self.md_preview_font_size.as_str() {
+            "prose-sm" => "prose-sm".to_string(),
+            "prose-base" => "prose-sm".to_string(),
+            "prose-lg" => "prose-base".to_string(),
+            "prose-xl" => "prose-lg".to_string(),
+            "prose-2xl" => "prose-xl".to_string(),
+            _ => "prose-base".to_string(),
+        };
+    }
+
     pub fn save(&self) -> Result<(), UbiquityError> {
         let pretty_ron_config = PrettyConfig::default();
         let ron_string = ron::ser::to_string_pretty(self, pretty_ron_config)?;

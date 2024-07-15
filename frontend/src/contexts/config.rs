@@ -53,89 +53,31 @@ impl ConfigContext {
         Ok(())
     }
 
-    pub fn set_md_input_font_size(&self, size: String) -> Result<(), UbiquityError> {
+    pub fn increase_font_size(&self) -> Result<(), UbiquityError> {
         let mut new_config = self.state();
-        new_config.md_input_font_size = size;
+        new_config.increase_font_size();
         self.set(new_config)?;
         Ok(())
     }
 
-    pub fn increase_font_size(&self) -> Result<(), UbiquityError> {
-        let current_size = self.state().md_input_font_size;
-        let new_size = match current_size.as_str() {
-            "text-xs" => "text-sm",
-            "text-sm" => "text-base",
-            "text-base" => "text-lg",
-            "text-lg" => "text-xl",
-            "text-xl" => "text-2xl",
-            "text-2xl" => "text-3xl",
-            "text-3xl" => "text-4xl",
-            "text-4xl" => "text-5xl",
-            "text-5xl" => "text-6xl",
-            "text-6xl" => "text-7xl",
-            "text-7xl" => "text-8xl",
-            "text-8xl" => "text-9xl",
-            "text-9xl" => "text-9xl",
-            _ => "text-base",
-        };
-        self.set_md_input_font_size(new_size.to_owned())?;
-        Ok(())
-    }
-
     pub fn decrease_font_size(&self) -> Result<(), UbiquityError> {
-        let current_size = self.state().md_input_font_size;
-        let new_size = match current_size.as_str() {
-            "text-xs" => "text-xs",
-            "text-sm" => "text-xs",
-            "text-base" => "text-sm",
-            "text-lg" => "text-base",
-            "text-xl" => "text-lg",
-            "text-2xl" => "text-xl",
-            "text-3xl" => "text-2xl",
-            "text-4xl" => "text-3xl",
-            "text-5xl" => "text-4xl",
-            "text-6xl" => "text-5xl",
-            "text-7xl" => "text-6xl",
-            "text-8xl" => "text-7xl",
-            "text-9xl" => "text-8xl",
-            _ => "text-base",
-        };
-        self.set_md_input_font_size(new_size.to_owned())?;
-        Ok(())
-    }
-
-    pub fn set_md_preview_font_size(&self, size: String) -> Result<(), UbiquityError> {
         let mut new_config = self.state();
-        new_config.md_preview_font_size = size;
+        new_config.decrease_font_size();
         self.set(new_config)?;
         Ok(())
     }
 
     pub fn increase_preview_font_size(&self) -> Result<(), UbiquityError> {
-        let current_size = self.state().md_preview_font_size;
-        let new_size = match current_size.as_str() {
-            "prose-sm" => "prose-base",
-            "prose-base" => "prose-lg",
-            "prose-lg" => "prose-xl",
-            "prose-xl" => "prose-2xl",
-            "prose-2xl" => "prose-2xl",
-            _ => "prose-base",
-        };
-        self.set_md_preview_font_size(new_size.to_owned())?;
+        let mut new_config = self.state();
+        new_config.increase_preview_font_size();
+        self.set(new_config)?;
         Ok(())
     }
 
     pub fn decrease_preview_font_size(&self) -> Result<(), UbiquityError> {
-        let current_size = self.state().md_preview_font_size;
-        let new_size = match current_size.as_str() {
-            "prose-sm" => "prose-sm",
-            "prose-base" => "prose-sm",
-            "prose-lg" => "prose-base",
-            "prose-xl" => "prose-lg",
-            "prose-2xl" => "prose-xl",
-            _ => "prose-base",
-        };
-        self.set_md_preview_font_size(new_size.to_owned())?;
+        let mut new_config = self.state();
+        new_config.decrease_preview_font_size();
+        self.set(new_config)?;
         Ok(())
     }
 }
