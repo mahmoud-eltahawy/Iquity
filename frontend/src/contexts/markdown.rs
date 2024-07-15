@@ -69,8 +69,8 @@ pub mod leptos_version {
             }
         }
 
-        pub fn update(&mut self, md: Markdown) -> Result<(), UbiquityError> {
-            *self = md;
+        pub fn update_text(&mut self, text: String) -> Result<(), UbiquityError> {
+            self.text = text;
             self.save_to_browser_storage()?;
             Ok(())
         }

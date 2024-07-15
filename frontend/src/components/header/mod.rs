@@ -5,7 +5,6 @@ use yew::prelude::*;
 
 use crate::components::tooltip::Tooltip;
 use urlencoding::encode;
-use yew_router::prelude::use_navigator;
 
 use crate::{
     components::{
@@ -14,7 +13,6 @@ use crate::{
     },
     contexts::markdown::use_markdown,
     icons::{PaletteIcon, RESPONSIVE_ICON_LG},
-    Page,
 };
 
 pub const DOWNLOAD_ANCHOR_ID: AttrValue = AttrValue::Static("dl");
@@ -22,9 +20,6 @@ pub const PDF_DOWNLOAD_ANCHOR_ID: AttrValue = AttrValue::Static("pdf_dl");
 
 #[function_component(Header)]
 pub fn header() -> Html {
-    let nav = use_navigator().unwrap();
-    let home_cb = Callback::from(move |_| nav.replace(&Page::Home));
-
     let markdown = use_markdown().state();
     let encoded_md = encode(&markdown.text).to_string();
 
@@ -41,11 +36,6 @@ pub fn header() -> Html {
                 <SaveBtn />
             </div>
 
-            <div class="navbar-center">
-                <btn class="btn btn-ghost normal-case font-display font-normal text-3xl" onclick={home_cb}>
-                    {"Ubiquity"}
-                </btn>
-            </div>
 
             <div class="navbar-end">
                 <div class={dropdown_classes.clone()}>

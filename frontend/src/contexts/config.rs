@@ -59,20 +59,6 @@ impl ConfigContext {
         self.set(new_config)?;
         Ok(())
     }
-
-    pub fn increase_preview_font_size(&self) -> Result<(), UbiquityError> {
-        let mut new_config = self.state();
-        new_config.increase_preview_font_size();
-        self.set(new_config)?;
-        Ok(())
-    }
-
-    pub fn decrease_preview_font_size(&self) -> Result<(), UbiquityError> {
-        let mut new_config = self.state();
-        new_config.decrease_preview_font_size();
-        self.set(new_config)?;
-        Ok(())
-    }
 }
 
 impl Deref for ConfigContext {

@@ -8,7 +8,6 @@ pub mod header;
 pub mod link_btn;
 pub mod markdown_preview;
 pub mod modals;
-pub mod pdf;
 pub mod theme_card;
 pub mod toasts;
 pub mod tooltip;
