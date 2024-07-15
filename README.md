@@ -27,7 +27,7 @@ Anyone can use Ubiquity.
 
 ## How is it made?
 
-- [Yew](https://www.yew.rs) - A web application framework.
+- [Leptos](https://www.leptos.dev) - A web application framework.
 -  [Tauri](https://www.tauri.app) - A desktop application framework.
 - [Tailwind](https://www.tailwindcss.com) - A CSS framework.
 - [DaisyUI](https://www.daisyui.com) - A Tailwind CSS component library.

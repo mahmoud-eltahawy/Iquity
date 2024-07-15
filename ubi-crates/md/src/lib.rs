@@ -49,7 +49,7 @@ Ubiquity is written in Rust.
 
 Ubiquity utilises two Rust frameworks.
 
-* [Yew](https://www.yew.rs) - A web application framework.
+* [Leptos](https://www.leptos.dev) - A web application framework.
 * [Tauri](https://www.tauri.app) - A desktop application framework.
 
 ## UI Design

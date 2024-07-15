@@ -1,6 +1,5 @@
 pub mod components;
 pub mod contexts;
-pub mod icons;
 pub mod pages;
 pub mod tauri;
 

@@ -2,7 +2,6 @@ use crate::contexts::markdown::Markdown;
 use error::UbiquityError;
 use md::*;
 use tauri_sys::tauri::invoke;
-use yew::AttrValue;
 
 pub async fn save_markdown_to_fs(markdown: Markdown) -> Result<String, UbiquityError> {
     let contents = markdown.text.to_string();
@@ -15,8 +14,7 @@ pub async fn save_markdown_to_fs(markdown: Markdown) -> Result<String, UbiquityE
     }
 }
 
-pub async fn read_markdown_from_fs(key: AttrValue) -> Result<String, UbiquityError> {
-    let path = key.to_string();
+pub async fn read_markdown_from_fs(path: String) -> Result<String, UbiquityError> {
     let markdown_file = &MarkdownPath { path };
     let read_file: Result<String, tauri_sys::error::Error> =
         invoke("read_file", markdown_file).await;
