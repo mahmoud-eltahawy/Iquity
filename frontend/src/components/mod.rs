@@ -6,6 +6,5 @@ pub mod editor;
 pub mod header;
 pub mod link_btn;
 pub mod markdown_preview;
-pub mod toasts;
 pub mod tooltip;
 pub mod welcome_hero;
