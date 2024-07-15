@@ -7,8 +7,7 @@ use markdown::{self, CompileOptions, Options, ParseOptions};
 
 use crate::contexts::markdown::Markdown;
 
-#[component]
-pub fn MarkdownPreview() -> impl IntoView {
+pub fn markdown_preview() -> impl IntoView {
     let markdown = use_context::<RwSignal<Markdown>>().unwrap();
     let conf = use_context::<RwSignal<Config>>().unwrap();
 

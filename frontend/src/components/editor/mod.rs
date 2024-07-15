@@ -9,8 +9,7 @@ use wasm_bindgen::JsCast;
 use web_sys::{HtmlDocument, HtmlTextAreaElement};
 pub const EDITOR_ID: &str = "editor";
 
-#[component]
-pub fn Editor() -> impl IntoView {
+pub fn editor() -> impl IntoView {
     let markdown_ctx = use_context::<RwSignal<Markdown>>().unwrap();
     let conf = use_context::<RwSignal<Config>>().unwrap();
 

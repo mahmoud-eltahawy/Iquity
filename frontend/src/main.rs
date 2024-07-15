@@ -1,27 +1,27 @@
 pub mod components;
 pub mod contexts;
-pub mod pages;
 pub mod tauri;
 
-use leptos::prelude::*;
+use leptos::{html::div, prelude::*};
 
-use crate::components::dual_view::DualView;
+use crate::components::dual_view::dual_view;
 use crate::contexts::config::config_provider;
 use crate::contexts::markdown::markdown_provider;
-use crate::pages::background::Background;
 
 #[component]
 fn App() -> impl IntoView {
-    provide_context(config_provider());
+    let conf = config_provider();
+    provide_context(conf);
     provide_context(markdown_provider());
 
-    view! {
-        <Background>
-            <div class="h-[calc(100vh-4rem)] flex flex-col content-center align-center items-center justify-center">
-                <DualView />
-            </div>
-        </Background>
-    }
+    let theme = move || conf.get().theme;
+
+    div()
+        .attr("data-theme", theme)
+        .attr("class", "flex flex-col justify-between max-w-[calc(100svw)] print:hidden min-h-screen")
+        .child(div().class("h-[calc(100vh-4rem)] flex flex-col content-center align-center items-center justify-center")
+            .child(dual_view())
+        )
 }
 
 fn main() {
