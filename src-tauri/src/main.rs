@@ -2,7 +2,7 @@ use std::{fs, path::PathBuf};
 
 use error::UbiquityError;
 use md::*;
-use tauri::{generate_context, AppHandle, Emitter};
+use tauri::generate_context;
 
 use rfd::FileDialog;
 
@@ -11,8 +11,7 @@ fn main() {
         .invoke_handler(tauri::generate_handler![
             read_file,
             save_file,
-            open_file_dialog,
-            notify_preview,
+            open_file_dialog
         ])
         .run(generate_context!())
         .expect("error while running tauri application");
@@ -68,11 +67,6 @@ fn open_file_dialog() -> Result<MarkdownFile, UbiquityError> {
 #[tauri::command]
 fn read_file(path: String) -> Result<String, UbiquityError> {
     Ok(fs::read_to_string(PathBuf::from(path))?)
-}
-
-#[tauri::command]
-fn notify_preview(app: AppHandle, content: String) {
-    app.emit_to("preview", "content", content).unwrap()
 }
 
 fn read_from_fs(path: PathBuf) -> Result<String, UbiquityError> {
