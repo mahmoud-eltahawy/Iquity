@@ -1348,6 +1348,7 @@ dependencies = [
  "js-sys",
  "lazy_static",
  "leptos",
+ "leptos_router",
  "log",
  "markdown",
  "md",
@@ -2563,6 +2564,30 @@ dependencies = [
  "syn 2.0.71",
  "tracing",
  "uuid",
+]
+
+[[package]]
+name = "leptos_router"
+version = "0.7.0-alpha3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7e25e170c86c030fa0cdf9b96bf83527016ad38de83d712e8499c4d07bf566d6"
+dependencies = [
+ "any_spawner",
+ "either_of",
+ "futures",
+ "gloo-net 0.5.0",
+ "js-sys",
+ "leptos",
+ "once_cell",
+ "or_poisoned",
+ "paste",
+ "reactive_graph",
+ "send_wrapper",
+ "tachys",
+ "thiserror",
+ "url",
+ "wasm-bindgen",
+ "web-sys",
 ]
 
 [[package]]
