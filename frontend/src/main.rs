@@ -2,23 +2,13 @@ pub mod components;
 pub mod contexts;
 pub mod tauri;
 
-use leptos::{html::div, prelude::*};
+use components::dual_view::{editor_view, preview_view};
+use leptos::prelude::*;
 use leptos_router::components::{Route, Router, Routes};
 use leptos_router::StaticSegment;
 
-use crate::components::dual_view::dual_view;
 use crate::contexts::config::config_provider;
 use crate::contexts::markdown::markdown_provider;
-
-fn editor() -> impl IntoView {
-    div()
-        .class("h-[calc(100vh-4rem)] flex flex-col content-center align-center items-center justify-center")
-        .child(dual_view())
-}
-
-fn preview() -> impl IntoView {
-    String::from("hello preview")
-}
 
 fn app() -> impl IntoView {
     let conf = config_provider();
@@ -33,8 +23,8 @@ fn app() -> impl IntoView {
         >
         <Router>
             <Routes fallback=|| view!{"".to_string()}>
-                <Route path=StaticSegment("") view=editor/>
-                <Route path=StaticSegment("preview") view=preview/>
+                <Route path=StaticSegment("editor") view=editor_view/>
+                <Route path=StaticSegment("preview") view=preview_view/>
             </Routes>
         </Router>
         </main>

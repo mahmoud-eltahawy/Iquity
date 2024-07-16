@@ -13,11 +13,14 @@
     "withGlobalTauri": true,
     "windows": [
       {
-        "fullscreen": false,
-        "height": 1000,
-        "resizable": true,
-        "title": "ubiquity",
-        "width": 1600
+        "url" : "/editor",
+        "label" : "editor",
+        "title": "iquity editor"
+      },
+      {
+        "url" : "/preview",
+        "label" : "preview",
+        "title": "iquity preview"
       }
     ],
     "security": {
