@@ -5,7 +5,6 @@ target/
 node_modules/
 dist/
 lottie.js
-output.css
 package-lock.json
 target/
 .idea/

@@ -22,10 +22,6 @@ pub fn editor() -> impl IntoView {
         });
     };
 
-    Effect::new(move |_| {
-        logging::console_log(&format!("{:#?}", markdown_ctx.get().text));
-    });
-
     let key_check = move |key_event: KeyboardEvent| {
         if key_event.key().eq("Tab") {
             key_event.prevent_default();
