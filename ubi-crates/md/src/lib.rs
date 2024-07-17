@@ -11,6 +11,11 @@ pub struct MarkdownPath {
     pub path: String,
 }
 
+#[derive(Deserialize, Serialize)]
+pub struct MarkdownContent {
+    pub content: String,
+}
+
 pub const DOCS_KEY: &str = "ubiquity_about.md";
 pub const DOCS_STR: &str = r#"# Ubiquity
 

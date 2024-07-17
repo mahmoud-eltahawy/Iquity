@@ -3,9 +3,13 @@ pub mod contexts;
 pub mod tauri;
 
 use components::container::style_container;
+use futures::StreamExt;
 use leptos::prelude::*;
+use leptos::spawn::spawn_local;
 use leptos_router::components::{Route, Router, Routes};
 use leptos_router::StaticSegment;
+use tauri::notify_preview;
+use wasm_bindgen::UnwrapThrowExt;
 
 use crate::components::container::container;
 use crate::components::editor::editor;
@@ -15,7 +19,16 @@ use crate::contexts::markdown::markdown_provider;
 use leptos::html::div;
 
 pub fn editor_view() -> impl IntoView {
-    provide_context(markdown_provider());
+    let markdown = markdown_provider();
+    provide_context(markdown);
+
+    Effect::new(move |_| {
+        let content = markdown.get().text;
+        spawn_local(async move {
+            notify_preview(content).await.unwrap();
+        });
+    });
+
     style_container(
     div()
         .class("w-[calc(100vw-2.5rem)] flex flex-1 flex-row justify-center space-x-8 items-center h-[calc(100vh-8.5rem)]")
@@ -25,7 +38,25 @@ pub fn editor_view() -> impl IntoView {
 }
 
 pub fn preview_view() -> impl IntoView {
-    provide_context(markdown_provider()); //TODO :it should recieve it not creating it
+    use tauri_sys::event::listen;
+    let markdown = markdown_provider();
+
+    spawn_local(async move {
+        match listen::<String>("content").await {
+            Ok(events) => (),
+            Err(err) => log!("{:#?}", err),
+        };
+        // let (mut events, _) = futures::stream::abortable(events);
+
+        // while let Some(event) = events.next().await {
+        //     log::debug!("Received event!");
+        //     // markdown.update(|markdown| {
+        //     //     log!("{}", event.payload);
+        //     //     markdown.text = event.payload;
+        //     // });
+        // }
+    });
+    provide_context(markdown);
     style_container(
     div()
         .class("w-[calc(100vw-2.5rem)] flex flex-1 flex-row justify-center space-x-8 items-center h-[calc(100vh-8.5rem)]")
