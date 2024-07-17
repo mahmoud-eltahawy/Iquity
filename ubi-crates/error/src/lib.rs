@@ -58,8 +58,18 @@ impl From<io::Error> for UbiquityError {
     }
 }
 
-impl From<tauri_sys::error::Error> for UbiquityError {
-    fn from(tauri_error: tauri_sys::error::Error) -> Self {
+impl From<String> for UbiquityError {
+    fn from(name: String) -> Self {
+        Self {
+            title: name,
+            human_description: String::new(),
+            verbose_description: None,
+        }
+    }
+}
+
+impl From<tauri_sys::Error> for UbiquityError {
+    fn from(tauri_error: tauri_sys::Error) -> Self {
         let mut tauri_error_object_string = tauri_error.to_string();
 
         let range = Range { start: 0, end: 27 };
