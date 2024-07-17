@@ -23,13 +23,9 @@ pub async fn read_markdown_from_fs(path: String) -> Result<String, UbiquityError
     }
 }
 
-pub async fn notify_preview(content: String) -> Result<(), UbiquityError> {
+pub async fn notify_preview(content: String) {
     let markdown_content = &MarkdownContent { content };
-    let read_file: Result<(), String> = invoke("notify_preview", markdown_content).await;
-    match read_file {
-        Ok(_) => Ok(()),
-        Err(tauri_error) => Err(UbiquityError::from(tauri_error)),
-    }
+    invoke::<()>("notify_preview", markdown_content).await
 }
 
 pub async fn create_new_markdown_file() -> Result<String, UbiquityError> {

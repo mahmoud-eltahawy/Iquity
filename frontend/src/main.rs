@@ -9,13 +9,12 @@ use leptos::spawn::spawn_local;
 use leptos_router::components::{Route, Router, Routes};
 use leptos_router::StaticSegment;
 use tauri::notify_preview;
-use wasm_bindgen::UnwrapThrowExt;
 
 use crate::components::container::container;
 use crate::components::editor::editor;
 use crate::components::markdown_preview::markdown_preview;
 use crate::contexts::config::config_provider;
-use crate::contexts::markdown::markdown_provider;
+use crate::contexts::markdown::{markdown_provider, Markdown};
 use leptos::html::div;
 
 pub fn editor_view() -> impl IntoView {
@@ -23,9 +22,9 @@ pub fn editor_view() -> impl IntoView {
     provide_context(markdown);
 
     Effect::new(move |_| {
-        let content = markdown.get().text;
         spawn_local(async move {
-            notify_preview(content).await.unwrap();
+            let content = markdown.get().text;
+            notify_preview(content).await;
         });
     });
 
@@ -39,22 +38,19 @@ pub fn editor_view() -> impl IntoView {
 
 pub fn preview_view() -> impl IntoView {
     use tauri_sys::event::listen;
-    let markdown = markdown_provider();
+    let markdown = RwSignal::new(Markdown::new());
 
     spawn_local(async move {
-        match listen::<String>("content").await {
-            Ok(events) => (),
-            Err(err) => log!("{:#?}", err),
-        };
-        // let (mut events, _) = futures::stream::abortable(events);
+        let events = listen::<String>("content").await.unwrap();
+        let (mut events, _) = futures::stream::abortable(events);
 
-        // while let Some(event) = events.next().await {
-        //     log::debug!("Received event!");
-        //     // markdown.update(|markdown| {
-        //     //     log!("{}", event.payload);
-        //     //     markdown.text = event.payload;
-        //     // });
-        // }
+        while let Some(event) = events.next().await {
+            log::debug!("Received event! {}", event.payload);
+            markdown.update(|markdown| {
+                log!("{}", event.payload);
+                markdown.text = event.payload;
+            });
+        }
     });
     provide_context(markdown);
     style_container(

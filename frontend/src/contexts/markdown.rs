@@ -21,6 +21,11 @@ impl Default for Markdown {
 }
 
 impl Markdown {
+    pub fn new() -> Self {
+        let text = String::from(DOCS_STR);
+        let key = Some(String::from(""));
+        Self { text, key }
+    }
     pub fn from(text: String, key: Option<String>) -> Self {
         Self { text, key }
     }

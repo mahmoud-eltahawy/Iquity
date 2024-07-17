@@ -72,6 +72,7 @@ fn read_file(path: String) -> Result<String, UbiquityError> {
 
 #[tauri::command]
 fn notify_preview(app: AppHandle, content: String) {
+    println!("notify_preview");
     app.emit_to("preview", "content", content).unwrap();
 }
 
