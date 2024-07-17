@@ -3,13 +3,14 @@ pub mod contexts;
 pub mod tauri;
 
 use futures::StreamExt;
-use leptos::prelude::*;
-use leptos::spawn::spawn_local;
-use leptos_router::components::{Route, Router, Routes};
-use leptos_router::StaticSegment;
+use leptos::{prelude::*, spawn::spawn_local};
+use leptos_router::{
+    components::{Route, Router, Routes},
+    StaticSegment,
+};
 use tauri::notify_preview;
+use tauri_sys::event::listen;
 
-use crate::components::container::container;
 use crate::components::editor::editor;
 use crate::components::markdown_preview::markdown_preview;
 use crate::contexts::config::config_provider;
@@ -26,11 +27,10 @@ pub fn editor_view() -> impl IntoView {
         });
     });
 
-    container(editor())
+    editor()
 }
 
 pub fn preview_view() -> impl IntoView {
-    use tauri_sys::event::listen;
     let markdown = RwSignal::new(Markdown::new());
 
     spawn_local(async move {
@@ -44,26 +44,19 @@ pub fn preview_view() -> impl IntoView {
         }
     });
     provide_context(markdown);
-    container(markdown_preview())
+    markdown_preview()
 }
 
 fn app() -> impl IntoView {
-    let conf = config_provider();
-    provide_context(conf);
+    provide_context(config_provider());
 
-    let theme = move || conf.get().theme;
     view! {
-        <main
-            data-theme=theme
-            class="flex flex-col justify-between max-w-[calc(100svw)] print:hidden min-h-screen"
-        >
         <Router>
             <Routes fallback=|| view!{"".to_string()}>
                 <Route path=StaticSegment("editor") view=editor_view/>
                 <Route path=StaticSegment("preview") view=preview_view/>
             </Routes>
         </Router>
-        </main>
     }
 }
 

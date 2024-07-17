@@ -27,11 +27,14 @@ pub fn markdown_preview() -> impl IntoView {
         conf.get().md_preview_font_size + "prose prose-img:rounded-xl prose-pre:bg-base-300 prose-pre:text-base-content prose-pre:overflow-auto prose-code:bg-base-300 prose-code:px-[5.5px] prose-code:font-normal prose-code:rounded-[0.3125rem] prose-code:overflow-auto prose-a:no-underline prose-a:text-info print:block"
     };
 
+    let theme = move || conf.get().theme;
+
     div()
         .attr(
             "class",
-            "flex flex-col h-full overflow-visible scroll-smooth",
+            "flex flex-col h-full overflow-visible scroll-smooth h-screen w-screen",
         )
+        .attr("data-theme", theme)
         .child(
             div()
                 .attr("class", "overflow-auto")

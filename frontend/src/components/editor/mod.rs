@@ -2,7 +2,7 @@ use crate::contexts::markdown::Markdown;
 use config::Config;
 use gloo::utils::document;
 use leptos::ev::{Event, KeyboardEvent};
-use leptos::html::{div, textarea};
+use leptos::html::textarea;
 use leptos::tachys::dom::event_target_value;
 use leptos::{ev, prelude::*};
 use wasm_bindgen::JsCast;
@@ -61,16 +61,17 @@ pub fn editor() -> impl IntoView {
     };
 
     let class = move || {
-        conf.get().md_input_font_size + "textarea bg-transparent whitespace-pre-wrap scroll-smooth font-mono resize-none border-none outline-none focus:outline-none w-full h-full overflow-y-auto"
+        conf.get().md_input_font_size + " textarea whitespace-pre-wrap scroll-smooth font-mono resize-none border-none outline-none focus:outline-none overflow-y-auto h-screen w-screen"
     };
 
-    div().class("flex flex-col h-full").child(
-        textarea()
-            .attr("id", EDITOR_ID)
-            .attr("spellcheck", "false")
-            .attr("class", class)
-            .on(ev::keydown, key_check)
-            .on(ev::input, oninput)
-            .child(md_text),
-    )
+    let theme = move || conf.get().theme;
+
+    textarea()
+        .attr("id", EDITOR_ID)
+        .attr("spellcheck", "false")
+        .attr("class", class)
+        .attr("data-theme", theme)
+        .on(ev::keydown, key_check)
+        .on(ev::input, oninput)
+        .child(md_text)
 }
