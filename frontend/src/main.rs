@@ -5,7 +5,7 @@ pub mod tauri;
 use futures::StreamExt;
 use leptos::{prelude::*, spawn::spawn_local};
 use leptos_router::{
-    components::{Route, Router, Routes},
+    components::{FlatRoutes, Route, Router},
     StaticSegment,
 };
 use tauri::notify_preview;
@@ -52,10 +52,10 @@ fn app() -> impl IntoView {
 
     view! {
         <Router>
-            <Routes fallback=|| view!{"".to_string()}>
+            <FlatRoutes fallback=|| view!{"".to_string()}>
                 <Route path=StaticSegment("editor") view=editor_view/>
                 <Route path=StaticSegment("preview") view=preview_view/>
-            </Routes>
+            </FlatRoutes>
         </Router>
     }
 }

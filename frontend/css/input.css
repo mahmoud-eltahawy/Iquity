@@ -6,7 +6,7 @@ body {
   overflow : hidden !important;
 }
 
-textarea {
+.textarea {
     cursor: auto;
     border: none;
     overflow: auto;
