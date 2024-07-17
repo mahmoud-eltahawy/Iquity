@@ -22,8 +22,8 @@ pub fn editor_view() -> impl IntoView {
     provide_context(markdown);
 
     Effect::new(move |_| {
+        let content = markdown.get().text;
         spawn_local(async move {
-            let content = markdown.get().text;
             notify_preview(content).await;
         });
     });
@@ -45,9 +45,7 @@ pub fn preview_view() -> impl IntoView {
         let (mut events, _) = futures::stream::abortable(events);
 
         while let Some(event) = events.next().await {
-            log::debug!("Received event! {}", event.payload);
             markdown.update(|markdown| {
-                log!("{}", event.payload);
                 markdown.text = event.payload;
             });
         }
