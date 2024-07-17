@@ -2,7 +2,6 @@ pub mod components;
 pub mod contexts;
 pub mod tauri;
 
-use components::container::style_container;
 use futures::StreamExt;
 use leptos::prelude::*;
 use leptos::spawn::spawn_local;
@@ -15,7 +14,6 @@ use crate::components::editor::editor;
 use crate::components::markdown_preview::markdown_preview;
 use crate::contexts::config::config_provider;
 use crate::contexts::markdown::{markdown_provider, Markdown};
-use leptos::html::div;
 
 pub fn editor_view() -> impl IntoView {
     let markdown = markdown_provider();
@@ -28,12 +26,7 @@ pub fn editor_view() -> impl IntoView {
         });
     });
 
-    style_container(
-    div()
-        .class("w-[calc(100vw-2.5rem)] flex flex-1 flex-row justify-center space-x-8 items-center h-[calc(100vh-8.5rem)]")
-        .child(
-            container(editor()),
-        ))
+    container(editor())
 }
 
 pub fn preview_view() -> impl IntoView {
@@ -51,12 +44,7 @@ pub fn preview_view() -> impl IntoView {
         }
     });
     provide_context(markdown);
-    style_container(
-    div()
-        .class("w-[calc(100vw-2.5rem)] flex flex-1 flex-row justify-center space-x-8 items-center h-[calc(100vh-8.5rem)]")
-        .child(
-            container(markdown_preview())
-        ))
+    container(markdown_preview())
 }
 
 fn app() -> impl IntoView {
