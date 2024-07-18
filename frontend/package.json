@@ -1,16 +1,14 @@
 {
-    "name": "iquity",
-    "private": true,
-    "version": "0.0.0",
-    "description": "iquity is a cross-platform markdown compiler.",
-    "devDependencies": {
-        "@tailwindcss/typography": "^0.5.9",
-        "daisyui": "^2.50.0",
-        "internal-ip": "^7.0.0",
-        "tailwindcss": "^3.2.4"
-    },
-    "dependencies": {
-        "@tauri-apps/api": "^2.0.0-alpha.4",
-        "@tauri-apps/cli": "^2.0.0-alpha.9"
-    }
+  "name": "iquity",
+  "private": true,
+  "version": "0.0.0",
+  "description": "iquity is a cross-platform markdown compiler.",
+  "devDependencies": {
+    "@tailwindcss/typography": "^0.5.13",
+    "daisyui": "^4.12.10",
+    "internal-ip": "^8.0.0"
+  },
+  "dependencies": {
+    "@tauri-apps/api": "^2.0.0-beta.15"
+  }
 }
