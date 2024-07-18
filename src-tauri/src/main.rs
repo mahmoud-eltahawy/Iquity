@@ -1,5 +1,3 @@
-use std::path::PathBuf;
-
 use tauri::{generate_context, AppHandle, Emitter, Manager};
 
 use futures::{
@@ -22,13 +20,13 @@ async fn main() {
             let path = path
                 .args
                 .get("path")
-                .unwrap()
+                .expect("expected a file path")
                 .value
                 .as_str()
-                .unwrap()
+                .expect("expected a string file path")
                 .to_string();
 
-            let handle = app.app_handle().clone();
+            let handle = app.app_handle().to_owned();
             tokio::task::spawn(async move {
                 watch(handle, path).await.unwrap();
             });
@@ -63,11 +61,11 @@ async fn watch<P: AsRef<Path>>(app: AppHandle, path: P) -> Result<(), Box<dyn st
         if rx.next().await.is_none() {
             continue;
         }
-        let content = read_file(path.as_ref().to_str().unwrap().to_string()).await?;
+        let content = read_file(&path).await?;
         app.emit_to("preview", "content", content)?;
     }
 }
 
-async fn read_file(path: String) -> Result<String, Box<dyn std::error::Error>> {
-    Ok(tokio::fs::read_to_string(PathBuf::from(path)).await?)
+async fn read_file<P: AsRef<Path>>(path: P) -> Result<String, Box<dyn std::error::Error>> {
+    Ok(tokio::fs::read_to_string(path).await?)
 }
