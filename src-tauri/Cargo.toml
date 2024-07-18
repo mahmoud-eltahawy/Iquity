@@ -23,7 +23,6 @@ config = { workspace = true }
 error = { workspace = true }
 md = { workspace = true }
 
-rfd = "0.14.1"
 tauri-plugin-clipboard-manager = "2.1.0-beta.6"
 notify = "6.1.1"
 futures = "0.3.30"

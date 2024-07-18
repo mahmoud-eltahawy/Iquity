@@ -13,12 +13,7 @@
     "withGlobalTauri": true,
     "windows": [
       {
-        "url" : "/editor",
-        "label" : "editor",
-        "title": "iquity editor"
-      },
-      {
-        "url" : "/preview",
+        "url" : "/",
         "label" : "preview",
         "title": "iquity preview"
       }
