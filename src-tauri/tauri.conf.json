@@ -5,9 +5,9 @@
     "frontendDist": "../frontend/dist",
     "devUrl": "http://127.0.0.1:8080"
   },
-  "productName": "ubiquity",
+  "productName": "iquity",
   "version": "0.4.0",
-  "identifier": "com.eltahawy.ubiquity",
+  "identifier": "com.eltahawy.iquity",
   "plugins": {
     "cli": {
       "args": [

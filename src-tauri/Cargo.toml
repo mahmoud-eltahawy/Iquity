@@ -1,8 +1,8 @@
 [package]
-name = "Ubiquity"
+name = "iquity"
 license = "GPL"
 repository = ""
-default-run = "Ubiquity"
+default-run = "iquity"
 edition = { workspace = true }
 version = "0.4.0"
 

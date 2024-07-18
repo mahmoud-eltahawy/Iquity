@@ -4,8 +4,8 @@ resolver = "2"
 
 [workspace.package]
 version = "0.4.0"
-authors = ["Stephen Power"]
-description = "A cross-platform markdown editor."
+authors = ["Stephen Power","mahmoud eltahawy"]
+description = "A cross-platform markdown compiler."
 license = "GPL"
 edition = "2021"
 

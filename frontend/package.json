@@ -1,8 +1,8 @@
 {
-    "name": "ubiquity",
+    "name": "iquity",
     "private": true,
     "version": "0.0.0",
-    "description": "Ubiquity is a cross-platform music player written in Rust.",
+    "description": "iquity is a cross-platform markdown compiler.",
     "devDependencies": {
         "@tailwindcss/typography": "^0.5.9",
         "daisyui": "^2.50.0",
