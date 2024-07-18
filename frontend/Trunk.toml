@@ -27,6 +27,8 @@ port = 8080
 open = false
 # Disable auto-reload of the web app.
 no_autoreload = false
+# Control minification
+minify = "always" # can be one of: never, on_release, always
 
 [clean]
 # The output dir for all final assets.
@@ -35,12 +37,12 @@ dist = "dist"
 cargo = false
 
 [tools]
-# Default dart-sass version to download.
-sass = "1.54.9"
 # Default wasm-bindgen version to download.
 wasm_bindgen = "0.2.92"
 # Default wasm-opt version to download.
 wasm_opt = "version_110"
+# Default tailwindcss-cli version to download.
+tailwindcss = "3.4.6"
 
 ## proxy
 # Proxies are optional, and default to `None`.
