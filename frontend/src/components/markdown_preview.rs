@@ -1,18 +1,73 @@
+use std::time::Duration;
+
 use config::Config;
 use gloo::utils::window;
+use gloo_timers::future::sleep;
 use leptos::{
+    either::Either,
     ev::{self, KeyboardEvent},
-    html::{article, div},
+    html::{article, button, div, i, p, span},
     prelude::*,
+    spawn::spawn_local,
 };
 use markdown::{self, CompileOptions, Options, ParseOptions};
 use wasm_bindgen::UnwrapThrowExt;
 
 use crate::Markdown;
 
+// <button type="button" @click="closeToast()" x-show="open" x-transition.duration.300ms class="fixed right-4 top-4 z-50 rounded-md bg-green-500 px-4 py-2 text-white transition hover:bg-green-600">
+//     <div class="flex items-center space-x-2">
+//         <span class="text-3xl"><i class="bx bx-check"></i></span>
+//         <p class="font-bold">Item Created Successfully!</p>
+//     </div>
+// </button>
+
+fn notification(
+    should_show_up: RwSignal<bool>,
+    theme: impl Fn() -> &'static str + 'static,
+) -> impl IntoView {
+    let message = RwSignal::new("");
+    let close = move |_| {
+        should_show_up.set(false);
+    };
+
+    Effect::new(move |_| {
+        message.set(theme());
+    });
+    //
+
+    move || {
+        if should_show_up.get() {
+            Either::Left(  button()
+        .on(ev::click, close)
+        .class("fixed right-4 top-4 z-50 rounded-md bg-green-500 px-4 py-2 text-white transition hover:bg-green-600")
+        .child(div()
+            .class("flex items-center space-x-2")
+            .child((span()
+                .class("text-3xl")
+                .child(i()
+                    .class("bx bx-check")),
+                p()
+                    .class("font-bold")
+                    .child(move || message.get())))))
+        } else {
+            Either::Right(())
+        }
+    }
+}
+
 pub fn markdown_preview() -> impl IntoView {
     let markdown = use_context::<RwSignal<Markdown>>().unwrap();
     let conf = use_context::<RwSignal<Config>>().unwrap();
+    let theme_notifier = RwSignal::new(false);
+
+    let notify_theme = move || {
+        theme_notifier.set(true);
+        spawn_local(async move {
+            sleep(Duration::from_secs(1)).await;
+            theme_notifier.set(false);
+        });
+    };
 
     let md = move || {
         let compile = CompileOptions {
@@ -39,10 +94,12 @@ pub fn markdown_preview() -> impl IntoView {
 
         if ke.code().eq("F2") {
             conf.update(|x| x.next_theme());
+            notify_theme();
         }
 
         if ke.code().eq("F3") {
             conf.update(|x| x.prev_theme());
+            notify_theme();
         }
 
         if ke.code().eq("F4") {
@@ -54,15 +111,18 @@ pub fn markdown_preview() -> impl IntoView {
         }
     });
 
-    div()
-        .attr(
-            "class",
-            "flex flex-col h-full overflow-visible scroll-smooth h-screen w-screen p-5",
-        )
-        .attr("data-theme", theme)
-        .child(
-            div()
-                .attr("class", "overflow-auto")
-                .child(article().id("preview").class(class).inner_html(md)),
-        )
+    (
+        div()
+            .attr(
+                "class",
+                "flex flex-col h-full overflow-visible scroll-smooth h-screen w-screen p-5",
+            )
+            .attr("data-theme", theme)
+            .child(
+                div()
+                    .attr("class", "overflow-auto")
+                    .child(article().id("preview").class(class).inner_html(md)),
+            ),
+        notification(theme_notifier, theme),
+    )
 }
