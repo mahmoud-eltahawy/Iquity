@@ -20,7 +20,7 @@ pub fn markdown_preview() -> impl IntoView {
         let parse = ParseOptions::gfm();
         let options = Options { compile, parse };
         let m = markdown.get();
-        markdown::to_html_with_options(&m.text, &options).unwrap()
+        markdown::to_html_with_options(&m.0, &options).unwrap()
     };
 
     let class = move || {

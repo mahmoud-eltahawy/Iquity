@@ -10,7 +10,7 @@ use crate::contexts::config::config_provider;
 use crate::contexts::markdown::Markdown;
 
 pub fn app() -> impl IntoView {
-    let markdown = RwSignal::new(Markdown::new());
+    let markdown = RwSignal::new(Markdown::default());
     provide_context(config_provider());
     provide_context(markdown);
 
@@ -20,7 +20,7 @@ pub fn app() -> impl IntoView {
 
         while let Some(event) = events.next().await {
             markdown.update(|markdown| {
-                markdown.text = event.payload;
+                markdown.0 = event.payload;
             });
         }
         unreachable!()

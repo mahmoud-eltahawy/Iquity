@@ -59,12 +59,13 @@ async fn watch<P: AsRef<Path>>(app: AppHandle, path: P) -> Result<(), Box<dyn st
     let (mut watcher, mut rx) = watcher()?;
     watcher.watch(path.as_ref(), RecursiveMode::Recursive)?;
 
-    while let Some(_) = rx.next().await {
+    loop {
+        if rx.next().await.is_none() {
+            continue;
+        }
         let content = read_file(path.as_ref().to_str().unwrap().to_string()).await?;
         app.emit_to("preview", "content", content)?;
     }
-
-    Ok(())
 }
 
 async fn read_file(path: String) -> Result<String, Box<dyn std::error::Error>> {

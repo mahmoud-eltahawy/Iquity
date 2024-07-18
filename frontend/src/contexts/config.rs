@@ -14,9 +14,7 @@ pub fn load_from_storage() -> Result<Config, UbiquityError> {
 pub fn config_provider() -> RwSignal<Config> {
     let config = load_from_storage().unwrap_or_default();
 
-    let config_state = RwSignal::new(config);
-
-    config_state
+    RwSignal::new(config)
 }
 
 pub const THEMES: &[&str] = &[
