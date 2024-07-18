@@ -42,6 +42,7 @@ pub fn preview_view() -> impl IntoView {
                 markdown.text = event.payload;
             });
         }
+        unreachable!()
     });
     provide_context(markdown);
     markdown_preview()

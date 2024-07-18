@@ -2,11 +2,19 @@ use std::{fs, path::PathBuf};
 
 use error::UbiquityError;
 use md::*;
-use tauri::{generate_context, AppHandle, Emitter};
+use tauri::{generate_context, AppHandle, Emitter, Manager};
 
 use rfd::FileDialog;
 
-fn main() {
+use futures::{
+    channel::mpsc::{channel, Receiver},
+    SinkExt, StreamExt,
+};
+use notify::{Config, Event, RecommendedWatcher, RecursiveMode, Watcher};
+use std::path::Path;
+
+#[tokio::main]
+async fn main() {
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
             read_file,
@@ -14,10 +22,52 @@ fn main() {
             open_file_dialog,
             notify_preview,
         ])
+        .setup(move |app| {
+            let handle = app.app_handle().clone();
+            tokio::task::spawn(async move {
+                let path = "../README.md";
+                async_watch(handle, path).await.unwrap();
+            });
+            Ok(())
+        })
         .run(generate_context!())
         .expect("error while running tauri application");
 }
 
+fn async_watcher() -> notify::Result<(RecommendedWatcher, Receiver<notify::Result<Event>>)> {
+    let (mut tx, rx) = channel(1);
+
+    // Automatically select the best implementation for your platform.
+    // You can also access each implementation directly e.g. INotifyWatcher.
+    let watcher = RecommendedWatcher::new(
+        move |res| {
+            futures::executor::block_on(async {
+                tx.send(res).await.unwrap();
+            })
+        },
+        Config::default(),
+    )?;
+
+    Ok((watcher, rx))
+}
+
+async fn async_watch<P: AsRef<Path>>(
+    app: AppHandle,
+    path: P,
+) -> Result<(), Box<dyn std::error::Error>> {
+    let (mut watcher, mut rx) = async_watcher()?;
+
+    // Add a path to be watched. All files and directories at that path and
+    // below will be monitored for changes.
+    watcher.watch(path.as_ref(), RecursiveMode::Recursive)?;
+
+    while let Some(_) = rx.next().await {
+        let content = async_read_file(path.as_ref().to_str().unwrap().to_string()).await?;
+        app.emit_to("preview", "content", content).unwrap();
+    }
+
+    Ok(())
+}
 #[tauri::command]
 fn save_file(path: Option<String>, contents: String) -> Result<String, UbiquityError> {
     match path {
@@ -68,6 +118,10 @@ fn open_file_dialog() -> Result<MarkdownFile, UbiquityError> {
 #[tauri::command]
 fn read_file(path: String) -> Result<String, UbiquityError> {
     Ok(fs::read_to_string(PathBuf::from(path))?)
+}
+
+async fn async_read_file(path: String) -> Result<String, Box<dyn std::error::Error>> {
+    Ok(tokio::fs::read_to_string(PathBuf::from(path)).await?)
 }
 
 #[tauri::command]
