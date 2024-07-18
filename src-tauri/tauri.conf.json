@@ -8,7 +8,18 @@
   "productName": "ubiquity",
   "version": "0.4.0",
   "identifier": "com.eltahawy.ubiquity",
-  "plugins": {},
+  "plugins": {
+    "cli": {
+      "args": [
+        {
+          "short": "p",
+          "name": "path",
+          "takesValue": true,
+          "description": "file path"
+        }
+      ]    
+    }
+  },
   "app": {
     "withGlobalTauri": true,
     "windows": [

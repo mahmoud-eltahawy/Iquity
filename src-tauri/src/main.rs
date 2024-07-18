@@ -8,17 +8,28 @@ use futures::{
 };
 use notify::{Config, Event, RecommendedWatcher, RecursiveMode, Watcher};
 use std::path::Path;
+use tauri_plugin_cli::CliExt;
 
 #[tokio::main]
 async fn main() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_cli::init())
         .invoke_handler(tauri::generate_handler![
             // read_file
         ])
         .setup(move |app| {
+            let path = app.cli().matches().unwrap();
+            let path = path
+                .args
+                .get("path")
+                .unwrap()
+                .value
+                .as_str()
+                .unwrap()
+                .to_string();
+
             let handle = app.app_handle().clone();
             tokio::task::spawn(async move {
-                let path = "../README.md";
                 watch(handle, path).await.unwrap();
             });
             Ok(())
