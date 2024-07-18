@@ -57,7 +57,7 @@ fn watcher() -> notify::Result<(RecommendedWatcher, Receiver<notify::Result<Even
 
 async fn watch<P: AsRef<Path>>(app: AppHandle, path: P) -> Result<(), Box<dyn std::error::Error>> {
     let (mut watcher, mut rx) = watcher()?;
-    watcher.watch(path.as_ref(), RecursiveMode::Recursive)?;
+    watcher.watch(path.as_ref(), RecursiveMode::NonRecursive)?;
 
     loop {
         if rx.next().await.is_none() {
