@@ -1,6 +1,5 @@
 pub mod components;
 pub mod contexts;
-pub mod tauri;
 
 use futures::StreamExt;
 use leptos::{prelude::*, spawn::spawn_local};

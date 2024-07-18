@@ -3,7 +3,6 @@ use std::collections::HashMap;
 use error::UbiquityError;
 use gloo::storage::{LocalStorage, Storage};
 use leptos::prelude::*;
-use md::{DOCS_KEY, DOCS_STR};
 use serde_json::Value;
 
 #[derive(Clone, Debug, PartialEq)]
@@ -12,17 +11,9 @@ pub struct Markdown {
     pub key: Option<String>,
 }
 
-impl Default for Markdown {
-    fn default() -> Self {
-        let text = String::from(DOCS_STR);
-        let key = Some(String::from(DOCS_KEY));
-        Self { text, key }
-    }
-}
-
 impl Markdown {
     pub fn new() -> Self {
-        let key = Some(String::from(DOCS_KEY));
+        let key = None;
         let text = String::from("");
         Self { text, key }
     }
@@ -70,12 +61,4 @@ impl Markdown {
         LocalStorage::set(key_str, text_str)?;
         Ok(())
     }
-}
-
-pub fn markdown_provider() -> RwSignal<Markdown> {
-    let markdown = Markdown::load_latest_from_storage().unwrap_or_default();
-
-    let markdown_state = RwSignal::new(markdown);
-
-    markdown_state
 }
