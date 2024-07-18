@@ -8,6 +8,38 @@ use std::path::PathBuf;
 
 mod error;
 
+pub const THEMES: &[&str] = &[
+    "dracula",
+    "synthwave",
+    "dark",
+    "light",
+    "cupcake",
+    "bumblebee",
+    "emerald",
+    "corporate",
+    "retro",
+    "cyberpunk",
+    "valentine",
+    "halloween",
+    "garden",
+    "forest",
+    "aqua",
+    "lofi",
+    "pastel",
+    "fantasy",
+    "wireframe",
+    "black",
+    "luxury",
+    "cmyk",
+    "autumn",
+    "business",
+    "acid",
+    "lemonade",
+    "night",
+    "coffee",
+    "winter",
+];
+
 #[derive(Clone, Deserialize, Serialize, Debug, PartialEq)]
 pub struct Config {
     pub theme: String,
@@ -19,7 +51,7 @@ pub struct Config {
 impl Default for Config {
     fn default() -> Self {
         Self {
-            theme: "synthwave".to_string(),
+            theme: THEMES.first().unwrap().to_string(),
             data_path: data_dir(),
             md_input_font_size: String::from("text-base"),
             md_preview_font_size: String::from("prose-base"),

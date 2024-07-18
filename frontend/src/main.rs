@@ -1,18 +1,19 @@
 pub mod components;
-pub mod contexts;
 
+use config::Config;
 use futures::StreamExt;
 use leptos::{prelude::*, spawn::spawn_local};
 use serde::de::DeserializeOwned;
 use tauri_sys::event::listen;
 
 use crate::components::markdown_preview::markdown_preview;
-use crate::contexts::config::config_provider;
-use crate::contexts::markdown::Markdown;
+
+#[derive(Clone, Default, Debug, PartialEq)]
+pub struct Markdown(pub String);
 
 pub fn app() -> impl IntoView {
     let markdown = RwSignal::new(Markdown::default());
-    provide_context(config_provider());
+    provide_context(RwSignal::new(Config::default()));
     provide_context(markdown);
 
     listen_to("content", move |payload| {

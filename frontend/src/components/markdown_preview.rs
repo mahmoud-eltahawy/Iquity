@@ -1,4 +1,4 @@
-use config::Config;
+use config::{Config, THEMES};
 use gloo::utils::window;
 use leptos::{
     ev::{self, KeyboardEvent},
@@ -8,7 +8,7 @@ use leptos::{
 use markdown::{self, CompileOptions, Options, ParseOptions};
 use wasm_bindgen::UnwrapThrowExt;
 
-use crate::contexts::markdown::Markdown;
+use crate::Markdown;
 
 pub fn markdown_preview() -> impl IntoView {
     let markdown = use_context::<RwSignal<Markdown>>().unwrap();
@@ -36,12 +36,24 @@ pub fn markdown_preview() -> impl IntoView {
         if ke.code().eq("F1") {
             window().print().unwrap_throw();
         }
+
+        if ke.code().eq("F2") {
+            let mut cycle = THEMES.iter().cycle();
+            conf.update(|x| loop {
+                let next_theme = cycle.next().unwrap().to_string();
+                if cycle.next() == Some(&x.theme.as_str()) {
+                    x.theme = next_theme;
+                    break;
+                }
+            });
+            //
+        }
     });
 
     div()
         .attr(
             "class",
-            "flex flex-col h-full overflow-visible scroll-smooth h-screen w-screen",
+            "flex flex-col h-full overflow-visible scroll-smooth h-screen w-screen p-5",
         )
         .attr("data-theme", theme)
         .child(
