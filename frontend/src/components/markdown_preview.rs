@@ -1,4 +1,4 @@
-use config::{Config, THEMES};
+use config::Config;
 use gloo::utils::window;
 use leptos::{
     ev::{self, KeyboardEvent},
@@ -27,7 +27,7 @@ pub fn markdown_preview() -> impl IntoView {
     };
 
     let class = move || {
-        conf.get().md_preview_font_size + "prose prose-img:rounded-xl prose-pre:bg-base-300 prose-pre:text-base-content prose-pre:overflow-auto prose-code:bg-base-300 prose-code:px-[5.5px] prose-code:font-normal prose-code:rounded-[0.3125rem] prose-code:overflow-auto prose-a:no-underline prose-a:text-info print:block"
+        conf.get().font_size + " prose prose-img:rounded-xl prose-pre:bg-base-300 prose-pre:text-base-content prose-pre:overflow-auto prose-code:bg-base-300 prose-code:px-[5.5px] prose-code:font-normal prose-code:rounded-[0.3125rem] prose-code:overflow-auto prose-a:no-underline prose-a:text-info print:block"
     };
 
     let theme = move || conf.get().theme;
@@ -38,15 +38,19 @@ pub fn markdown_preview() -> impl IntoView {
         }
 
         if ke.code().eq("F2") {
-            let mut cycle = THEMES.iter().cycle();
-            conf.update(|x| loop {
-                let next_theme = cycle.next().unwrap().to_string();
-                if cycle.next() == Some(&x.theme.as_str()) {
-                    x.theme = next_theme;
-                    break;
-                }
-            });
-            //
+            conf.update(|x| x.next_theme());
+        }
+
+        if ke.code().eq("F3") {
+            conf.update(|x| x.prev_theme());
+        }
+
+        if ke.code().eq("F4") {
+            conf.update(|x| x.increase_font_size());
+        }
+
+        if ke.code().eq("F5") {
+            conf.update(|x| x.decrease_font_size());
         }
     });
 
