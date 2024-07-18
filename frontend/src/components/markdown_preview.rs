@@ -1,9 +1,12 @@
 use config::Config;
+use gloo::utils::window;
 use leptos::{
+    ev::{self, KeyboardEvent},
     html::{article, div},
     prelude::*,
 };
 use markdown::{self, CompileOptions, Options, ParseOptions};
+use wasm_bindgen::UnwrapThrowExt;
 
 use crate::contexts::markdown::Markdown;
 
@@ -28,6 +31,12 @@ pub fn markdown_preview() -> impl IntoView {
     };
 
     let theme = move || conf.get().theme;
+
+    window_event_listener(ev::keydown, move |ke: KeyboardEvent| {
+        if ke.code().eq("F1") {
+            window().print().unwrap_throw();
+        }
+    });
 
     div()
         .attr(
