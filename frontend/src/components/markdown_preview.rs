@@ -15,23 +15,26 @@ use wasm_bindgen::UnwrapThrowExt;
 
 use crate::Markdown;
 
-fn notification(
-    should_show_up: RwSignal<bool>,
-    theme: impl Fn() -> &'static str + 'static,
-) -> impl IntoView {
-    let message = RwSignal::new("");
-    let close = move |_| {
-        should_show_up.set(false);
+fn notification(theme: impl Fn() -> &'static str + 'static) -> impl IntoView {
+    let messages = RwSignal::new(Vec::new());
+    let close = move || {
+        messages.update(|xs| {
+            xs.pop();
+        });
     };
 
     Effect::new(move |_| {
-        message.set(theme());
+        messages.update(|xs| xs.insert(0, theme()));
+        spawn_local(async move {
+            sleep(Duration::from_secs(1)).await;
+            close();
+        });
     });
 
     move || {
-        if should_show_up.get() {
+        if !messages.get().is_empty() {
             Either::Left(  button()
-        .on(ev::click, close)
+        .on(ev::click, move |_| close())
         .class("fixed right-4 top-4 z-50 rounded-md bg-green-500 px-4 py-2 text-white transition hover:bg-green-600")
         .child(div()
             .class("flex items-center space-x-2")
@@ -41,7 +44,7 @@ fn notification(
                     .class("bx bx-check")),
                 p()
                     .class("font-bold")
-                    .child(move || message.get())))))
+                    .child(move || messages.get().first().unwrap().to_string())))))
         } else {
             Either::Right(())
         }
@@ -51,15 +54,6 @@ fn notification(
 pub fn markdown_preview() -> impl IntoView {
     let markdown = use_context::<RwSignal<Markdown>>().unwrap();
     let conf = use_context::<RwSignal<Config>>().unwrap();
-    let theme_notifier = RwSignal::new(false);
-
-    let notify_theme = move || {
-        theme_notifier.set(true);
-        spawn_local(async move {
-            sleep(Duration::from_secs(1)).await;
-            theme_notifier.set(false);
-        });
-    };
 
     let md = move || {
         let compile = CompileOptions {
@@ -86,12 +80,10 @@ pub fn markdown_preview() -> impl IntoView {
 
         if ke.code().eq("F2") {
             conf.update(|x| x.next_theme());
-            notify_theme();
         }
 
         if ke.code().eq("F3") {
             conf.update(|x| x.prev_theme());
-            notify_theme();
         }
 
         if ke.code().eq("F4") {
@@ -115,6 +107,6 @@ pub fn markdown_preview() -> impl IntoView {
                     .attr("class", "overflow-auto")
                     .child(article().id("preview").class(class).inner_html(md)),
             ),
-        notification(theme_notifier, theme),
+        notification(theme),
     )
 }
