@@ -20,7 +20,6 @@ thiserror = { workspace = true }
 dirs = { workspace = true }
 
 config = { workspace = true }
-error = { workspace = true }
 mdtg = { workspace = true }
 
 

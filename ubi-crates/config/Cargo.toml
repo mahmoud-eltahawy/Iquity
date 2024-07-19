@@ -11,4 +11,3 @@ ron = { workspace = true }
 serde = { workspace = true }
 dirs = { workspace = true }
 thiserror = { workspace = true }
-error = { workspace = true }

@@ -11,5 +11,3 @@ categories = ["command-line-utilities", "parser-implementations", "text-processi
 license = "MIT"
 edition = { workspace = true }
 
-[dependencies]
-error = { workspace = true }

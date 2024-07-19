@@ -25,6 +25,5 @@ getrandom = { version = "0.2.8", features = ["js"] }
 markdown = "1.0.0-alpha.18"
 urlencoding = "2.1.2"
 config = { path = "./ubi-crates/config" }
-error = { path = "./ubi-crates/error" }
 mdtg = { path = "./ubi-crates/mdtg" }
 tauri-sys = { git = "https://github.com/JonasKruckenberg/tauri-sys", branch = "v2" , features = ["core","event"] }
