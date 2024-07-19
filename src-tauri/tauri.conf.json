@@ -1,9 +1,9 @@
 {
   "build": {
     "beforeBuildCommand": "cd frontend && trunk build --release index.html",
-    "beforeDevCommand": "cd frontend && trunk serve --release index.html",
+    "beforeDevCommand": "cd frontend && trunk serve index.html",
     "frontendDist": "../frontend/dist",
-    "devUrl": "http://127.0.0.1:8080"
+    "devUrl": "http://localhost:1420"
   },
   "productName": "iquity",
   "version": "0.4.0",
