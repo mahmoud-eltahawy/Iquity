@@ -16,3 +16,8 @@ A cross-platform markdown compiler.
 - [Tailwind](https://www.tailwindcss.com) - A CSS framework.
 - [DaisyUI](https://www.daisyui.com) - A Tailwind CSS component library.
 
+
+# todos
+- [ ] add help button on (?) down
+- [ ] add a toml config file
+
