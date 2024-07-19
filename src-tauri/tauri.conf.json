@@ -1,6 +1,6 @@
 {
   "build": {
-    "beforeBuildCommand": "cd frontend && trunk build --release index.html",
+    "beforeBuildCommand": "cd frontend && bun install && trunk build --release index.html",
     "beforeDevCommand": "cd frontend && trunk serve index.html",
     "frontendDist": "../frontend/dist",
     "devUrl": "http://localhost:1420"
@@ -31,7 +31,12 @@
       }
     ],
     "security": {
-      "csp": "default-src blob: data: filesystem: ws: wss: http: https: tauri: 'wasm-unsafe-eval' 'self'; script-src blob: data: filesystem: ws: wss: http: https: tauri: 'wasm-unsafe-eval' 'self'; connect-src ipc: http://ipc.localhost"
+      "csp": {
+        "default-src": "'self' customprotocol: asset:",
+        "connect-src": "ipc: tauri://localhost",
+        "img-src": "'self' asset: http://asset.localhost blob: data:",
+        "style-src": "'unsafe-inline'"
+      }
     }
   }
 }
