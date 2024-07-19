@@ -19,23 +19,23 @@ pub fn app() -> impl IntoView {
     let conf = Config::default();
 
     window_event_listener(ev::keydown, move |ke: ev::KeyboardEvent| {
-        if ke.code().eq("F1") {
+        if ke.code().eq("KeyP") {
             window().print().unwrap_throw();
         }
 
-        if ke.code().eq("F2") {
+        if ke.code().eq("KeyJ") {
             conf.next_theme();
         }
 
-        if ke.code().eq("F3") {
+        if ke.code().eq("KeyK") {
             conf.prev_theme();
         }
 
-        if ke.code().eq("F4") {
+        if ke.code().eq("Minus") {
             conf.decrease_font_size();
         }
 
-        if ke.code().eq("F5") {
+        if ke.code().eq("Equal") {
             conf.increase_font_size();
         }
     });

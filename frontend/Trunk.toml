@@ -25,6 +25,8 @@ open = false
 no_autoreload = false
 # Control minification
 minify = "always" # can be one of: never, on_release, always
+ws_protocol = "ws"
+
 
 [clean]
 # The output dir for all final assets.
