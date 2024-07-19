@@ -1,10 +1,13 @@
 pub mod components;
+pub mod local_config;
 
-use config::Config;
 use futures::StreamExt;
-use leptos::{prelude::*, spawn::spawn_local};
+use gloo::utils::window;
+use leptos::{ev, prelude::*, spawn::spawn_local};
+use local_config::Config;
 use serde::de::DeserializeOwned;
 use tauri_sys::event::listen;
+use wasm_bindgen::UnwrapThrowExt;
 
 use crate::components::markdown_preview::markdown_preview;
 
@@ -13,7 +16,31 @@ pub struct Markdown(pub String);
 
 pub fn app() -> impl IntoView {
     let markdown = RwSignal::new(Markdown::default());
-    provide_context(RwSignal::new(Config::default()));
+    let conf = Config::default();
+
+    window_event_listener(ev::keydown, move |ke: ev::KeyboardEvent| {
+        if ke.code().eq("F1") {
+            window().print().unwrap_throw();
+        }
+
+        if ke.code().eq("F2") {
+            conf.next_theme();
+        }
+
+        if ke.code().eq("F3") {
+            conf.prev_theme();
+        }
+
+        if ke.code().eq("F4") {
+            conf.decrease_font_size();
+        }
+
+        if ke.code().eq("F5") {
+            conf.increase_font_size();
+        }
+    });
+
+    provide_context(conf);
     provide_context(markdown);
 
     listen_to("content", move |payload| {

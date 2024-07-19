@@ -1,8 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
     mode: 'jit',
-
-    content: ['./css/*.css','./src/**/*.rs','../ubi-crates/config/**/*.rs', './index.html'
+    content: ['./css/*.css','./src/**/*.rs', './index.html'
     ],
     plugins: [
         require('daisyui'),
