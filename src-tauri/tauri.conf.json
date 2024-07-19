@@ -1,13 +1,13 @@
 {
+  "productName": "iquity",
+  "version": "0.4.0",
+  "identifier": "com.eltahawy.iquity",
   "build": {
     "beforeBuildCommand": "cd frontend && bun install && trunk build --release index.html",
     "beforeDevCommand": "cd frontend && trunk serve index.html",
     "frontendDist": "../frontend/dist",
     "devUrl": "http://localhost:1420"
   },
-  "productName": "iquity",
-  "version": "0.4.0",
-  "identifier": "com.eltahawy.iquity",
   "plugins": {
     "cli": {
       "args": [
@@ -25,18 +25,13 @@
     "withGlobalTauri": true,
     "windows": [
       {
-        "url": "/",
-        "label": "preview",
-        "title": "iquity preview"
+        "title": "iquity",
+        "width": 600,
+        "height": 800
       }
     ],
     "security": {
-      "csp": {
-        "default-src": "'self' customprotocol: asset:",
-        "connect-src": "ipc: tauri://localhost",
-        "img-src": "'self' asset: http://asset.localhost blob: data:",
-        "style-src": "'unsafe-inline'"
-      }
+      "csp": null
     }
   }
 }

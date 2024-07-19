@@ -62,7 +62,7 @@ async fn watch<P: AsRef<Path>>(app: AppHandle, path: P) -> Result<(), Box<dyn st
             continue;
         }
         let content = read_file(&path).await?;
-        app.emit_to("preview", "content", content)?;
+        app.emit("content", content)?;
     }
 }
 
