@@ -15,13 +15,6 @@ use wasm_bindgen::UnwrapThrowExt;
 
 use crate::Markdown;
 
-// <button type="button" @click="closeToast()" x-show="open" x-transition.duration.300ms class="fixed right-4 top-4 z-50 rounded-md bg-green-500 px-4 py-2 text-white transition hover:bg-green-600">
-//     <div class="flex items-center space-x-2">
-//         <span class="text-3xl"><i class="bx bx-check"></i></span>
-//         <p class="font-bold">Item Created Successfully!</p>
-//     </div>
-// </button>
-
 fn notification(
     should_show_up: RwSignal<bool>,
     theme: impl Fn() -> &'static str + 'static,
@@ -34,7 +27,6 @@ fn notification(
     Effect::new(move |_| {
         message.set(theme());
     });
-    //
 
     move || {
         if should_show_up.get() {
@@ -103,11 +95,11 @@ pub fn markdown_preview() -> impl IntoView {
         }
 
         if ke.code().eq("F4") {
-            conf.update(|x| x.increase_font_size());
+            conf.update(|x| x.decrease_font_size());
         }
 
         if ke.code().eq("F5") {
-            conf.update(|x| x.decrease_font_size());
+            conf.update(|x| x.increase_font_size());
         }
     });
 

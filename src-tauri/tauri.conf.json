@@ -14,6 +14,7 @@
         {
           "short": "p",
           "name": "path",
+          "index": 1,
           "takesValue": true,
           "description": "file path"
         }

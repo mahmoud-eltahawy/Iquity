@@ -2,17 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  overflow : hidden !important;
-}
-
 .textarea {
-    cursor: auto;
-    border: none;
-    overflow: auto;
-    outline: none;
-    -webkit-box-shadow: none;
-    -moz-box-shadow: none;
-    box-shadow: none;
-    resize: none;
+  cursor: auto;
+  border: none;
+  outline: none;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  resize: none;
 }

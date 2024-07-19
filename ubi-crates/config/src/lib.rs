@@ -70,11 +70,11 @@ impl Config {
 
     pub fn decrease_font_size(&mut self) {
         self.font_size = match self.font_size.as_str() {
-            "prose-sm" => "prose-sm".to_string(),
-            "prose-base" => "prose-sm".to_string(),
-            "prose-lg" => "prose-base".to_string(),
-            "prose-xl" => "prose-lg".to_string(),
             "prose-2xl" => "prose-xl".to_string(),
+            "prose-xl" => "prose-lg".to_string(),
+            "prose-lg" => "prose-base".to_string(),
+            "prose-base" => "prose-sm".to_string(),
+            "prose-sm" => "prose-sm".to_string(),
             _ => "prose-base".to_string(),
         };
     }

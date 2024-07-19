@@ -2,8 +2,7 @@
 module.exports = {
     mode: 'jit',
 
-    content: ['./css/*.{js,ts,jsx,tsx,css,scss,html}', './css/**/*.{js,ts,jsx,tsx}',
-        './src/**/*.{js,ts,jsx,tsx,rs,scss,css,html}', './index.html'
+    content: ['./css/*.css','./src/**/*.rs','../ubi-crates/config/**/*.rs', './index.html'
     ],
     plugins: [
         require('daisyui'),
