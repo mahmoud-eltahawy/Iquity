@@ -13,14 +13,35 @@ A cross-platform markdown compiler.
 - [Tailwind](https://www.tailwindcss.com) - A CSS framework.
 - [DaisyUI](https://www.daisyui.com) - A Tailwind CSS component library.
 
-## how is this different from Ubiquity
+## how to install it
+at the moment. building from source is the only option
+### Prerequisites
+1. [Rust](https://www.rust-lang.org/)
+2. [Tauri V2](https://v2.tauri.app/start/prerequisites/)
+3. [Leptos](https://leptos.dev/)
+```bash
+  cargo install trunk
+  rustup target add wasm32-unknown-unknown
+```
+4. iquity is using [Bun](https://bun.sh/) to download tauri api package
 
-- Ubiquity ships it's own text editor side by side with the previewer while iquity trys to be minimal by watching the file your editing with your favourite text editor and hot reloads it's content every time you change some thing in it
-- Ubiqity is using yew while iquity using leptos
+### Installing
+```
+  git clone --depth=1 https://github.com/mahmoud-eltahawy/Iquity.git
+  cd iquity
+  cargo tauri build
+```
+- the builded program is called iquity located at ./target/release/iquity
+- it is single executable so you just move it to a directory that is in your path
+
+
+## how is this different from Ubiquity
+- Ubiquity ships it's own text editor side by side with the previewer while iquity trys to be minimal by watching the file you are editing with your favourite text editor and hot reloads it's content every time you change some thing in it
+- Ubiqity is using **Yew** while iquity using **Leptos**
 - some other minimal differencs you will notice while using it but as development goes on. the two projects will become very different
 
 ## todos
-- [X] add help button on (?) down
-- [X] add help flag --help
 - [ ] add a toml config file
 - [ ] add slides feature
+
+
