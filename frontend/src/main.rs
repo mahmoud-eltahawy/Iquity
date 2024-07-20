@@ -1,14 +1,14 @@
-pub mod components;
-pub mod local_config;
+mod components;
+mod local_config;
+mod utils;
 
 use std::ops::Deref;
 
-use futures::StreamExt;
+use components::help::help;
 use gloo::utils::window;
-use leptos::{ev, prelude::*, spawn::spawn_local};
+use leptos::{either::Either, ev, prelude::*};
 use local_config::Config;
-use serde::de::DeserializeOwned;
-use tauri_sys::event::listen;
+use utils::listen_to;
 use wasm_bindgen::UnwrapThrowExt;
 
 use crate::components::markdown_preview::markdown_preview;
@@ -33,26 +33,39 @@ impl Deref for Markdown {
 pub fn app() -> impl IntoView {
     let markdown = Markdown::default();
     let conf = Config::default();
+    let help_message = RwSignal::new(false);
 
     window_event_listener(ev::keydown, move |ke: ev::KeyboardEvent| {
-        if ke.code().eq("KeyP") {
+        let code = ke.code();
+
+        if code.eq("KeyP") {
             window().print().unwrap_throw();
         }
 
-        if ke.code().eq("KeyJ") {
+        if code.eq("KeyJ") {
             conf.next_theme();
         }
 
-        if ke.code().eq("KeyK") {
+        if code.eq("KeyK") {
             conf.prev_theme();
         }
 
-        if ke.code().eq("Minus") {
+        if code.eq("Minus") {
             conf.decrease_font_size();
         }
 
-        if ke.code().eq("Equal") {
+        if code.eq("Equal") {
             conf.increase_font_size();
+        }
+
+        if help_message.get_untracked() {
+            if code == "Escape" {
+                help_message.set(false);
+            }
+        }
+
+        if code.eq("Slash") {
+            help_message.set(true);
         }
     });
 
@@ -64,26 +77,13 @@ pub fn app() -> impl IntoView {
             *content = payload;
         });
     });
-    markdown_preview()
-}
-
-fn listen_to<F, T>(event: &'static str, fun: F)
-where
-    F: Fn(T) + 'static,
-    T: DeserializeOwned + 'static,
-{
-    spawn_local(async move {
-        let events = listen::<T>(event).await.unwrap();
-        let (mut events, _) = futures::stream::abortable(events);
-
-        loop {
-            if let Some(event) = events.next().await {
-                fun(event.payload);
-            } else {
-                continue;
-            }
+    (markdown_preview(), move || {
+        if help_message.get() {
+            Either::Left(help())
+        } else {
+            Either::Right(())
         }
-    });
+    })
 }
 
 fn main() {
