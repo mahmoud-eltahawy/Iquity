@@ -19,5 +19,7 @@ A cross-platform markdown compiler.
 
 # todos
 - [ ] add help button on (?) down
+- [ ] add help flag --help
 - [ ] add a toml config file
+- [ ] add slides feature
 
