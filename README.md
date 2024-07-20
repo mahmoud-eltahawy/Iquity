@@ -15,20 +15,19 @@ A cross-platform markdown compiler.
 
 ## how to install it
 at the moment. building from source is the only option
+
 ### Prerequisites
-1. [Rust](https://www.rust-lang.org/)
-2. [Tauri V2](https://v2.tauri.app/start/prerequisites/)
-3. [Leptos](https://leptos.dev/)
-```bash
-  cargo install trunk
-  rustup target add wasm32-unknown-unknown
-```
-4. iquity is using [Bun](https://bun.sh/) to download tailwind and daisyui
+1. install [Rust](https://www.rust-lang.org/)
+2. make sure your machine have [Tauri V2](https://v2.tauri.app/start/prerequisites/) Prerequisites
+4. install [Bun](https://bun.sh/) to download tailwind and daisyui
 
 ### Installing
-```
+```bash
   git clone --depth=1 https://github.com/mahmoud-eltahawy/Iquity.git
   cd iquity
+  cargo install trunk
+  rustup target add wasm32-unknown-unknown
+  cargo install tauri-cli --version "^2.0.0-beta"
   cargo tauri build
 ```
 - the builded program is called iquity located at ./target/release/iquity
