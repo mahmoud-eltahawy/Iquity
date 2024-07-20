@@ -1,4 +1,4 @@
-use tauri::{generate_context, AppHandle, Emitter, Manager};
+use tauri::{generate_context, AppHandle, Emitter, Manager, State};
 
 use futures::{
     channel::mpsc::{channel, Receiver},
@@ -9,6 +9,11 @@ use std::path::Path;
 use tauri_plugin_cli::CliExt;
 
 const HELP_MESSAGE: &str = r#"
+    Welcom to iquity 
+        the markdown compiler
+
+    you called iquity without a markdown path
+    
         you should call the program with the path to
     the target md file then the program will hot reload
     the content of the file every time you change 
@@ -41,9 +46,7 @@ const HELP_MESSAGE: &str = r#"
 async fn main() {
     tauri::Builder::default()
         .plugin(tauri_plugin_cli::init())
-        .invoke_handler(tauri::generate_handler![
-            // read_file
-        ])
+        .invoke_handler(tauri::generate_handler![md_init])
         .setup(move |app| {
             let matches = app.cli().matches().unwrap();
             let Some(path) = matches
@@ -54,6 +57,7 @@ async fn main() {
                 println!("{}", HELP_MESSAGE);
                 std::process::exit(0x0100);
             };
+            app.manage(path.clone());
 
             let handle = app.app_handle().to_owned();
             tokio::task::spawn(async move {
@@ -93,6 +97,11 @@ async fn watch<P: AsRef<Path>>(app: AppHandle, path: P) -> Result<(), Box<dyn st
         let content = read_file(&path).await?;
         app.emit("content", content)?;
     }
+}
+
+#[tauri::command]
+async fn md_init(path: State<'_, String>) -> Result<String, String> {
+    read_file(&path.inner()).await.map_err(|x| x.to_string())
 }
 
 async fn read_file<P: AsRef<Path>>(path: P) -> Result<String, Box<dyn std::error::Error>> {

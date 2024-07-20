@@ -6,9 +6,9 @@ use std::ops::Deref;
 
 use components::help::help;
 use gloo::utils::window;
-use leptos::{either::Either, ev, prelude::*};
+use leptos::{either::Either, ev, prelude::*, spawn::spawn_local};
 use local_config::Config;
-use utils::listen_to;
+use utils::{init_markdown, listen_to};
 use wasm_bindgen::UnwrapThrowExt;
 
 use crate::components::markdown_preview::markdown_preview;
@@ -32,6 +32,9 @@ impl Deref for Markdown {
 
 pub fn app() -> impl IntoView {
     let markdown = Markdown::default();
+    spawn_local(async move {
+        init_markdown(markdown).await;
+    });
     let conf = Config::default();
     let help_message = RwSignal::new(false);
 
@@ -58,10 +61,8 @@ pub fn app() -> impl IntoView {
             conf.increase_font_size();
         }
 
-        if help_message.get_untracked() {
-            if code == "Escape" {
-                help_message.set(false);
-            }
+        if help_message.get_untracked() && code == "Escape" {
+            help_message.set(false);
         }
 
         if code.eq("Slash") {
