@@ -9,11 +9,16 @@ use std::path::Path;
 use tauri_plugin_cli::CliExt;
 
 const HELP_MESSAGE: &str = r#"
-    you should call the program with the path to the target md file
+        you should call the program with the path to
+    the target md file then the program will hot reload
+    the content of the file every time you change 
+    something in it. 
+
 
     EXAMPLE
 
     iquity ./README.md
+
 
     PREVIEW WINDOW KEYS    
 

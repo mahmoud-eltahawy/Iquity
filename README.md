@@ -18,8 +18,8 @@ A cross-platform markdown compiler.
 
 
 # todos
-- [ ] add help button on (?) down
-- [ ] add help flag --help
+- [X] add help button on (?) down
+- [X] add help flag --help
 - [ ] add a toml config file
 - [ ] add slides feature
 
