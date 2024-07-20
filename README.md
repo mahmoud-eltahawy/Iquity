@@ -23,7 +23,7 @@ at the moment. building from source is the only option
   cargo install trunk
   rustup target add wasm32-unknown-unknown
 ```
-4. iquity is using [Bun](https://bun.sh/) to download tauri api package
+4. iquity is using [Bun](https://bun.sh/) to download tailwind and daisyui
 
 ### Installing
 ```
@@ -35,7 +35,7 @@ at the moment. building from source is the only option
 - it is single executable so you just move it to a directory that is in your path
 
 ## how to use it
-```
+```bash
   iquity # will print help messge
   # you should use it like this
   iquity PATH_TO_README_FILE.md
