@@ -8,6 +8,30 @@ use notify::{Config, Event, RecommendedWatcher, RecursiveMode, Watcher};
 use std::path::Path;
 use tauri_plugin_cli::CliExt;
 
+const HELP_MESSAGE: &str = r#"
+    you should call the program with the path to the target md file
+
+    EXAMPLE
+
+    iquity ./README.md
+
+    PREVIEW WINDOW KEYS    
+
+    p => print to pdf
+
+    j => next theme
+
+    k => previous theme
+
+    = or + => increase font size    
+
+    - or _ => decrease font size    
+
+    ? or / => show this help message    
+
+    esc => to hide this message    
+"#;
+
 #[tokio::main]
 async fn main() {
     tauri::Builder::default()
@@ -16,15 +40,15 @@ async fn main() {
             // read_file
         ])
         .setup(move |app| {
-            let path = app.cli().matches().unwrap();
-            let path = path
+            let matches = app.cli().matches().unwrap();
+            let Some(path) = matches
                 .args
                 .get("path")
-                .expect("expected a file path")
-                .value
-                .as_str()
-                .expect("expected a string file path")
-                .to_string();
+                .and_then(|x| x.value.as_str().map(|x| x.to_string()))
+            else {
+                println!("{}", HELP_MESSAGE);
+                std::process::exit(0x0100);
+            };
 
             let handle = app.app_handle().to_owned();
             tokio::task::spawn(async move {
