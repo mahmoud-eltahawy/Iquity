@@ -8,7 +8,7 @@ pub(crate) fn help() -> impl IntoView {
     let theme = move || THEMES[conf.theme_index.get() % THEMES_SIZE];
     div()
         .attr("data-theme", theme)
-        .class("grid grid-cols-1 gap-2 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 w-9/12 h-5/6 text-white text-center border-2 rounded-lg p-5 text-2xl")
+        .class("grid grid-cols-1 gap-2 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 w-9/12 h-5/6 text-center border-2 rounded-lg p-5 text-2xl")
         .child((
             p().child("p => print to pdf"),
             p().child("j => next theme"),
