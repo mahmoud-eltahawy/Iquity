@@ -1,6 +1,8 @@
 pub mod components;
 pub mod local_config;
 
+use std::ops::Deref;
+
 use futures::StreamExt;
 use gloo::utils::window;
 use leptos::{ev, prelude::*, spawn::spawn_local};
@@ -11,11 +13,25 @@ use wasm_bindgen::UnwrapThrowExt;
 
 use crate::components::markdown_preview::markdown_preview;
 
-#[derive(Clone, Default, Debug, PartialEq)]
-pub struct Markdown(pub String);
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub struct Markdown(pub RwSignal<String>);
+
+impl Default for Markdown {
+    fn default() -> Self {
+        Markdown(RwSignal::new(String::default()))
+    }
+}
+
+impl Deref for Markdown {
+    type Target = RwSignal<String>;
+
+    fn deref(&self) -> &Self::Target {
+        &self.0
+    }
+}
 
 pub fn app() -> impl IntoView {
-    let markdown = RwSignal::new(Markdown::default());
+    let markdown = Markdown::default();
     let conf = Config::default();
 
     window_event_listener(ev::keydown, move |ke: ev::KeyboardEvent| {
@@ -44,8 +60,8 @@ pub fn app() -> impl IntoView {
     provide_context(markdown);
 
     listen_to("content", move |payload| {
-        markdown.update(|markdown| {
-            markdown.0 = payload;
+        markdown.update(|content| {
+            *content = payload;
         });
     });
     markdown_preview()

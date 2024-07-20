@@ -12,7 +12,7 @@ use crate::{
 use super::notification;
 
 pub fn markdown_preview() -> impl IntoView {
-    let markdown = use_context::<RwSignal<Markdown>>().unwrap();
+    let markdown = use_context::<Markdown>().unwrap();
     let conf = use_context::<Config>().unwrap();
 
     let md = move || {
@@ -24,7 +24,7 @@ pub fn markdown_preview() -> impl IntoView {
         let parse = ParseOptions::gfm();
         let options = Options { compile, parse };
         let md = markdown.get();
-        markdown::to_html_with_options(&md.0, &options).unwrap()
+        markdown::to_html_with_options(&md, &options).unwrap()
     };
 
     let class = move || {

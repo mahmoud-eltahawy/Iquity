@@ -19,12 +19,14 @@ pub fn notification(theme: impl Fn() -> &'static str + 'static) -> impl IntoView
     };
 
     Effect::new(move |_| {
-        messages.update(|xs| xs.insert(0, theme()));
+        messages.update(|xs| xs.push(theme()));
         spawn_local(async move {
             sleep(Duration::from_secs(1)).await;
             close();
         });
     });
+
+    let message = move || messages.get().last().unwrap().to_string();
 
     move || {
         if !messages.get().is_empty() {
@@ -39,7 +41,7 @@ pub fn notification(theme: impl Fn() -> &'static str + 'static) -> impl IntoView
                     .class("bx bx-check")),
                 p()
                     .class("font-bold")
-                    .child(move || messages.get().first().unwrap().to_string())))))
+                    .child(message)))))
         } else {
             Either::Right(())
         }
