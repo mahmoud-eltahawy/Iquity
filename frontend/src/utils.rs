@@ -29,7 +29,7 @@ where
 
 pub fn silent_invoke(action: &'static str) {
     #[derive(Serialize, Deserialize)]
-    pub struct Empty {}
+    struct Empty {}
     spawn_local(async move {
         invoke::<()>(action, Empty {}).await;
     });

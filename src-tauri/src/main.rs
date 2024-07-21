@@ -1,17 +1,13 @@
-use tauri::{generate_context, AppHandle, Emitter, Manager, State};
+use tauri::{generate_context, AppHandle, Manager, State};
+use utils::{emit_content, read_file};
 
-use config::{EmittedMarkdown, CONTENT_EVENT};
-use futures::{
-    channel::mpsc::{channel, Receiver},
-    SinkExt, StreamExt,
-};
-use notify::{Config, Event, RecommendedWatcher, RecursiveMode, Watcher};
 use std::{
     io::{stdout, Write},
-    path::Path,
     sync::Mutex,
 };
 use tauri_plugin_cli::CliExt;
+
+mod utils;
 
 const SLIDES_SPLITTER: &str = "---";
 
@@ -88,55 +84,12 @@ async fn main() {
 
             let handle = app.app_handle().to_owned();
             tokio::task::spawn(async move {
-                watch(handle, path).await.unwrap();
+                utils::watch(handle, path).await.unwrap();
             });
             Ok(())
         })
         .run(generate_context!())
         .expect("error while running tauri application");
-}
-
-fn watcher() -> notify::Result<(RecommendedWatcher, Receiver<notify::Result<Event>>)> {
-    let (mut tx, rx) = channel(1);
-
-    // Automatically select the best implementation for your platform.
-    // You can also access each implementation directly e.g. INotifyWatcher.
-    let watcher = RecommendedWatcher::new(
-        move |res| {
-            futures::executor::block_on(async {
-                tx.send(res).await.unwrap();
-            })
-        },
-        Config::default(),
-    )?;
-
-    Ok((watcher, rx))
-}
-
-async fn watch<P: AsRef<Path>>(app: AppHandle, path: P) -> Result<(), Box<dyn std::error::Error>> {
-    let (mut watcher, mut rx) = watcher()?;
-    watcher.watch(path.as_ref(), RecursiveMode::NonRecursive)?;
-
-    let content = app.state::<Content>();
-
-    loop {
-        if rx.next().await.is_none() {
-            continue;
-        }
-        let slides = read_file(&path).await?;
-        let mut content_slides = content.slides.lock().unwrap();
-        *content_slides = slides;
-        let mut index = content.index.lock().unwrap();
-        if *index > content_slides.len() - 1 {
-            *index = content_slides.len() - 1;
-        };
-        emit_content(
-            &app,
-            *index,
-            content_slides.len(),
-            content_slides.get(*index).unwrap_or(&String::new()),
-        );
-    }
 }
 
 #[tauri::command]
@@ -150,12 +103,6 @@ async fn md_init(
     emit_content(&app, 0, slides.len(), &slides[0]);
     *content_slides = slides;
     Ok(())
-}
-
-async fn read_file<P: AsRef<Path>>(path: P) -> Result<Vec<String>, Box<dyn std::error::Error>> {
-    let text = tokio::fs::read_to_string(path).await?;
-    let slides = text.split(SLIDES_SPLITTER).map(|x| x.to_string()).collect();
-    Ok(slides)
 }
 
 #[tauri::command]
@@ -178,9 +125,4 @@ fn prev_slide(app: AppHandle, content: State<'_, Content>) {
     *index = index.checked_sub(1).unwrap_or(0);
     let slide = slides.get(*index).unwrap();
     emit_content(&app, *index, slides.len(), slide);
-}
-
-fn emit_content(app: &AppHandle, index: usize, len: usize, slide: &String) {
-    let output = EmittedMarkdown::new(index + 1, len, slide);
-    app.emit(CONTENT_EVENT, output).unwrap();
 }
