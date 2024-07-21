@@ -81,6 +81,4 @@ esc => to hide this message
 
 ## todos
 - [ ] add a toml config file
-- [ ] add slides feature
-
-
+- [X] add slides feature

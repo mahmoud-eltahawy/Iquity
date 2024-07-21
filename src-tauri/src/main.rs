@@ -5,7 +5,7 @@ use futures::{
     SinkExt, StreamExt,
 };
 use notify::{Config, Event, RecommendedWatcher, RecursiveMode, Watcher};
-use std::path::Path;
+use std::{path::Path, sync::Mutex};
 use tauri_plugin_cli::CliExt;
 
 const HELP_MESSAGE: &str = r#"
@@ -42,11 +42,29 @@ const HELP_MESSAGE: &str = r#"
     esc => to hide this message    
 "#;
 
+struct Content {
+    slides: Mutex<Vec<String>>,
+    index: Mutex<usize>,
+}
+
+impl Default for Content {
+    fn default() -> Self {
+        Self {
+            slides: Mutex::new(Vec::new()),
+            index: Mutex::new(0),
+        }
+    }
+}
+
+const CONTENT_EVENT: &str = "content";
+const SLIDES_SPLITTER: &str = "---\n";
+
 #[tokio::main]
 async fn main() {
     tauri::Builder::default()
         .plugin(tauri_plugin_cli::init())
-        .invoke_handler(tauri::generate_handler![md_init])
+        .manage(Content::default())
+        .invoke_handler(tauri::generate_handler![md_init, next_slide, prev_slide,])
         .setup(move |app| {
             let matches = app.cli().matches().unwrap();
             let Some(path) = matches
@@ -90,20 +108,59 @@ async fn watch<P: AsRef<Path>>(app: AppHandle, path: P) -> Result<(), Box<dyn st
     let (mut watcher, mut rx) = watcher()?;
     watcher.watch(path.as_ref(), RecursiveMode::NonRecursive)?;
 
+    let content = app.state::<Content>();
+
     loop {
         if rx.next().await.is_none() {
             continue;
         }
-        let content = read_file(&path).await?;
-        app.emit("content", content)?;
+        let slides = read_file(&path).await?;
+        let mut content_slides = content.slides.lock().unwrap();
+        *content_slides = slides;
+        let mut index = content.index.lock().unwrap();
+        if *index > content_slides.len() - 1 {
+            *index = content_slides.len() - 1;
+        };
+        app.emit(
+            CONTENT_EVENT,
+            content_slides.get(*index).unwrap_or(&String::new()),
+        )?;
     }
 }
 
 #[tauri::command]
-async fn md_init(path: State<'_, String>) -> Result<String, String> {
-    read_file(&path.inner()).await.map_err(|x| x.to_string())
+async fn md_init(content: State<'_, Content>, path: State<'_, String>) -> Result<String, String> {
+    let slides = read_file(&path.inner()).await.map_err(|x| x.to_string())?;
+    let mut content_slides = content.slides.lock().unwrap();
+    *content_slides = slides;
+
+    Ok(content_slides[0].to_string())
 }
 
-async fn read_file<P: AsRef<Path>>(path: P) -> Result<String, Box<dyn std::error::Error>> {
-    Ok(tokio::fs::read_to_string(path).await?)
+async fn read_file<P: AsRef<Path>>(path: P) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+    let text = tokio::fs::read_to_string(path).await?;
+    let slides = text.split(SLIDES_SPLITTER).map(|x| x.to_string()).collect();
+    Ok(slides)
+}
+
+#[tauri::command]
+fn next_slide(app: AppHandle, content: State<'_, Content>) {
+    let slides = content.slides.lock().unwrap();
+    let mut index = content.index.lock().unwrap();
+    let slide = if *index < slides.len() - 1 {
+        *index += 1;
+        slides.get(*index).unwrap()
+    } else {
+        slides.last().unwrap()
+    };
+    app.emit(CONTENT_EVENT, slide).unwrap();
+}
+
+#[tauri::command]
+fn prev_slide(app: AppHandle, content: State<'_, Content>) {
+    let slides = content.slides.lock().unwrap();
+    let mut index = content.index.lock().unwrap();
+    *index = index.checked_sub(1).unwrap_or(0);
+    let slide = slides.get(*index).unwrap();
+    app.emit(CONTENT_EVENT, slide).unwrap();
 }

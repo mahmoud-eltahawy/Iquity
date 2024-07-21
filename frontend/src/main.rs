@@ -8,7 +8,7 @@ use components::help::help;
 use gloo::utils::window;
 use leptos::{either::Either, ev, prelude::*, spawn::spawn_local};
 use local_config::Config;
-use utils::{init_markdown, listen_to};
+use utils::{init_markdown, listen_to, next_slide, prev_slide};
 use wasm_bindgen::UnwrapThrowExt;
 
 use crate::components::markdown_preview::markdown_preview;
@@ -51,6 +51,18 @@ pub fn app() -> impl IntoView {
 
         if code.eq("KeyK") {
             conf.prev_theme();
+        }
+
+        if code.eq("KeyL") {
+            spawn_local(async move {
+                next_slide().await;
+            })
+        }
+
+        if code.eq("KeyH") {
+            spawn_local(async move {
+                prev_slide().await;
+            })
         }
 
         if code.eq("Minus") {
