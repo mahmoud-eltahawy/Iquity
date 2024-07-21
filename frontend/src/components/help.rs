@@ -1,17 +1,14 @@
-use leptos::either::Either;
-use leptos::html::{div, p};
+use leptos::html::{dialog, div, p};
 use leptos::prelude::*;
 
-use crate::local_config::{Config, THEMES, THEMES_SIZE};
+pub const HELP_ID: &str = "HELP";
 
-pub fn help(ask_help: RwSignal<bool>) -> impl IntoView {
-    let conf = use_context::<Config>().unwrap();
-    let theme = move || THEMES[conf.theme_index.get() % THEMES_SIZE];
-    move || {
-        if ask_help.get() {
-            Either::Left(div()
-            .attr("data-theme", theme)
-            .class("grid grid-cols-1 gap-2 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 w-9/12 h-5/6 text-center border-2 rounded-lg p-5 text-2xl")
+pub fn help() -> impl IntoView {
+    dialog()
+        .id(HELP_ID)
+        .class("modal").child(
+            div()
+            .class("modal-box grid grid-cols-1 gap-2 w-9/12 h-5/6 text-center border-2 rounded-lg p-5 prose-lg")
             .child((
                 p().child("p => print to pdf"),
                 p().child("j => next theme"),
@@ -22,9 +19,5 @@ pub fn help(ask_help: RwSignal<bool>) -> impl IntoView {
                 p().child("- or _ => decrease font size"),
                 p().child("? or / => show this help message"),
                 p().child("esc => to hide this message"),
-        )))
-        } else {
-            Either::Right(())
-        }
-    }
+            )))
 }

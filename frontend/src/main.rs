@@ -2,13 +2,11 @@ mod components;
 mod local_config;
 mod utils;
 
-use components::{help::help, which_slide::which_slide};
+use components::{help::help, notification::notification, which_slide::which_slide};
 use config::EmittedMarkdown;
-use gloo::utils::window;
-use leptos::{ev, prelude::*};
-use local_config::Config;
-use utils::{listen_to_content, silent_invoke};
-use wasm_bindgen::UnwrapThrowExt;
+use leptos::{html, prelude::*};
+use local_config::{Config, THEMES, THEMES_SIZE};
+use utils::{key_bindings, listen_to_content, silent_invoke};
 
 use crate::components::markdown_preview::markdown_preview;
 
@@ -65,57 +63,27 @@ impl Default for Markdown {
 }
 
 pub fn app() -> impl IntoView {
+    let conf = Config::default();
+
     let markdown = Markdown::default();
     listen_to_content(markdown);
     silent_invoke("md_init");
-
-    let conf = Config::default();
-    let ask_help = RwSignal::new(false);
-
-    provide_context(conf);
     provide_context(markdown);
 
-    window_event_listener(ev::keydown, move |ke: ev::KeyboardEvent| {
-        let code = ke.code();
+    let theme = move || THEMES[conf.theme_index.get() % THEMES_SIZE];
+    let font_size = move || conf.font_size.get();
 
-        if code.eq("KeyP") {
-            window().print().unwrap_throw();
-        }
+    key_bindings(conf);
 
-        if code.eq("KeyJ") {
-            conf.next_theme();
-        }
-
-        if code.eq("KeyK") {
-            conf.prev_theme();
-        }
-
-        if code.eq("KeyL") {
-            silent_invoke("next_slide");
-        }
-
-        if code.eq("KeyH") {
-            silent_invoke("prev_slide");
-        }
-
-        if code.eq("Minus") {
-            conf.decrease_font_size();
-        }
-
-        if code.eq("Equal") {
-            conf.increase_font_size();
-        }
-
-        if ask_help.get_untracked() && code == "Escape" {
-            ask_help.set(false);
-        }
-
-        if code.eq("Slash") {
-            ask_help.set(true);
-        }
-    });
-
-    (markdown_preview(), help(ask_help), which_slide())
+    html::main()
+        .attr("data-theme", theme)
+        .class(font_size)
+        .child((
+            markdown_preview(),
+            help(),
+            which_slide(),
+            notification(theme),
+        ))
 }
 
 fn main() {
