@@ -2,10 +2,10 @@ mod components;
 mod local_config;
 mod utils;
 
-use components::help::help;
+use components::{help::help, which_slide::which_slide};
 use config::EmittedMarkdown;
 use gloo::utils::window;
-use leptos::{either::Either, ev, prelude::*};
+use leptos::{ev, prelude::*};
 use local_config::Config;
 use utils::{listen_to_content, silent_invoke};
 use wasm_bindgen::UnwrapThrowExt;
@@ -45,8 +45,12 @@ impl Markdown {
         }: EmittedMarkdown<String>,
     ) {
         self.content.set(content);
-        self.current.set(current);
-        self.len.set(len);
+        if self.current.get_untracked() != current {
+            self.current.set(current);
+        }
+        if self.len.get_untracked() != len {
+            self.len.set(len);
+        }
     }
 }
 
@@ -66,7 +70,7 @@ pub fn app() -> impl IntoView {
     silent_invoke("md_init");
 
     let conf = Config::default();
-    let help_message = RwSignal::new(false);
+    let ask_help = RwSignal::new(false);
 
     provide_context(conf);
     provide_context(markdown);
@@ -102,22 +106,16 @@ pub fn app() -> impl IntoView {
             conf.increase_font_size();
         }
 
-        if help_message.get_untracked() && code == "Escape" {
-            help_message.set(false);
+        if ask_help.get_untracked() && code == "Escape" {
+            ask_help.set(false);
         }
 
         if code.eq("Slash") {
-            help_message.set(true);
+            ask_help.set(true);
         }
     });
 
-    (markdown_preview(), move || {
-        if help_message.get() {
-            Either::Left(help())
-        } else {
-            Either::Right(())
-        }
-    })
+    (markdown_preview(), help(ask_help), which_slide())
 }
 
 fn main() {
