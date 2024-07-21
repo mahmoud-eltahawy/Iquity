@@ -39,40 +39,6 @@ at the moment. building from source is the only option
   # you should use it like this
   iquity PATH_TO_README_FILE.md
 ```
-### the help message
-Welcom to iquity 
-    the markdown compiler
-
-you called iquity without a markdown path
-
-you should call the program with the path to
-the target md file then the program will hot reload
-the content of the file every time you change 
-something in it. 
-
-
-EXAMPLE
-
-iquity ./README.md
-
-
-PREVIEW WINDOW KEYS    
-
-p => print to pdf
-
-j => next theme
-
-k => previous theme
-
-= or + => increase font size    
-
-- or _ => decrease font size    
-
-? or / => show this help message    
-
-esc => to hide this message    
-
-
 
 ## how is this different from Ubiquity
 - Ubiquity ships it's own text editor side by side with the previewer while iquity trys to be minimal by watching the file you are editing with your favourite text editor and hot reloads it's content every time you change some thing in it
