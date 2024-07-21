@@ -13,6 +13,8 @@ pub(crate) fn help() -> impl IntoView {
             p().child("p => print to pdf"),
             p().child("j => next theme"),
             p().child("k => previous theme"),
+            p().child("L => next slide"),
+            p().child("H => previous slide"),
             p().child("= or + => increase font size"),
             p().child("- or _ => decrease font size"),
             p().child("? or / => show this help message"),

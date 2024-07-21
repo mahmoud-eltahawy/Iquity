@@ -29,14 +29,22 @@ where
 #[derive(Serialize, Deserialize)]
 pub struct Empty {}
 
-pub async fn init_markdown(md: Markdown) {
-    md.set(invoke::<String>("md_init", Empty {}).await);
+pub fn init_markdown() -> Markdown {
+    let markdown = Markdown::default();
+    spawn_local(async move {
+        markdown.set(invoke::<String>("md_init", Empty {}).await);
+    });
+    markdown
 }
 
-pub async fn next_slide() {
-    invoke::<String>("next_slide", Empty {}).await;
+pub fn next_slide() {
+    spawn_local(async move {
+        invoke::<String>("next_slide", Empty {}).await;
+    });
 }
 
-pub async fn prev_slide() {
-    invoke::<String>("prev_slide", Empty {}).await;
+pub fn prev_slide() {
+    spawn_local(async move {
+        invoke::<String>("prev_slide", Empty {}).await;
+    });
 }

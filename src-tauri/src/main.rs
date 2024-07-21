@@ -1,14 +1,21 @@
 use tauri::{generate_context, AppHandle, Emitter, Manager, State};
 
+use config::CONTENT_EVENT;
 use futures::{
     channel::mpsc::{channel, Receiver},
     SinkExt, StreamExt,
 };
 use notify::{Config, Event, RecommendedWatcher, RecursiveMode, Watcher};
-use std::{path::Path, sync::Mutex};
+use std::{
+    io::{stdout, Write},
+    path::Path,
+    sync::Mutex,
+};
 use tauri_plugin_cli::CliExt;
 
-const HELP_MESSAGE: &str = r#"
+const SLIDES_SPLITTER: &str = "---";
+
+const HELP_MESSAGE: &[u8] = r#"
     Welcom to iquity 
         the markdown compiler
 
@@ -33,6 +40,10 @@ const HELP_MESSAGE: &str = r#"
 
     k => previous theme
 
+    L => next slide
+
+    H => previous slide
+
     = or + => increase font size    
 
     - or _ => decrease font size    
@@ -40,7 +51,8 @@ const HELP_MESSAGE: &str = r#"
     ? or / => show this help message    
 
     esc => to hide this message    
-"#;
+"#
+.as_bytes();
 
 struct Content {
     slides: Mutex<Vec<String>>,
@@ -56,9 +68,6 @@ impl Default for Content {
     }
 }
 
-const CONTENT_EVENT: &str = "content";
-const SLIDES_SPLITTER: &str = "---\n";
-
 #[tokio::main]
 async fn main() {
     tauri::Builder::default()
@@ -72,7 +81,7 @@ async fn main() {
                 .get("path")
                 .and_then(|x| x.value.as_str().map(|x| x.to_string()))
             else {
-                println!("{}", HELP_MESSAGE);
+                stdout().write_all(HELP_MESSAGE).unwrap();
                 std::process::exit(0x0100);
             };
             app.manage(path.clone());

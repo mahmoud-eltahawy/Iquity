@@ -2,6 +2,8 @@ use serde::{Deserialize, Serialize};
 
 mod error;
 
+pub const CONTENT_EVENT: &str = "content";
+
 #[derive(Clone, Deserialize, Serialize, Debug, PartialEq)]
 pub enum FontSize {
     VerySmall,

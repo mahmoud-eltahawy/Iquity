@@ -5,8 +5,9 @@ mod utils;
 use std::ops::Deref;
 
 use components::help::help;
+use config::CONTENT_EVENT;
 use gloo::utils::window;
-use leptos::{either::Either, ev, prelude::*, spawn::spawn_local};
+use leptos::{either::Either, ev, prelude::*};
 use local_config::Config;
 use utils::{init_markdown, listen_to, next_slide, prev_slide};
 use wasm_bindgen::UnwrapThrowExt;
@@ -31,10 +32,7 @@ impl Deref for Markdown {
 }
 
 pub fn app() -> impl IntoView {
-    let markdown = Markdown::default();
-    spawn_local(async move {
-        init_markdown(markdown).await;
-    });
+    let markdown = init_markdown();
     let conf = Config::default();
     let help_message = RwSignal::new(false);
 
@@ -54,15 +52,11 @@ pub fn app() -> impl IntoView {
         }
 
         if code.eq("KeyL") {
-            spawn_local(async move {
-                next_slide().await;
-            })
+            next_slide();
         }
 
         if code.eq("KeyH") {
-            spawn_local(async move {
-                prev_slide().await;
-            })
+            prev_slide();
         }
 
         if code.eq("Minus") {
@@ -85,7 +79,7 @@ pub fn app() -> impl IntoView {
     provide_context(conf);
     provide_context(markdown);
 
-    listen_to("content", move |payload| {
+    listen_to(CONTENT_EVENT, move |payload| {
         markdown.update(|content| {
             *content = payload;
         });
