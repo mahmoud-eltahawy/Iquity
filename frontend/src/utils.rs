@@ -1,7 +1,8 @@
+use config::{EmittedMarkdown, CONTENT_EVENT};
 use futures::StreamExt;
 use tauri_sys::{core::invoke, event::listen};
 
-use leptos::{reactive_graph::traits::Set, spawn::spawn_local};
+use leptos::spawn::spawn_local;
 
 use serde::{de::DeserializeOwned, Deserialize, Serialize};
 
@@ -26,25 +27,16 @@ where
     });
 }
 
-#[derive(Serialize, Deserialize)]
-pub struct Empty {}
-
-pub fn init_markdown() -> Markdown {
-    let markdown = Markdown::default();
+pub fn silent_invoke(action: &'static str) {
+    #[derive(Serialize, Deserialize)]
+    pub struct Empty {}
     spawn_local(async move {
-        markdown.set(invoke::<String>("md_init", Empty {}).await);
-    });
-    markdown
-}
-
-pub fn next_slide() {
-    spawn_local(async move {
-        invoke::<String>("next_slide", Empty {}).await;
+        invoke::<()>(action, Empty {}).await;
     });
 }
 
-pub fn prev_slide() {
-    spawn_local(async move {
-        invoke::<String>("prev_slide", Empty {}).await;
+pub fn listen_to_content(markdown: Markdown) {
+    listen_to(CONTENT_EVENT, move |output: EmittedMarkdown<String>| {
+        markdown.set(output);
     });
 }

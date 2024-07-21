@@ -2,6 +2,26 @@ use serde::{Deserialize, Serialize};
 
 mod error;
 
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct EmittedMarkdown<T: ToString> {
+    pub current: usize,
+    pub len: usize,
+    pub content: T,
+}
+
+impl<T> EmittedMarkdown<T>
+where
+    T: ToString,
+{
+    pub fn new(current: usize, len: usize, content: T) -> Self {
+        Self {
+            current,
+            len,
+            content,
+        }
+    }
+}
+
 pub const CONTENT_EVENT: &str = "content";
 
 #[derive(Clone, Deserialize, Serialize, Debug, PartialEq)]

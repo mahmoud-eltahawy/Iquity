@@ -2,39 +2,74 @@ mod components;
 mod local_config;
 mod utils;
 
-use std::ops::Deref;
-
 use components::help::help;
-use config::CONTENT_EVENT;
+use config::EmittedMarkdown;
 use gloo::utils::window;
 use leptos::{either::Either, ev, prelude::*};
 use local_config::Config;
-use utils::{init_markdown, listen_to, next_slide, prev_slide};
+use utils::{listen_to_content, silent_invoke};
 use wasm_bindgen::UnwrapThrowExt;
 
 use crate::components::markdown_preview::markdown_preview;
 
-#[derive(Clone, Copy, Debug, PartialEq)]
-pub struct Markdown(pub RwSignal<String>);
+#[derive(Clone, Copy, Debug)]
+pub struct Markdown {
+    content: RwSignal<String>,
+    current: RwSignal<usize>,
+    len: RwSignal<usize>,
+}
 
-impl Default for Markdown {
-    fn default() -> Self {
-        Markdown(RwSignal::new(String::default()))
+impl From<EmittedMarkdown<String>> for Markdown {
+    fn from(
+        EmittedMarkdown {
+            current,
+            len,
+            content,
+        }: EmittedMarkdown<String>,
+    ) -> Self {
+        Self {
+            content: RwSignal::new(content),
+            current: RwSignal::new(current),
+            len: RwSignal::new(len),
+        }
     }
 }
 
-impl Deref for Markdown {
-    type Target = RwSignal<String>;
+impl Markdown {
+    pub fn set(
+        &self,
+        EmittedMarkdown {
+            current,
+            len,
+            content,
+        }: EmittedMarkdown<String>,
+    ) {
+        self.content.set(content);
+        self.current.set(current);
+        self.len.set(len);
+    }
+}
 
-    fn deref(&self) -> &Self::Target {
-        &self.0
+impl Default for Markdown {
+    fn default() -> Self {
+        Markdown {
+            content: RwSignal::new(String::default()),
+            current: RwSignal::new(0),
+            len: RwSignal::new(0),
+        }
     }
 }
 
 pub fn app() -> impl IntoView {
-    let markdown = init_markdown();
+    let markdown = Markdown::default();
+    listen_to_content(markdown);
+    silent_invoke("md_init");
+
     let conf = Config::default();
     let help_message = RwSignal::new(false);
+
+    provide_context(conf);
+    provide_context(markdown);
 
     window_event_listener(ev::keydown, move |ke: ev::KeyboardEvent| {
         let code = ke.code();
@@ -52,11 +87,11 @@ pub fn app() -> impl IntoView {
         }
 
         if code.eq("KeyL") {
-            next_slide();
+            silent_invoke("next_slide");
         }
 
         if code.eq("KeyH") {
-            prev_slide();
+            silent_invoke("prev_slide");
         }
 
         if code.eq("Minus") {
@@ -76,14 +111,6 @@ pub fn app() -> impl IntoView {
         }
     });
 
-    provide_context(conf);
-    provide_context(markdown);
-
-    listen_to(CONTENT_EVENT, move |payload| {
-        markdown.update(|content| {
-            *content = payload;
-        });
-    });
     (markdown_preview(), move || {
         if help_message.get() {
             Either::Left(help())

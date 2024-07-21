@@ -1,6 +1,6 @@
 use tauri::{generate_context, AppHandle, Emitter, Manager, State};
 
-use config::CONTENT_EVENT;
+use config::{EmittedMarkdown, CONTENT_EVENT};
 use futures::{
     channel::mpsc::{channel, Receiver},
     SinkExt, StreamExt,
@@ -130,20 +130,26 @@ async fn watch<P: AsRef<Path>>(app: AppHandle, path: P) -> Result<(), Box<dyn st
         if *index > content_slides.len() - 1 {
             *index = content_slides.len() - 1;
         };
-        app.emit(
-            CONTENT_EVENT,
+        emit_content(
+            &app,
+            *index,
+            content_slides.len(),
             content_slides.get(*index).unwrap_or(&String::new()),
-        )?;
+        );
     }
 }
 
 #[tauri::command]
-async fn md_init(content: State<'_, Content>, path: State<'_, String>) -> Result<String, String> {
+async fn md_init(
+    app: AppHandle,
+    content: State<'_, Content>,
+    path: State<'_, String>,
+) -> Result<(), String> {
     let slides = read_file(&path.inner()).await.map_err(|x| x.to_string())?;
     let mut content_slides = content.slides.lock().unwrap();
+    emit_content(&app, 0, slides.len(), &slides[0]);
     *content_slides = slides;
-
-    Ok(content_slides[0].to_string())
+    Ok(())
 }
 
 async fn read_file<P: AsRef<Path>>(path: P) -> Result<Vec<String>, Box<dyn std::error::Error>> {
@@ -162,7 +168,7 @@ fn next_slide(app: AppHandle, content: State<'_, Content>) {
     } else {
         slides.last().unwrap()
     };
-    app.emit(CONTENT_EVENT, slide).unwrap();
+    emit_content(&app, *index, slides.len(), slide);
 }
 
 #[tauri::command]
@@ -171,5 +177,10 @@ fn prev_slide(app: AppHandle, content: State<'_, Content>) {
     let mut index = content.index.lock().unwrap();
     *index = index.checked_sub(1).unwrap_or(0);
     let slide = slides.get(*index).unwrap();
-    app.emit(CONTENT_EVENT, slide).unwrap();
+    emit_content(&app, *index, slides.len(), slide);
+}
+
+fn emit_content(app: &AppHandle, index: usize, len: usize, slide: &String) {
+    let output = EmittedMarkdown::new(index + 1, len, slide);
+    app.emit(CONTENT_EVENT, output).unwrap();
 }
