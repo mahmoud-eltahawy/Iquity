@@ -23,6 +23,7 @@ where
 }
 
 pub const CONTENT_EVENT: &str = "content";
+pub const CONFIG_EVENT: &str = "config";
 
 #[derive(Clone, Deserialize, Serialize, Debug, PartialEq)]
 pub enum FontSize {
@@ -42,13 +43,15 @@ pub struct GlobalConfig {
 }
 #[cfg(feature = "server")]
 pub mod server_only {
+    use std::path::PathBuf;
+
     use crate::GlobalConfig;
-    const DEFAULT_CONFIG_NAME: &str = ".iquity_config.toml";
+    const CONFIG_NAME: &str = ".iquity_config.toml";
 
     impl GlobalConfig {
-        fn config_path() -> Option<std::path::PathBuf> {
+        pub fn config_path() -> Option<std::path::PathBuf> {
             dirs::home_dir().map(|mut x| {
-                x.push(DEFAULT_CONFIG_NAME);
+                x.push(CONFIG_NAME);
                 x
             })
         }
@@ -59,17 +62,14 @@ pub mod server_only {
             toml::from_str(text)
         }
 
-        pub async fn get_from_home() -> Result<Self, Box<dyn std::error::Error>> {
-            let Some(path) = Self::config_path() else {
-                return Err("can not find config path".to_string().into());
-            };
+        pub async fn get(path: &PathBuf) -> Result<Self, Box<dyn std::error::Error>> {
             let text = tokio::fs::read_to_string(&path).await;
             let config = match text {
                 Ok(text) => GlobalConfig::from_toml(&text)?,
                 Err(_) => {
                     let gb = GlobalConfig::default();
                     let text = gb.to_toml()?;
-                    tokio::fs::write(path, text).await?;
+                    tokio::fs::write(&path, text).await?;
                     gb
                 }
             };

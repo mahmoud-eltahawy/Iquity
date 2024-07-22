@@ -1,10 +1,12 @@
-use config::GlobalConfig;
-use tauri::{generate_context, AppHandle, Manager, State};
+use config::{GlobalConfig, CONFIG_EVENT};
+use tauri::{generate_context, AppHandle, Emitter, Manager, State};
 use tauri_plugin_notification::NotificationExt;
 use utils::{emit_content, read_markdown};
 
 use std::{
     io::{stdout, Write},
+    path::PathBuf,
+    str::FromStr,
     sync::Mutex,
 };
 use tauri_plugin_cli::CliExt;
@@ -66,21 +68,25 @@ impl Default for Content {
     }
 }
 
+struct Paths {
+    markdown: PathBuf,
+    config: PathBuf,
+}
+
 #[tokio::main]
 async fn main() {
-    let config = GlobalConfig::get_from_home().await.unwrap();
-    println!("{:#?}", config);
+    let config_path = GlobalConfig::config_path().unwrap();
 
     tauri::Builder::default()
         .plugin(tauri_plugin_notification::init())
         .plugin(tauri_plugin_cli::init())
         .manage(Content::default())
         .invoke_handler(tauri::generate_handler![
-            md_init, next_slide, prev_slide, notify,
+            conf_init, md_init, next_slide, prev_slide, notify,
         ])
         .setup(move |app| {
             let matches = app.cli().matches().unwrap();
-            let Some(path) = matches
+            let Some(markdown_path) = matches
                 .args
                 .get("path")
                 .and_then(|x| x.value.as_str().map(|x| x.to_string()))
@@ -88,11 +94,15 @@ async fn main() {
                 stdout().write_all(HELP_MESSAGE).unwrap();
                 std::process::exit(0x0100);
             };
-            app.manage(path.clone());
+            let paths = Paths {
+                markdown: PathBuf::from_str(&markdown_path).unwrap(),
+                config: config_path,
+            };
+            app.manage(paths);
 
             let handle = app.app_handle().to_owned();
             tokio::task::spawn(async move {
-                utils::watch(handle, path).await.unwrap();
+                utils::watch(handle, markdown_path).await.unwrap();
             });
             Ok(())
         })
@@ -104,14 +114,23 @@ async fn main() {
 async fn md_init(
     app: AppHandle,
     content: State<'_, Content>,
-    path: State<'_, String>,
+    path: State<'_, Paths>,
 ) -> Result<(), String> {
-    let slides = read_markdown(&path.inner())
+    let slides = read_markdown(&path.inner().markdown)
         .await
         .map_err(|x| x.to_string())?;
     let mut content_slides = content.slides.lock().unwrap();
     emit_content(&app, 0, slides.len(), &slides[0]);
     *content_slides = slides;
+    Ok(())
+}
+
+#[tauri::command]
+async fn conf_init(app: AppHandle, paths: State<'_, Paths>) -> Result<(), String> {
+    let config = GlobalConfig::get(&paths.inner().config)
+        .await
+        .map_err(|x| x.to_string())?;
+    app.emit(CONFIG_EVENT, config).map_err(|x| x.to_string())?;
     Ok(())
 }
 

@@ -6,7 +6,7 @@ use components::help::help;
 use config::EmittedMarkdown;
 use leptos::{html, prelude::*};
 use local_config::{Config, THEMES, THEMES_SIZE};
-use utils::{key_bindings, listen_to_content, notify, silent_invoke};
+use utils::{key_bindings, listen_to_config, listen_to_content, notify, silent_invoke};
 
 use crate::components::markdown_preview::markdown_preview;
 
@@ -64,6 +64,8 @@ impl Default for Markdown {
 
 pub fn app() -> impl IntoView {
     let conf = Config::default();
+    listen_to_config(conf);
+    silent_invoke("conf_init");
 
     let markdown = Markdown::default();
     listen_to_content(markdown);

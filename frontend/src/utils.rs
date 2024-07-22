@@ -1,4 +1,5 @@
 use config::{EmittedMarkdown, CONTENT_EVENT};
+use config::{GlobalConfig, CONFIG_EVENT};
 use futures::StreamExt;
 use gloo::utils::{document, window};
 use tauri_sys::{core::invoke, event::listen};
@@ -54,6 +55,12 @@ pub fn notify(title: &'static str, message: String) {
 pub fn listen_to_content(markdown: Markdown) {
     listen_to(CONTENT_EVENT, move |output: EmittedMarkdown<String>| {
         markdown.set(output);
+    });
+}
+
+pub fn listen_to_config(conf: Config) {
+    listen_to(CONFIG_EVENT, move |output: GlobalConfig| {
+        conf.set(output);
     });
 }
 

@@ -44,6 +44,23 @@ pub struct Config {
 }
 
 impl Config {
+    pub fn set(&self, conf: GlobalConfig) {
+        self.theme_index.set({
+            THEMES
+                .iter()
+                .enumerate()
+                .find(|(_, x)| x.to_string() == conf.theme)
+                .map(|(i, _)| i)
+                .unwrap_or(0)
+        });
+        self.font_size.set(match conf.font_size {
+            config::FontSize::VerySmall => "prose-sm".to_string(),
+            config::FontSize::Small => "prose-base".to_string(),
+            config::FontSize::Middle => "prose-lg".to_string(),
+            config::FontSize::Big => "prose-xl".to_string(),
+            config::FontSize::VeryBig => "prose-2xl".to_string(),
+        });
+    }
     pub fn increase_font_size(self) {
         self.font_size.update(|x| {
             *x = match x.as_str() {
