@@ -41,7 +41,7 @@ pub async fn watch<P: AsRef<Path>>(
         if rx.next().await.is_none() {
             continue;
         }
-        let slides = read_file(&path).await?;
+        let slides = read_markdown(&path).await?;
         let mut content_slides = content.slides.lock().unwrap();
         *content_slides = slides;
         let mut index = content.index.lock().unwrap();
@@ -57,7 +57,9 @@ pub async fn watch<P: AsRef<Path>>(
     }
 }
 
-pub async fn read_file<P: AsRef<Path>>(path: P) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+pub async fn read_markdown<P: AsRef<Path>>(
+    path: P,
+) -> Result<Vec<String>, Box<dyn std::error::Error>> {
     let text = tokio::fs::read_to_string(path).await?;
     let slides = text.split(SLIDES_SPLITTER).map(|x| x.to_string()).collect();
     Ok(slides)

@@ -9,5 +9,14 @@ license.workspace = true
 [dependencies]
 ron = { workspace = true }
 serde = { workspace = true }
-dirs = { workspace = true }
 thiserror = { workspace = true }
+dirs = { workspace = true ,optional = true  }
+tokio = { workspace = true ,optional = true }
+toml = { version = "0.8.15" ,optional = true}
+
+[features]
+server = [
+  "dep:tokio",
+  "dep:toml",
+  "dep:dirs",
+]

@@ -83,10 +83,15 @@ impl Config {
 impl From<GlobalConfig> for Config {
     fn from(
         GlobalConfig {
-            theme_index,
-            font_size,
+            theme, font_size, ..
         }: GlobalConfig,
     ) -> Self {
+        let theme_index = THEMES
+            .iter()
+            .enumerate()
+            .find(|(_, x)| x.to_string() == theme)
+            .map(|(i, _)| i)
+            .unwrap_or(0);
         Self {
             theme_index: RwSignal::new(theme_index),
             font_size: RwSignal::new(match font_size {

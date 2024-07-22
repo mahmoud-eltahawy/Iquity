@@ -1,0 +1,4 @@
+theme = "dracula"
+font_size = "Small"
+theme_notification = true
+slide_notification = true

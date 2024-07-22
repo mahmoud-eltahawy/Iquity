@@ -35,15 +35,56 @@ pub enum FontSize {
 
 #[derive(Clone, Deserialize, Serialize, Debug, PartialEq)]
 pub struct GlobalConfig {
-    pub theme_index: usize,
+    pub theme: String,
     pub font_size: FontSize,
+    pub theme_notification: bool,
+    pub slide_notification: bool,
+}
+#[cfg(feature = "server")]
+pub mod server_only {
+    use crate::GlobalConfig;
+    const DEFAULT_CONFIG_NAME: &str = ".iquity_config.toml";
+
+    impl GlobalConfig {
+        fn config_path() -> Option<std::path::PathBuf> {
+            dirs::home_dir().map(|mut x| {
+                x.push(DEFAULT_CONFIG_NAME);
+                x
+            })
+        }
+        fn to_toml(&self) -> Result<String, toml::ser::Error> {
+            toml::to_string(self)
+        }
+        fn from_toml(text: &str) -> Result<Self, toml::de::Error> {
+            toml::from_str(text)
+        }
+
+        pub async fn get_from_home() -> Result<Self, Box<dyn std::error::Error>> {
+            let Some(path) = Self::config_path() else {
+                return Err("can not find config path".to_string().into());
+            };
+            let text = tokio::fs::read_to_string(&path).await;
+            let config = match text {
+                Ok(text) => GlobalConfig::from_toml(&text)?,
+                Err(_) => {
+                    let gb = GlobalConfig::default();
+                    let text = gb.to_toml()?;
+                    tokio::fs::write(path, text).await?;
+                    gb
+                }
+            };
+            Ok(config)
+        }
+    }
 }
 
 impl Default for GlobalConfig {
     fn default() -> Self {
         Self {
-            theme_index: 0,
+            theme: "dracula".to_string(),
             font_size: FontSize::Small,
+            theme_notification: true,
+            slide_notification: true,
         }
     }
 }

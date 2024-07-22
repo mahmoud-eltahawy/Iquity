@@ -1,6 +1,7 @@
+use config::GlobalConfig;
 use tauri::{generate_context, AppHandle, Manager, State};
 use tauri_plugin_notification::NotificationExt;
-use utils::{emit_content, read_file};
+use utils::{emit_content, read_markdown};
 
 use std::{
     io::{stdout, Write},
@@ -67,6 +68,9 @@ impl Default for Content {
 
 #[tokio::main]
 async fn main() {
+    let config = GlobalConfig::get_from_home().await.unwrap();
+    println!("{:#?}", config);
+
     tauri::Builder::default()
         .plugin(tauri_plugin_notification::init())
         .plugin(tauri_plugin_cli::init())
@@ -102,7 +106,9 @@ async fn md_init(
     content: State<'_, Content>,
     path: State<'_, String>,
 ) -> Result<(), String> {
-    let slides = read_file(&path.inner()).await.map_err(|x| x.to_string())?;
+    let slides = read_markdown(&path.inner())
+        .await
+        .map_err(|x| x.to_string())?;
     let mut content_slides = content.slides.lock().unwrap();
     emit_content(&app, 0, slides.len(), &slides[0]);
     *content_slides = slides;
