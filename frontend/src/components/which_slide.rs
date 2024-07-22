@@ -10,7 +10,7 @@ use leptos::{
 
 use crate::Markdown;
 
-pub fn which_slide() -> impl IntoView {
+pub fn _which_slide() -> impl IntoView {
     let show = RwSignal::new(false);
     let markdown = use_context::<Markdown>().unwrap();
     Effect::new(move |_| {

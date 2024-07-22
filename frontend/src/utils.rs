@@ -40,11 +40,11 @@ pub fn silent_invoke(action: &'static str) {
     });
 }
 
-pub fn notify(title: &'static str, message: &'static str) {
+pub fn notify(title: &'static str, message: String) {
     #[derive(Serialize, Deserialize)]
     struct Content {
         title: &'static str,
-        message: &'static str,
+        message: String,
     }
     spawn_local(async move {
         invoke::<()>("notify", Content { title, message }).await;

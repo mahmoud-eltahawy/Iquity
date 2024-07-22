@@ -2,7 +2,7 @@ mod components;
 mod local_config;
 mod utils;
 
-use components::{help::help, which_slide::which_slide};
+use components::help::help;
 use config::EmittedMarkdown;
 use leptos::{html, prelude::*};
 use local_config::{Config, THEMES, THEMES_SIZE};
@@ -74,7 +74,15 @@ pub fn app() -> impl IntoView {
     let font_size = move || conf.font_size.get();
 
     Effect::new(move |_| {
-        notify("iquity theme", theme());
+        notify("iquity theme", theme().to_string());
+    });
+
+    Effect::new(move |_| {
+        let current = markdown.current.get();
+        let len = markdown.len.get();
+        if current != 0 && len != 0 {
+            notify("iquity slide", format!("[ {} / {} ]", current, len));
+        }
     });
 
     key_bindings(conf);
@@ -82,7 +90,7 @@ pub fn app() -> impl IntoView {
     html::main()
         .attr("data-theme", theme)
         .class(font_size)
-        .child((markdown_preview(), help(), which_slide()))
+        .child((markdown_preview(), help()))
 }
 
 fn main() {
