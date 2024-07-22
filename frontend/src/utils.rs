@@ -40,6 +40,17 @@ pub fn silent_invoke(action: &'static str) {
     });
 }
 
+pub fn notify(title: &'static str, message: &'static str) {
+    #[derive(Serialize, Deserialize)]
+    struct Content {
+        title: &'static str,
+        message: &'static str,
+    }
+    spawn_local(async move {
+        invoke::<()>("notify", Content { title, message }).await;
+    });
+}
+
 pub fn listen_to_content(markdown: Markdown) {
     listen_to(CONTENT_EVENT, move |output: EmittedMarkdown<String>| {
         markdown.set(output);

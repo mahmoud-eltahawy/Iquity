@@ -2,11 +2,11 @@ mod components;
 mod local_config;
 mod utils;
 
-use components::{help::help, notification::notification, which_slide::which_slide};
+use components::{help::help, which_slide::which_slide};
 use config::EmittedMarkdown;
 use leptos::{html, prelude::*};
 use local_config::{Config, THEMES, THEMES_SIZE};
-use utils::{key_bindings, listen_to_content, silent_invoke};
+use utils::{key_bindings, listen_to_content, notify, silent_invoke};
 
 use crate::components::markdown_preview::markdown_preview;
 
@@ -73,17 +73,16 @@ pub fn app() -> impl IntoView {
     let theme = move || THEMES[conf.theme_index.get() % THEMES_SIZE];
     let font_size = move || conf.font_size.get();
 
+    Effect::new(move |_| {
+        notify("iquity theme", theme());
+    });
+
     key_bindings(conf);
 
     html::main()
         .attr("data-theme", theme)
         .class(font_size)
-        .child((
-            markdown_preview(),
-            help(),
-            which_slide(),
-            notification(theme),
-        ))
+        .child((markdown_preview(), help(), which_slide()))
 }
 
 fn main() {

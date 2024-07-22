@@ -1,4 +1,5 @@
 use tauri::{generate_context, AppHandle, Manager, State};
+use tauri_plugin_notification::NotificationExt;
 use utils::{emit_content, read_file};
 
 use std::{
@@ -67,9 +68,12 @@ impl Default for Content {
 #[tokio::main]
 async fn main() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_notification::init())
         .plugin(tauri_plugin_cli::init())
         .manage(Content::default())
-        .invoke_handler(tauri::generate_handler![md_init, next_slide, prev_slide,])
+        .invoke_handler(tauri::generate_handler![
+            md_init, next_slide, prev_slide, notify,
+        ])
         .setup(move |app| {
             let matches = app.cli().matches().unwrap();
             let Some(path) = matches
@@ -103,6 +107,16 @@ async fn md_init(
     emit_content(&app, 0, slides.len(), &slides[0]);
     *content_slides = slides;
     Ok(())
+}
+
+#[tauri::command]
+fn notify(app: AppHandle, title: String, message: String) {
+    app.notification()
+        .builder()
+        .title(title)
+        .body(message)
+        .show()
+        .unwrap_or_default();
 }
 
 #[tauri::command]

@@ -12,6 +12,7 @@
     "resources:default",
     "menu:default",
     "tray:default",
-    "cli:default"
+    "cli:default",
+    "notification:default"
   ]
 }
