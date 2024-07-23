@@ -78,7 +78,7 @@ pub fn listen_to_markdown(md: Markdown) {
                 .await;
 
                 let options = compile_options();
-                let content = markdown::to_html_with_options(&content, &options).unwrap();
+                let content = Box::new(markdown::to_html_with_options(&content, &options).unwrap());
                 md.cache_set(output.current, content.clone());
                 md.set(output, content);
             });

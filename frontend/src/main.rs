@@ -16,8 +16,8 @@ use crate::components::markdown_preview::markdown_preview;
 
 #[derive(Clone, Copy, Debug)]
 pub struct Markdown {
-    cache: RwSignal<BTreeMap<usize, String>>,
-    content: RwSignal<String>,
+    cache: RwSignal<BTreeMap<usize, Box<String>>>,
+    content: RwSignal<Box<String>>,
     current: RwSignal<usize>,
     len: RwSignal<usize>,
 }
@@ -35,10 +35,10 @@ impl Markdown {
             None => false,
         }
     }
-    pub fn cache_set(&self, index: usize, content: String) {
+    pub fn cache_set(&self, index: usize, content: Box<String>) {
         self.cache.update_untracked(|xs| xs.insert(index, content));
     }
-    pub fn set(&self, EmittedMarkdown { current, len }: EmittedMarkdown, content: String) {
+    pub fn set(&self, EmittedMarkdown { current, len }: EmittedMarkdown, content: Box<String>) {
         self.content.set(content);
         if self.current.get_untracked() != current {
             self.current.set(current);
@@ -53,7 +53,7 @@ impl Default for Markdown {
     fn default() -> Self {
         Markdown {
             cache: RwSignal::new(BTreeMap::new()),
-            content: RwSignal::new(String::default()),
+            content: RwSignal::new(Box::new(String::default())),
             current: RwSignal::new(0),
             len: RwSignal::new(0),
         }
