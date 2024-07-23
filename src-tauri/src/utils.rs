@@ -48,7 +48,7 @@ pub async fn watch_markdown<P: AsRef<Path>>(
         if *index > content_slides.len() - 1 {
             *index = content_slides.len() - 1;
         };
-        emit_content(
+        emit_markdown(
             &app,
             *index,
             content_slides.len(),
@@ -69,9 +69,15 @@ pub async fn watch_config<P: AsRef<Path>>(
             continue;
         }
 
-        let config = EmittedConfig::from(GlobalConfig::get(&path).await?);
-        emit_config(&app, config);
+        let global_config = GlobalConfig::get(&path).await?;
+        let lch = global_config.live_config_reload;
+        let emitted_config = EmittedConfig::from(global_config);
+        emit_config(&app, emitted_config);
+        if !lch {
+            break;
+        }
     }
+    Ok(())
 }
 
 pub async fn read_markdown<P: AsRef<Path>>(
@@ -82,7 +88,7 @@ pub async fn read_markdown<P: AsRef<Path>>(
     Ok(slides)
 }
 
-pub fn emit_content(app: &AppHandle, index: usize, len: usize, slide: &String) {
+pub fn emit_markdown(app: &AppHandle, index: usize, len: usize, slide: &String) {
     let output = EmittedMarkdown::new(index + 1, len, slide);
     app.emit(CONTENT_EVENT, output).unwrap();
 }

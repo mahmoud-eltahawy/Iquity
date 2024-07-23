@@ -43,6 +43,7 @@ pub struct Config {
     pub font_size: RwSignal<String>,
     pub theme_notification: RwSignal<bool>, //ISSUE : does it have to be signal
     pub slide_notification: RwSignal<bool>, //ISSUE : does it have to be signal
+    pub live_config_reload: RwSignal<bool>, //ISSUE : does it have to be signal
 }
 
 impl Config {
@@ -50,10 +51,10 @@ impl Config {
         let theme_index = THEMES
             .iter()
             .enumerate()
-            .find(|(_, x)| x.to_string() == conf.theme)
+            .find(|(_, x)| x.to_string() == conf.default_theme)
             .map(|(i, _)| i)
             .unwrap_or(0);
-        let font_size = match conf.font_size {
+        let font_size = match conf.default_font_size {
             config::FontSize::VerySmall => "prose-sm".to_string(),
             config::FontSize::Small => "prose-base".to_string(),
             config::FontSize::Middle => "prose-lg".to_string(),
@@ -79,10 +80,12 @@ impl Config {
         EmittedConfig {
             theme_notification,
             slide_notification,
+            live_config_reload,
         }: EmittedConfig,
     ) {
         self.theme_notification.set(theme_notification);
         self.slide_notification.set(slide_notification);
+        self.live_config_reload.set(live_config_reload);
     }
 
     pub fn increase_font_size(self) {
@@ -128,6 +131,7 @@ impl Default for Config {
             font_size: RwSignal::new("prose-base".to_string()),
             theme_notification: RwSignal::new(true),
             slide_notification: RwSignal::new(true),
+            live_config_reload: RwSignal::new(true),
         }
     }
 }

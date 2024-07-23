@@ -16,7 +16,7 @@ use crate::{local_config::Config, Markdown};
 
 pub fn listen_to<F, T>(event: &'static str, fun: F)
 where
-    F: Fn(T) + 'static,
+    F: Fn(T) -> bool + 'static,
     T: DeserializeOwned + 'static,
 {
     spawn_local(async move {
@@ -25,7 +25,9 @@ where
 
         loop {
             if let Some(event) = events.next().await {
-                fun(event.payload);
+                if fun(event.payload) {
+                    break;
+                };
             } else {
                 continue;
             }
@@ -43,8 +45,7 @@ pub fn silent_invoke(action: &'static str) {
 
 pub fn config_init(conf: Config) {
     spawn_local(async move {
-        let c = invoke::<GlobalConfig>("conf_init", Empty {}).await;
-        conf.set(c);
+        conf.set(invoke::<GlobalConfig>("conf_init", Empty {}).await);
     });
 }
 
@@ -59,16 +60,21 @@ pub fn notify(title: &'static str, message: String) {
     });
 }
 
-pub fn listen_to_content(markdown: Markdown) {
+pub fn listen_to_markdown(markdown: Markdown) {
     listen_to(CONTENT_EVENT, move |output: EmittedMarkdown<String>| {
         markdown.set(output);
+        false
     });
 }
 
 pub fn listen_to_config(conf: Config) {
-    listen_to(CONFIG_EVENT, move |output: EmittedConfig| {
-        conf.update(output);
-    });
+    if conf.live_config_reload.get_untracked() {
+        listen_to(CONFIG_EVENT, move |output: EmittedConfig| {
+            let lch = output.live_config_reload;
+            conf.update(output);
+            !lch
+        });
+    }
 }
 
 pub fn key_bindings(conf: Config) {

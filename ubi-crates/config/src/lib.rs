@@ -13,6 +13,7 @@ pub struct EmittedMarkdown<T: ToString> {
 pub struct EmittedConfig {
     pub theme_notification: bool,
     pub slide_notification: bool,
+    pub live_config_reload: bool,
 }
 
 impl From<GlobalConfig> for EmittedConfig {
@@ -20,12 +21,14 @@ impl From<GlobalConfig> for EmittedConfig {
         GlobalConfig {
             theme_notification,
             slide_notification,
+            live_config_reload,
             ..
         }: GlobalConfig,
     ) -> Self {
         Self {
             theme_notification,
             slide_notification,
+            live_config_reload,
         }
     }
 }
@@ -47,6 +50,7 @@ pub const CONTENT_EVENT: &str = "content";
 pub const CONFIG_EVENT: &str = "config";
 
 #[derive(Clone, Deserialize, Serialize, Debug, PartialEq)]
+#[serde(rename_all = "snake_case")]
 pub enum FontSize {
     VerySmall,
     Small,
@@ -57,10 +61,11 @@ pub enum FontSize {
 
 #[derive(Clone, Deserialize, Serialize, Debug, PartialEq)]
 pub struct GlobalConfig {
-    pub theme: String,
-    pub font_size: FontSize,
+    pub default_theme: String,
+    pub default_font_size: FontSize,
     pub theme_notification: bool,
     pub slide_notification: bool,
+    pub live_config_reload: bool,
 }
 #[cfg(feature = "server")]
 pub mod server_only {
@@ -102,10 +107,11 @@ pub mod server_only {
 impl Default for GlobalConfig {
     fn default() -> Self {
         Self {
-            theme: "dracula".to_string(),
-            font_size: FontSize::Small,
+            default_theme: "dracula".to_string(),
+            default_font_size: FontSize::Small,
             theme_notification: true,
             slide_notification: true,
+            live_config_reload: true,
         }
     }
 }

@@ -1,7 +1,7 @@
 use config::GlobalConfig;
 use tauri::{generate_context, AppHandle, Manager, State};
 use tauri_plugin_notification::NotificationExt;
-use utils::{emit_content, read_markdown};
+use utils::{emit_markdown, read_markdown};
 
 use std::{
     io::{stdout, Write},
@@ -124,7 +124,7 @@ async fn md_init(
         .await
         .map_err(|x| x.to_string())?;
     let mut content_slides = content.slides.lock().unwrap();
-    emit_content(&app, 0, slides.len(), &slides[0]);
+    emit_markdown(&app, 0, slides.len(), &slides[0]);
     *content_slides = slides;
     Ok(())
 }
@@ -158,7 +158,7 @@ fn next_slide(app: AppHandle, content: State<'_, Content>) {
     } else {
         slides.last().unwrap()
     };
-    emit_content(&app, *index, slides.len(), slide);
+    emit_markdown(&app, *index, slides.len(), slide);
 }
 
 #[tauri::command]
@@ -167,5 +167,5 @@ fn prev_slide(app: AppHandle, content: State<'_, Content>) {
     let mut index = content.index.lock().unwrap();
     *index = index.checked_sub(1).unwrap_or(0);
     let slide = slides.get(*index).unwrap();
-    emit_content(&app, *index, slides.len(), slide);
+    emit_markdown(&app, *index, slides.len(), slide);
 }
