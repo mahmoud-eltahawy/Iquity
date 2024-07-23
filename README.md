@@ -46,5 +46,10 @@ at the moment. building from source is the only option
 - some other minimal differencs you will notice while using it but as development goes on. the two projects will become very different
 
 ## todos
-- [ ] add a toml config file
 - [X] add slides feature
+- [X] add a toml config file
+- [ ] add keybindings to config
+
+---
+
+# Title i
