@@ -79,12 +79,25 @@ pub async fn watch_config<P: AsRef<Path>>(
     }
     Ok(())
 }
+use markdown::{self, CompileOptions, Options, ParseOptions};
 
 pub async fn read_markdown<P: AsRef<Path>>(
     path: P,
 ) -> Result<Vec<String>, Box<dyn std::error::Error>> {
     let text = tokio::fs::read_to_string(path).await?;
-    let slides = text.split(SLIDES_SPLITTER).map(|x| x.to_string()).collect();
+    let slides = text
+        .split(SLIDES_SPLITTER)
+        .map(|x| {
+            let compile = CompileOptions {
+                allow_dangerous_html: true,
+                allow_dangerous_protocol: true,
+                ..CompileOptions::default()
+            };
+            let parse = ParseOptions::gfm();
+            let options = Options { compile, parse };
+            markdown::to_html_with_options(x, &options).unwrap()
+        })
+        .collect();
     Ok(slides)
 }
 

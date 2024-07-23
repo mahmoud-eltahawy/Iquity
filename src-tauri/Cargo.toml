@@ -21,6 +21,7 @@ thiserror = { workspace = true }
 dirs = { workspace = true }
 config = { workspace = true ,features = ["server"] }
 tokio = { workspace = true }
+markdown = { workspace = true }
 
 tauri-plugin-clipboard-manager = "2.1.0-beta.6"
 notify = "6.1.1"

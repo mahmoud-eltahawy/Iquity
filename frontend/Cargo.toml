@@ -37,7 +37,6 @@ gloo = "0.11"
 gloo-timers = { version = "0.3", features = ["futures"] }
 
 getrandom = { workspace = true }
-markdown = { workspace = true }
 urlencoding = { workspace = true }
 
 tauri-sys = { workspace = true }
