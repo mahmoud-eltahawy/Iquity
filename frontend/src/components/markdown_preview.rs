@@ -1,9 +1,56 @@
+use std::collections::BTreeMap;
+
+use config::EmittedMarkdown;
 use leptos::{
     html::{article, div},
     prelude::*,
 };
 
-use crate::Markdown;
+#[derive(Clone, Copy, Debug)]
+pub struct Markdown {
+    cache: RwSignal<BTreeMap<usize, Box<String>>>,
+    content: RwSignal<Box<String>>,
+    pub current: RwSignal<usize>,
+    pub len: RwSignal<usize>,
+}
+
+impl Markdown {
+    pub fn cache_call(&self, current: usize) -> bool {
+        match self.cache.with_untracked(|xs| xs.get(&current).cloned()) {
+            Some(content) => {
+                self.content.set(content);
+                if self.current.get_untracked() != current {
+                    self.current.set(current);
+                }
+                true
+            }
+            None => false,
+        }
+    }
+    pub fn cache_set(&self, index: usize, content: Box<String>) {
+        self.cache.update_untracked(|xs| xs.insert(index, content));
+    }
+    pub fn set(&self, EmittedMarkdown { current, len }: EmittedMarkdown, content: Box<String>) {
+        self.content.set(content);
+        if self.current.get_untracked() != current {
+            self.current.set(current);
+        }
+        if self.len.get_untracked() != len {
+            self.len.set(len);
+        }
+    }
+}
+
+impl Default for Markdown {
+    fn default() -> Self {
+        Markdown {
+            cache: RwSignal::new(BTreeMap::new()),
+            content: RwSignal::new(Box::new(String::default())),
+            current: RwSignal::new(0),
+            len: RwSignal::new(0),
+        }
+    }
+}
 
 pub fn markdown_preview() -> impl IntoView {
     let markdown = use_context::<Markdown>().unwrap();
