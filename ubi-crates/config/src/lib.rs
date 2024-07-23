@@ -38,7 +38,8 @@ impl EmittedMarkdown {
     }
 }
 
-pub const CONTENT_EVENT: &str = "content";
+pub const SLIDE_EVENT: &str = "slide";
+pub const BREAKING_CONTENT_EVENT: &str = "breaking_content";
 pub const CONFIG_EVENT: &str = "config";
 
 #[derive(Clone, Deserialize, Serialize, Debug, PartialEq)]

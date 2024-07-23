@@ -1,6 +1,8 @@
 use super::{Content, SLIDES_SPLITTER};
 
-use config::{EmittedConfig, EmittedMarkdown, GlobalConfig, CONFIG_EVENT, CONTENT_EVENT};
+use config::{
+    EmittedConfig, EmittedMarkdown, GlobalConfig, BREAKING_CONTENT_EVENT, CONFIG_EVENT, SLIDE_EVENT,
+};
 use futures::{
     channel::mpsc::{channel, Receiver},
     SinkExt, StreamExt,
@@ -48,8 +50,13 @@ pub async fn watch_markdown<P: AsRef<Path>>(
         if *index > content_slides.len() - 1 {
             *index = content_slides.len() - 1;
         };
-        emit_md(&app, *index, content_slides.len());
+        emit_breaking_md(&app, *index, content_slides.len());
     }
+}
+
+fn emit_breaking_md(app: &AppHandle, index: usize, len: usize) {
+    let output = EmittedMarkdown::new(index, len);
+    app.emit(BREAKING_CONTENT_EVENT, output).unwrap();
 }
 
 pub async fn watch_config<P: AsRef<Path>>(
@@ -85,7 +92,7 @@ pub async fn read_markdown<P: AsRef<Path>>(
 
 pub fn emit_md(app: &AppHandle, index: usize, len: usize) {
     let output = EmittedMarkdown::new(index, len);
-    app.emit(CONTENT_EVENT, output).unwrap();
+    app.emit(SLIDE_EVENT, output).unwrap();
 }
 
 pub fn emit_config(app: &AppHandle, config: EmittedConfig) {

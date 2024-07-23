@@ -15,6 +15,9 @@ pub struct Markdown {
 }
 
 impl Markdown {
+    pub fn clear_cache(&self) {
+        self.cache.update_untracked(|xs| xs.clear());
+    }
     pub fn cache_call(&self, current: usize) -> bool {
         match self.cache.with_untracked(|xs| xs.get(&current).cloned()) {
             Some(content) => {

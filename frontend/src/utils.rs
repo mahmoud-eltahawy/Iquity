@@ -1,4 +1,4 @@
-use config::{EmittedConfig, EmittedMarkdown, CONTENT_EVENT};
+use config::{EmittedConfig, EmittedMarkdown, BREAKING_CONTENT_EVENT, SLIDE_EVENT};
 use config::{GlobalConfig, CONFIG_EVENT};
 use futures::StreamExt;
 use gloo::utils::{document, window};
@@ -61,12 +61,13 @@ pub fn notify(title: &'static str, message: String) {
     });
 }
 
-pub fn listen_to_markdown(md: Markdown) {
-    listen_to(CONTENT_EVENT, move |output: EmittedMarkdown| {
-        #[derive(Serialize)]
-        struct Index {
-            index: usize,
-        }
+#[derive(Serialize)]
+struct Index {
+    index: usize,
+}
+
+pub fn listen_to_slide(md: Markdown) {
+    listen_to(SLIDE_EVENT, move |output: EmittedMarkdown| {
         if !md.cache_call(output.current) {
             spawn_local(async move {
                 let content = invoke::<String>(
@@ -83,6 +84,27 @@ pub fn listen_to_markdown(md: Markdown) {
                 md.set(output, content);
             });
         };
+        false
+    });
+}
+
+pub fn listen_to_data_change(md: Markdown) {
+    listen_to(BREAKING_CONTENT_EVENT, move |output: EmittedMarkdown| {
+        md.clear_cache();
+        spawn_local(async move {
+            let content = invoke::<String>(
+                "get_md",
+                Index {
+                    index: output.current,
+                },
+            )
+            .await;
+
+            let options = compile_options();
+            let content = Box::new(markdown::to_html_with_options(&content, &options).unwrap());
+            md.cache_set(output.current, content.clone());
+            md.set(output, content);
+        });
         false
     });
 }
