@@ -67,27 +67,41 @@ pub fn listen_to_markdown(md: Markdown) {
         struct Index {
             index: usize,
         }
-        spawn_local(async move {
-            let content = invoke::<String>(
-                "get_md",
-                Index {
-                    index: output.current,
-                },
-            )
-            .await;
+        let content = md.cache_get(output.current);
+        match content {
+            Some(content) => {
+                md.set(output, content);
+            }
+            None => {
+                spawn_local(async move {
+                    let content = invoke::<String>(
+                        "get_md",
+                        Index {
+                            index: output.current,
+                        },
+                    )
+                    .await;
 
-            let compile = CompileOptions {
-                allow_dangerous_html: true,
-                allow_dangerous_protocol: true,
-                ..CompileOptions::default()
-            };
-            let parse = ParseOptions::gfm();
-            let options = Options { compile, parse };
-            let content = markdown::to_html_with_options(&content, &options).unwrap();
-            md.set(output, content);
-        });
+                    let options = compile_options();
+                    let content = markdown::to_html_with_options(&content, &options).unwrap();
+                    md.cache_set(output.current, content.clone());
+                    md.set(output, content);
+                });
+            }
+        }
         false
     });
+}
+
+fn compile_options() -> Options {
+    let compile = CompileOptions {
+        allow_dangerous_html: true,
+        allow_dangerous_protocol: true,
+        ..CompileOptions::default()
+    };
+    let parse = ParseOptions::gfm();
+    let options = Options { compile, parse };
+    options
 }
 
 pub fn listen_to_config(conf: Config) {
