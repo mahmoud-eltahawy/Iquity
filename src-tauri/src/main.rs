@@ -92,19 +92,18 @@ async fn main() {
                 stdout().write_all(HELP_MESSAGE).unwrap();
                 std::process::exit(0x0100);
             };
-            let config_path = GlobalConfig::config_path().unwrap();
             let paths = Paths {
                 markdown: PathBuf::from_str(&markdown_path).unwrap(),
-                config: config_path.clone(),
+                config: GlobalConfig::config_path().unwrap(),
             };
             app.manage(paths);
-            let handle = app.app_handle().to_owned();
+            let markdown_handle = app.app_handle().to_owned();
+            let config_handle = markdown_handle.clone();
             tokio::task::spawn(async move {
-                utils::watch_markdown(handle, markdown_path).await.unwrap();
+                utils::watch_markdown(markdown_handle).await.unwrap();
             });
-            let handle = app.app_handle().to_owned();
             tokio::task::spawn(async move {
-                utils::watch_config(handle, config_path).await.unwrap();
+                utils::watch_config(config_handle).await.unwrap();
             });
 
             Ok(())

@@ -1,3 +1,5 @@
+use crate::Paths;
+
 use super::{Content, SLIDES_SPLITTER};
 
 use config::{EmittedConfig, EmittedMarkdown, GlobalConfig, CONFIG_EVENT, CONTENT_EVENT};
@@ -28,12 +30,10 @@ fn watcher() -> notify::Result<(RecommendedWatcher, Receiver<notify::Result<Even
     Ok((watcher, rx))
 }
 
-pub async fn watch_markdown<P: AsRef<Path>>(
-    app: AppHandle,
-    path: P,
-) -> Result<(), Box<dyn std::error::Error>> {
+pub async fn watch_markdown(app: AppHandle) -> Result<(), Box<dyn std::error::Error>> {
     let (mut watcher, mut rx) = watcher()?;
-    watcher.watch(path.as_ref(), RecursiveMode::NonRecursive)?;
+    let path = &app.state::<Paths>().markdown;
+    watcher.watch(path, RecursiveMode::NonRecursive)?;
 
     let content = app.state::<Content>();
 
@@ -57,12 +57,10 @@ pub async fn watch_markdown<P: AsRef<Path>>(
     }
 }
 
-pub async fn watch_config<P: AsRef<Path>>(
-    app: AppHandle,
-    path: P,
-) -> Result<(), Box<dyn std::error::Error>> {
+pub async fn watch_config(app: AppHandle) -> Result<(), Box<dyn std::error::Error>> {
     let (mut watcher, mut rx) = watcher()?;
-    watcher.watch(path.as_ref(), RecursiveMode::NonRecursive)?;
+    let path = &app.state::<Paths>().config;
+    watcher.watch(path, RecursiveMode::NonRecursive)?;
 
     loop {
         if rx.next().await.is_none() {
