@@ -2394,6 +2394,7 @@ dependencies = [
  "log",
  "markdown",
  "notify",
+ "rayon",
  "serde",
  "serde_json",
  "tauri",

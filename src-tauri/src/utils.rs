@@ -78,6 +78,7 @@ pub async fn watch_config(app: AppHandle) -> Result<(), Box<dyn std::error::Erro
     Ok(())
 }
 use markdown::{self, CompileOptions, Options, ParseOptions};
+use rayon::prelude::*;
 
 pub async fn read_markdown<P: AsRef<Path>>(
     path: P,
@@ -85,6 +86,8 @@ pub async fn read_markdown<P: AsRef<Path>>(
     let text = tokio::fs::read_to_string(path).await?;
     let slides = text
         .split(SLIDES_SPLITTER)
+        .collect::<Vec<_>>()
+        .into_par_iter()
         .map(|x| {
             let compile = CompileOptions {
                 allow_dangerous_html: true,
