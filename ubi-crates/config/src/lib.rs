@@ -3,9 +3,10 @@ use serde::{Deserialize, Serialize};
 mod error;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct EmittedMarkdown {
+pub struct EmittedMarkdown<T: ToString> {
     pub current: usize,
     pub len: usize,
+    pub content: T,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -32,14 +33,20 @@ impl From<GlobalConfig> for EmittedConfig {
     }
 }
 
-impl EmittedMarkdown {
-    pub fn new(current: usize, len: usize) -> Self {
-        Self { current, len }
+impl<T> EmittedMarkdown<T>
+where
+    T: ToString,
+{
+    pub fn new(current: usize, len: usize, content: T) -> Self {
+        Self {
+            current,
+            len,
+            content,
+        }
     }
 }
 
-pub const SLIDE_EVENT: &str = "slide";
-pub const BREAKING_CONTENT_EVENT: &str = "breaking_content";
+pub const CONTENT_EVENT: &str = "content";
 pub const CONFIG_EVENT: &str = "config";
 
 #[derive(Clone, Deserialize, Serialize, Debug, PartialEq)]

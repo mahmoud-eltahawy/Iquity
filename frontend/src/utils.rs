@@ -1,8 +1,7 @@
-use config::{EmittedConfig, EmittedMarkdown, BREAKING_CONTENT_EVENT, SLIDE_EVENT};
+use config::{EmittedConfig, EmittedMarkdown, CONTENT_EVENT};
 use config::{GlobalConfig, CONFIG_EVENT};
 use futures::StreamExt;
 use gloo::utils::{document, window};
-use markdown::{CompileOptions, Options, ParseOptions};
 use tauri_sys::{core::invoke, event::listen};
 
 use leptos::{ev, prelude::*, spawn::spawn_local};
@@ -61,63 +60,11 @@ pub fn notify(title: &'static str, message: String) {
     });
 }
 
-#[derive(Serialize)]
-struct Index {
-    index: usize,
-}
-
-pub fn listen_to_slide(md: Markdown) {
-    listen_to(SLIDE_EVENT, move |output: EmittedMarkdown| {
-        if !md.cache_call(output.current) {
-            spawn_local(async move {
-                let content = invoke::<String>(
-                    "get_md",
-                    Index {
-                        index: output.current,
-                    },
-                )
-                .await;
-
-                let options = compile_options();
-                let content = Box::new(markdown::to_html_with_options(&content, &options).unwrap());
-                md.cache_set(output.current, content.clone());
-                md.set(output, content);
-            });
-        };
+pub fn listen_to_markdown(markdown: Markdown) {
+    listen_to(CONTENT_EVENT, move |output: EmittedMarkdown<String>| {
+        markdown.set(output);
         false
     });
-}
-
-pub fn listen_to_data_change(md: Markdown) {
-    listen_to(BREAKING_CONTENT_EVENT, move |output: EmittedMarkdown| {
-        md.clear_cache();
-        spawn_local(async move {
-            let content = invoke::<String>(
-                "get_md",
-                Index {
-                    index: output.current,
-                },
-            )
-            .await;
-
-            let options = compile_options();
-            let content = Box::new(markdown::to_html_with_options(&content, &options).unwrap());
-            md.cache_set(output.current, content.clone());
-            md.set(output, content);
-        });
-        false
-    });
-}
-
-fn compile_options() -> Options {
-    let compile = CompileOptions {
-        allow_dangerous_html: true,
-        allow_dangerous_protocol: true,
-        ..CompileOptions::default()
-    };
-    let parse = ParseOptions::gfm();
-    let options = Options { compile, parse };
-    options
 }
 
 pub fn listen_to_config(conf: Config) {
