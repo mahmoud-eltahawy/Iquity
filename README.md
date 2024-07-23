@@ -49,7 +49,3 @@ at the moment. building from source is the only option
 - [X] add slides feature
 - [X] add a toml config file
 - [ ] add keybindings to config
-
----
-
-# Title i
