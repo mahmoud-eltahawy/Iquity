@@ -87,13 +87,13 @@ async fn main() {
             let Some(markdown_path) = matches
                 .args
                 .get("path")
-                .and_then(|x| x.value.as_str().map(|x| x.to_string()))
+                .and_then(|x| x.value.as_str().and_then(|x| PathBuf::from_str(x).ok()))
             else {
                 stdout().write_all(HELP_MESSAGE).unwrap();
                 std::process::exit(0x0100);
             };
             let paths = Paths {
-                markdown: PathBuf::from_str(&markdown_path).unwrap(),
+                markdown: markdown_path,
                 config: GlobalConfig::config_path().unwrap(),
             };
             app.manage(paths);
