@@ -2,24 +2,13 @@ use leptos::{
     html::{article, div},
     prelude::*,
 };
-use markdown::{self, CompileOptions, Options, ParseOptions};
 
 use crate::Markdown;
 
 pub fn markdown_preview() -> impl IntoView {
     let markdown = use_context::<Markdown>().unwrap();
 
-    let md = move || {
-        let compile = CompileOptions {
-            allow_dangerous_html: true,
-            allow_dangerous_protocol: true,
-            ..CompileOptions::default()
-        };
-        let parse = ParseOptions::gfm();
-        let options = Options { compile, parse };
-        let md = markdown.content.get();
-        markdown::to_html_with_options(&md, &options).unwrap()
-    };
+    let md = move || markdown.content.get();
 
     div()
         .class(

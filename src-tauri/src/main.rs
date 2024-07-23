@@ -1,7 +1,7 @@
 use config::GlobalConfig;
 use tauri::{generate_context, AppHandle, Manager, State};
 use tauri_plugin_notification::NotificationExt;
-use utils::{emit_markdown, read_markdown};
+use utils::{emit_md, read_markdown};
 
 use std::{
     io::{stdout, Write},
@@ -80,7 +80,7 @@ async fn main() {
         .plugin(tauri_plugin_cli::init())
         .manage(Content::default())
         .invoke_handler(tauri::generate_handler![
-            conf_init, md_init, next_slide, prev_slide, notify,
+            conf_init, md_init, get_md, next_slide, prev_slide, notify,
         ])
         .setup(move |app| {
             let matches = app.cli().matches().unwrap();
@@ -124,9 +124,15 @@ async fn md_init(
         .await
         .map_err(|x| x.to_string())?;
     let mut content_slides = content.slides.lock().unwrap();
-    emit_markdown(&app, 0, slides.len(), &slides[0]);
+    emit_md(&app, 0, slides.len());
     *content_slides = slides;
     Ok(())
+}
+
+#[tauri::command]
+fn get_md(content: State<'_, Content>, index: usize) -> String {
+    let content_slides = content.slides.lock().unwrap();
+    content_slides.get(index).cloned().unwrap_or(String::new())
 }
 
 #[tauri::command]
@@ -152,13 +158,10 @@ fn notify(app: AppHandle, title: String, message: String) {
 fn next_slide(app: AppHandle, content: State<'_, Content>) {
     let slides = content.slides.lock().unwrap();
     let mut index = content.index.lock().unwrap();
-    let slide = if *index < slides.len() - 1 {
+    if *index < slides.len() - 1 {
         *index += 1;
-        slides.get(*index).unwrap()
-    } else {
-        slides.last().unwrap()
     };
-    emit_markdown(&app, *index, slides.len(), slide);
+    emit_md(&app, *index, slides.len());
 }
 
 #[tauri::command]
@@ -166,6 +169,5 @@ fn prev_slide(app: AppHandle, content: State<'_, Content>) {
     let slides = content.slides.lock().unwrap();
     let mut index = content.index.lock().unwrap();
     *index = index.checked_sub(1).unwrap_or(0);
-    let slide = slides.get(*index).unwrap();
-    emit_markdown(&app, *index, slides.len(), slide);
+    emit_md(&app, *index, slides.len());
 }

@@ -48,12 +48,7 @@ pub async fn watch_markdown<P: AsRef<Path>>(
         if *index > content_slides.len() - 1 {
             *index = content_slides.len() - 1;
         };
-        emit_markdown(
-            &app,
-            *index,
-            content_slides.len(),
-            content_slides.get(*index).unwrap_or(&String::new()),
-        );
+        emit_md(&app, *index, content_slides.len());
     }
 }
 
@@ -88,8 +83,8 @@ pub async fn read_markdown<P: AsRef<Path>>(
     Ok(slides)
 }
 
-pub fn emit_markdown(app: &AppHandle, index: usize, len: usize, slide: &String) {
-    let output = EmittedMarkdown::new(index + 1, len, slide);
+pub fn emit_md(app: &AppHandle, index: usize, len: usize) {
+    let output = EmittedMarkdown::new(index, len);
     app.emit(CONTENT_EVENT, output).unwrap();
 }
 

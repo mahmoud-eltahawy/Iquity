@@ -19,31 +19,8 @@ pub struct Markdown {
     len: RwSignal<usize>,
 }
 
-impl From<EmittedMarkdown<String>> for Markdown {
-    fn from(
-        EmittedMarkdown {
-            current,
-            len,
-            content,
-        }: EmittedMarkdown<String>,
-    ) -> Self {
-        Self {
-            content: RwSignal::new(content),
-            current: RwSignal::new(current),
-            len: RwSignal::new(len),
-        }
-    }
-}
-
 impl Markdown {
-    pub fn set(
-        &self,
-        EmittedMarkdown {
-            current,
-            len,
-            content,
-        }: EmittedMarkdown<String>,
-    ) {
+    pub fn set(&self, EmittedMarkdown { current, len }: EmittedMarkdown, content: String) {
         self.content.set(content);
         if self.current.get_untracked() != current {
             self.current.set(current);

@@ -2,6 +2,7 @@ use config::{EmittedConfig, EmittedMarkdown, CONTENT_EVENT};
 use config::{GlobalConfig, CONFIG_EVENT};
 use futures::StreamExt;
 use gloo::utils::{document, window};
+use markdown::{CompileOptions, Options, ParseOptions};
 use tauri_sys::{core::invoke, event::listen};
 
 use leptos::{ev, prelude::*, spawn::spawn_local};
@@ -60,9 +61,31 @@ pub fn notify(title: &'static str, message: String) {
     });
 }
 
-pub fn listen_to_markdown(markdown: Markdown) {
-    listen_to(CONTENT_EVENT, move |output: EmittedMarkdown<String>| {
-        markdown.set(output);
+pub fn listen_to_markdown(md: Markdown) {
+    listen_to(CONTENT_EVENT, move |output: EmittedMarkdown| {
+        #[derive(Serialize)]
+        struct Index {
+            index: usize,
+        }
+        spawn_local(async move {
+            let content = invoke::<String>(
+                "get_md",
+                Index {
+                    index: output.current,
+                },
+            )
+            .await;
+
+            let compile = CompileOptions {
+                allow_dangerous_html: true,
+                allow_dangerous_protocol: true,
+                ..CompileOptions::default()
+            };
+            let parse = ParseOptions::gfm();
+            let options = Options { compile, parse };
+            let content = markdown::to_html_with_options(&content, &options).unwrap();
+            md.set(output, content);
+        });
         false
     });
 }
