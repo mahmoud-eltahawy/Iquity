@@ -9,6 +9,27 @@ pub struct EmittedMarkdown<T: ToString> {
     pub content: T,
 }
 
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct EmittedConfig {
+    pub theme_notification: bool,
+    pub slide_notification: bool,
+}
+
+impl From<GlobalConfig> for EmittedConfig {
+    fn from(
+        GlobalConfig {
+            theme_notification,
+            slide_notification,
+            ..
+        }: GlobalConfig,
+    ) -> Self {
+        Self {
+            theme_notification,
+            slide_notification,
+        }
+    }
+}
+
 impl<T> EmittedMarkdown<T>
 where
     T: ToString,
@@ -43,7 +64,7 @@ pub struct GlobalConfig {
 }
 #[cfg(feature = "server")]
 pub mod server_only {
-    use std::path::PathBuf;
+    use std::path::Path;
 
     use crate::GlobalConfig;
     const CONFIG_NAME: &str = ".iquity_config.toml";
@@ -62,7 +83,7 @@ pub mod server_only {
             toml::from_str(text)
         }
 
-        pub async fn get(path: &PathBuf) -> Result<Self, Box<dyn std::error::Error>> {
+        pub async fn get<P: AsRef<Path>>(path: P) -> Result<Self, Box<dyn std::error::Error>> {
             let text = tokio::fs::read_to_string(&path).await;
             let config = match text {
                 Ok(text) => GlobalConfig::from_toml(&text)?,

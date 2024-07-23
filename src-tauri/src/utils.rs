@@ -1,6 +1,6 @@
 use super::{Content, SLIDES_SPLITTER};
 
-use config::{EmittedMarkdown, CONTENT_EVENT};
+use config::{EmittedConfig, EmittedMarkdown, GlobalConfig, CONFIG_EVENT, CONTENT_EVENT};
 use futures::{
     channel::mpsc::{channel, Receiver},
     SinkExt, StreamExt,
@@ -28,7 +28,7 @@ fn watcher() -> notify::Result<(RecommendedWatcher, Receiver<notify::Result<Even
     Ok((watcher, rx))
 }
 
-pub async fn watch<P: AsRef<Path>>(
+pub async fn watch_markdown<P: AsRef<Path>>(
     app: AppHandle,
     path: P,
 ) -> Result<(), Box<dyn std::error::Error>> {
@@ -57,6 +57,23 @@ pub async fn watch<P: AsRef<Path>>(
     }
 }
 
+pub async fn watch_config<P: AsRef<Path>>(
+    app: AppHandle,
+    path: P,
+) -> Result<(), Box<dyn std::error::Error>> {
+    let (mut watcher, mut rx) = watcher()?;
+    watcher.watch(path.as_ref(), RecursiveMode::NonRecursive)?;
+
+    loop {
+        if rx.next().await.is_none() {
+            continue;
+        }
+
+        let config = EmittedConfig::from(GlobalConfig::get(&path).await?);
+        emit_config(&app, config);
+    }
+}
+
 pub async fn read_markdown<P: AsRef<Path>>(
     path: P,
 ) -> Result<Vec<String>, Box<dyn std::error::Error>> {
@@ -68,4 +85,8 @@ pub async fn read_markdown<P: AsRef<Path>>(
 pub fn emit_content(app: &AppHandle, index: usize, len: usize, slide: &String) {
     let output = EmittedMarkdown::new(index + 1, len, slide);
     app.emit(CONTENT_EVENT, output).unwrap();
+}
+
+pub fn emit_config(app: &AppHandle, config: EmittedConfig) {
+    app.emit(CONFIG_EVENT, config).unwrap();
 }

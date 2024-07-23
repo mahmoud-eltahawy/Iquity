@@ -1,5 +1,5 @@
-use config::{GlobalConfig, CONFIG_EVENT};
-use tauri::{generate_context, AppHandle, Emitter, Manager, State};
+use config::GlobalConfig;
+use tauri::{generate_context, AppHandle, Manager, State};
 use tauri_plugin_notification::NotificationExt;
 use utils::{emit_content, read_markdown};
 
@@ -75,8 +75,6 @@ struct Paths {
 
 #[tokio::main]
 async fn main() {
-    let config_path = GlobalConfig::config_path().unwrap();
-
     tauri::Builder::default()
         .plugin(tauri_plugin_notification::init())
         .plugin(tauri_plugin_cli::init())
@@ -94,16 +92,21 @@ async fn main() {
                 stdout().write_all(HELP_MESSAGE).unwrap();
                 std::process::exit(0x0100);
             };
+            let config_path = GlobalConfig::config_path().unwrap();
             let paths = Paths {
                 markdown: PathBuf::from_str(&markdown_path).unwrap(),
-                config: config_path,
+                config: config_path.clone(),
             };
             app.manage(paths);
-
             let handle = app.app_handle().to_owned();
             tokio::task::spawn(async move {
-                utils::watch(handle, markdown_path).await.unwrap();
+                utils::watch_markdown(handle, markdown_path).await.unwrap();
             });
+            let handle = app.app_handle().to_owned();
+            tokio::task::spawn(async move {
+                utils::watch_config(handle, config_path).await.unwrap();
+            });
+
             Ok(())
         })
         .run(generate_context!())
@@ -116,7 +119,8 @@ async fn md_init(
     content: State<'_, Content>,
     path: State<'_, Paths>,
 ) -> Result<(), String> {
-    let slides = read_markdown(&path.inner().markdown)
+    let markdown_path = path.inner().markdown.clone();
+    let slides = read_markdown(&markdown_path)
         .await
         .map_err(|x| x.to_string())?;
     let mut content_slides = content.slides.lock().unwrap();
@@ -126,12 +130,12 @@ async fn md_init(
 }
 
 #[tauri::command]
-async fn conf_init(app: AppHandle, paths: State<'_, Paths>) -> Result<(), String> {
-    let config = GlobalConfig::get(&paths.inner().config)
+async fn conf_init(paths: State<'_, Paths>) -> Result<GlobalConfig, String> {
+    let config_path = paths.inner().config.clone();
+    let config = GlobalConfig::get(&config_path)
         .await
         .map_err(|x| x.to_string())?;
-    app.emit(CONFIG_EVENT, config).map_err(|x| x.to_string())?;
-    Ok(())
+    Ok(config)
 }
 
 #[tauri::command]

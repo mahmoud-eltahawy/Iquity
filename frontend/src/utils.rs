@@ -1,4 +1,4 @@
-use config::{EmittedMarkdown, CONTENT_EVENT};
+use config::{EmittedConfig, EmittedMarkdown, CONTENT_EVENT};
 use config::{GlobalConfig, CONFIG_EVENT};
 use futures::StreamExt;
 use gloo::utils::{document, window};
@@ -32,12 +32,19 @@ where
         }
     });
 }
+#[derive(Serialize, Deserialize)]
+struct Empty {}
 
 pub fn silent_invoke(action: &'static str) {
-    #[derive(Serialize, Deserialize)]
-    struct Empty {}
     spawn_local(async move {
         invoke::<()>(action, Empty {}).await;
+    });
+}
+
+pub fn config_init(conf: Config) {
+    spawn_local(async move {
+        let c = invoke::<GlobalConfig>("conf_init", Empty {}).await;
+        conf.set(c);
     });
 }
 
@@ -59,8 +66,8 @@ pub fn listen_to_content(markdown: Markdown) {
 }
 
 pub fn listen_to_config(conf: Config) {
-    listen_to(CONFIG_EVENT, move |output: GlobalConfig| {
-        conf.set(output);
+    listen_to(CONFIG_EVENT, move |output: EmittedConfig| {
+        conf.update(output);
     });
 }
 

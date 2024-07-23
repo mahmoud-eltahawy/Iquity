@@ -6,7 +6,9 @@ use components::help::help;
 use config::EmittedMarkdown;
 use leptos::{html, prelude::*};
 use local_config::{Config, THEMES, THEMES_SIZE};
-use utils::{key_bindings, listen_to_config, listen_to_content, notify, silent_invoke};
+use utils::{
+    config_init, key_bindings, listen_to_config, listen_to_content, notify, silent_invoke,
+};
 
 use crate::components::markdown_preview::markdown_preview;
 
@@ -65,7 +67,7 @@ impl Default for Markdown {
 pub fn app() -> impl IntoView {
     let conf = Config::default();
     listen_to_config(conf);
-    silent_invoke("conf_init");
+    config_init(conf);
 
     let markdown = Markdown::default();
     listen_to_content(markdown);
@@ -76,13 +78,16 @@ pub fn app() -> impl IntoView {
     let font_size = move || conf.font_size.get();
 
     Effect::new(move |_| {
-        notify("iquity theme", theme().to_string());
+        let theme = theme().to_string();
+        if conf.theme_notification.get_untracked() {
+            notify("iquity theme", theme);
+        }
     });
 
     Effect::new(move |_| {
         let current = markdown.current.get();
         let len = markdown.len.get();
-        if current != 0 && len != 0 {
+        if current != 0 && len != 0 && conf.slide_notification.get_untracked() {
             notify("iquity slide", format!("[ {} / {} ]", current, len));
         }
     });
