@@ -15,10 +15,6 @@ features = []
 
 [dependencies]
 serde = { workspace = true }
-log = { workspace = true }
-walkdir = { workspace = true }
-thiserror = { workspace = true }
-dirs = { workspace = true }
 config = { workspace = true ,features = ["server"] }
 tokio = { workspace = true }
 markdown = { workspace = true }
