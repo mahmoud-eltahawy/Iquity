@@ -23,8 +23,17 @@ pub struct Markdown {
 }
 
 impl Markdown {
-    pub fn cache_get(&self, index: usize) -> Option<String> {
-        self.cache.with_untracked(|xs| xs.get(&index).cloned())
+    pub fn cache_call(&self, current: usize) -> bool {
+        match self.cache.with_untracked(|xs| xs.get(&current).cloned()) {
+            Some(content) => {
+                self.content.set(content);
+                if self.current.get_untracked() != current {
+                    self.current.set(current);
+                }
+                true
+            }
+            None => false,
+        }
     }
     pub fn cache_set(&self, index: usize, content: String) {
         self.cache.update_untracked(|xs| xs.insert(index, content));

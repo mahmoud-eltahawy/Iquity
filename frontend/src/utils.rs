@@ -67,28 +67,22 @@ pub fn listen_to_markdown(md: Markdown) {
         struct Index {
             index: usize,
         }
-        let content = md.cache_get(output.current);
-        match content {
-            Some(content) => {
-                md.set(output, content);
-            }
-            None => {
-                spawn_local(async move {
-                    let content = invoke::<String>(
-                        "get_md",
-                        Index {
-                            index: output.current,
-                        },
-                    )
-                    .await;
+        if !md.cache_call(output.current) {
+            spawn_local(async move {
+                let content = invoke::<String>(
+                    "get_md",
+                    Index {
+                        index: output.current,
+                    },
+                )
+                .await;
 
-                    let options = compile_options();
-                    let content = markdown::to_html_with_options(&content, &options).unwrap();
-                    md.cache_set(output.current, content.clone());
-                    md.set(output, content);
-                });
-            }
-        }
+                let options = compile_options();
+                let content = markdown::to_html_with_options(&content, &options).unwrap();
+                md.cache_set(output.current, content.clone());
+                md.set(output, content);
+            });
+        };
         false
     });
 }
