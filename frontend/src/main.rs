@@ -32,9 +32,9 @@ pub fn app() -> impl IntoView {
     });
 
     Effect::new(move |_| {
-        let current = markdown.current.get();
+        let current = markdown.current.get() + 1;
         let len = markdown.len.get();
-        if current != 0 && len != 0 && conf.slide_notification.get_untracked() {
+        if len != 0 && conf.slide_notification.get_untracked() {
             notify("iquity slide", format!("[ {} / {} ]", current, len));
         }
     });
