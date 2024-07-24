@@ -68,7 +68,7 @@ pub fn listen_to_markdown(markdown: Markdown) {
 }
 
 pub fn listen_to_config(conf: Config) {
-    if conf.live_config_reload.get_untracked() {
+    if *conf.live_config_reload.borrow() {
         listen_to(CONFIG_EVENT, move |output: EmittedConfig| {
             let lch = output.live_config_reload;
             conf.update(output);
@@ -80,7 +80,7 @@ pub fn listen_to_config(conf: Config) {
 pub fn key_bindings(conf: Config) {
     window_event_listener(ev::keydown, move |ke: ev::KeyboardEvent| {
         let code = ke.code();
-        let keys = conf.keys.get_untracked();
+        let keys = conf.keys.borrow().clone();
 
         if code.eq(&keys.print) {
             window().print().unwrap_throw();

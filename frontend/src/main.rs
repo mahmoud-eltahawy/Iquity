@@ -66,8 +66,8 @@ impl Default for Markdown {
 
 pub fn app() -> impl IntoView {
     let conf = Config::default();
-    listen_to_config(conf);
-    config_init(conf);
+    listen_to_config(conf.clone());
+    config_init(conf.clone());
 
     let markdown = Markdown::default();
     listen_to_markdown(markdown);
@@ -77,18 +77,24 @@ pub fn app() -> impl IntoView {
     let theme = move || THEMES[conf.theme_index.get() % THEMES_SIZE];
     let font_size = move || conf.font_size.get();
 
-    Effect::new(move |_| {
-        let theme = theme().to_string();
-        if conf.theme_notification.get_untracked() {
-            notify("iquity theme", theme);
+    Effect::new({
+        let theme_notification = conf.theme_notification.clone();
+        move |_| {
+            let theme = theme().to_string();
+            if *theme_notification.borrow() {
+                notify("iquity theme", theme);
+            }
         }
     });
 
-    Effect::new(move |_| {
-        let current = markdown.current.get();
-        let len = markdown.len.get();
-        if current != 0 && len != 0 && conf.slide_notification.get_untracked() {
-            notify("iquity slide", format!("[ {} / {} ]", current, len));
+    Effect::new({
+        let conf = conf.clone();
+        move |_| {
+            let current = markdown.current.get();
+            let len = markdown.len.get();
+            if current != 0 && len != 0 && *conf.slide_notification.borrow() {
+                notify("iquity slide", format!("[ {} / {} ]", current, len));
+            }
         }
     });
 

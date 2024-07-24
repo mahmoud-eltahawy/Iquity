@@ -1,3 +1,5 @@
+use std::{cell::RefCell, rc::Rc};
+
 use config::{EmittedConfig, GlobalConfig, Keys};
 use leptos::prelude::*;
 
@@ -37,14 +39,14 @@ pub const THEMES: &[&str] = &[
     "sunset",
 ];
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone)]
 pub struct Config {
     pub theme_index: RwSignal<usize>,
     pub font_size: RwSignal<String>,
-    pub theme_notification: RwSignal<bool>, //ISSUE : does it have to be signal
-    pub slide_notification: RwSignal<bool>, //ISSUE : does it have to be signal
-    pub live_config_reload: RwSignal<bool>, //ISSUE : does it have to be signal
-    pub keys: RwSignal<Keys>,
+    pub theme_notification: Rc<RefCell<bool>>,
+    pub slide_notification: Rc<RefCell<bool>>,
+    pub live_config_reload: Rc<RefCell<bool>>,
+    pub keys: Rc<RefCell<Keys>>,
 }
 
 impl Config {
@@ -68,13 +70,13 @@ impl Config {
         if font_size != self.font_size.get_untracked() {
             self.font_size.set(font_size);
         }
-        if conf.theme_notification != self.theme_notification.get_untracked() {
-            self.theme_notification.set(conf.theme_notification);
+        if conf.theme_notification != *self.theme_notification.borrow() {
+            *self.theme_notification.borrow_mut() = conf.theme_notification;
         }
-        if conf.slide_notification != self.slide_notification.get_untracked() {
-            self.slide_notification.set(conf.slide_notification);
+        if conf.slide_notification != *self.slide_notification.borrow() {
+            *self.slide_notification.borrow_mut() = conf.slide_notification;
         }
-        self.keys.set(conf.keys);
+        *self.keys.borrow_mut() = conf.keys;
     }
 
     pub fn update(
@@ -85,12 +87,12 @@ impl Config {
             live_config_reload,
         }: EmittedConfig,
     ) {
-        self.theme_notification.set(theme_notification);
-        self.slide_notification.set(slide_notification);
-        self.live_config_reload.set(live_config_reload);
+        *self.theme_notification.borrow_mut() = theme_notification;
+        *self.slide_notification.borrow_mut() = slide_notification;
+        *self.live_config_reload.borrow_mut() = live_config_reload;
     }
 
-    pub fn increase_font_size(self) {
+    pub fn increase_font_size(&self) {
         self.font_size.update(|x| {
             *x = match x.as_str() {
                 "prose-sm" => "prose-base".to_string(),
@@ -103,7 +105,7 @@ impl Config {
         });
     }
 
-    pub fn decrease_font_size(self) {
+    pub fn decrease_font_size(&self) {
         self.font_size.update(|x| {
             *x = match x.as_str() {
                 "prose-2xl" => "prose-xl".to_string(),
@@ -116,11 +118,11 @@ impl Config {
         });
     }
 
-    pub fn next_theme(self) {
+    pub fn next_theme(&self) {
         self.theme_index.update(|x| *x += 1);
     }
 
-    pub fn prev_theme(self) {
+    pub fn prev_theme(&self) {
         self.theme_index
             .update(|x| *x = x.checked_sub(1).unwrap_or(THEMES_SIZE - 1));
     }
@@ -131,10 +133,10 @@ impl Default for Config {
         Self {
             theme_index: RwSignal::new(0),
             font_size: RwSignal::new("prose-base".to_string()),
-            theme_notification: RwSignal::new(true),
-            slide_notification: RwSignal::new(true),
-            live_config_reload: RwSignal::new(true),
-            keys: RwSignal::new(Keys::default()),
+            theme_notification: Rc::new(RefCell::new(true)),
+            slide_notification: Rc::new(RefCell::new(true)),
+            live_config_reload: Rc::new(RefCell::new(true)),
+            keys: Rc::new(RefCell::new(Keys::default())),
         }
     }
 }
