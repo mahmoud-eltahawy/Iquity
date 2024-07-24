@@ -80,36 +80,37 @@ pub fn listen_to_config(conf: Config) {
 pub fn key_bindings(conf: Config) {
     window_event_listener(ev::keydown, move |ke: ev::KeyboardEvent| {
         let code = ke.code();
+        let keys = conf.keys.get_untracked();
 
-        if code.eq("KeyP") {
+        if code.eq(&keys.print) {
             window().print().unwrap_throw();
         }
 
-        if code.eq("KeyJ") {
+        if code.eq(&keys.next_theme) {
             conf.next_theme();
         }
 
-        if code.eq("KeyK") {
+        if code.eq(&keys.prev_theme) {
             conf.prev_theme();
         }
 
-        if code.eq("KeyL") {
+        if code.eq(&keys.next_slide) {
             silent_invoke("next_slide");
         }
 
-        if code.eq("KeyH") {
+        if code.eq(&keys.prev_slide) {
             silent_invoke("prev_slide");
         }
 
-        if code.eq("Minus") {
-            conf.decrease_font_size();
-        }
-
-        if code.eq("Equal") {
+        if code.eq(&keys.increase_fontsize) {
             conf.increase_font_size();
         }
 
-        if code == "Slash" {
+        if code.eq(&keys.decrease_fontsize) {
+            conf.decrease_font_size();
+        }
+
+        if code.eq(&keys.help) {
             let dialog: HtmlDialogElement = document()
                 .get_element_by_id(HELP_ID)
                 .unwrap()

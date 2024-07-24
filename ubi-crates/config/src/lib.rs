@@ -59,14 +59,43 @@ pub enum FontSize {
     VeryBig,
 }
 
-#[derive(Clone, Deserialize, Serialize, Debug, PartialEq)]
+#[derive(Clone, Deserialize, Serialize, Debug)]
 pub struct GlobalConfig {
     pub default_theme: String,
     pub default_font_size: FontSize,
     pub theme_notification: bool,
     pub slide_notification: bool,
     pub live_config_reload: bool,
+    pub keys: Keys,
 }
+
+#[derive(Clone, Deserialize, Serialize, Debug)]
+pub struct Keys {
+    pub print: String,
+    pub next_theme: String,
+    pub prev_theme: String,
+    pub next_slide: String,
+    pub prev_slide: String,
+    pub increase_fontsize: String,
+    pub decrease_fontsize: String,
+    pub help: String,
+}
+
+impl Default for Keys {
+    fn default() -> Self {
+        Self {
+            print: "KeyP".to_string(),
+            next_theme: "KeyJ".to_string(),
+            prev_theme: "KeyK".to_string(),
+            next_slide: "KeyL".to_string(),
+            prev_slide: "KeyH".to_string(),
+            increase_fontsize: "Minus".to_string(),
+            decrease_fontsize: "Equal".to_string(),
+            help: "Slash".to_string(),
+        }
+    }
+}
+
 #[cfg(feature = "server")]
 pub mod server_only {
     use std::path::Path;
@@ -112,6 +141,7 @@ impl Default for GlobalConfig {
             theme_notification: true,
             slide_notification: true,
             live_config_reload: true,
+            keys: Keys::default(),
         }
     }
 }

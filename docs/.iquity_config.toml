@@ -3,3 +3,13 @@ default_font_size = "small"
 theme_notification = true
 slide_notification = true
 live_config_reload = true
+
+[keys]
+print = "KeyP"
+next_theme = "KeyJ"
+prev_theme = "KeyK"
+next_slide = "KeyL"
+prev_slide = "KeyH"
+increase_fontsize = "Minus"
+decrease_fontsize = "Equal"
+help = "Slash"

@@ -1,4 +1,4 @@
-use config::{EmittedConfig, GlobalConfig};
+use config::{EmittedConfig, GlobalConfig, Keys};
 use leptos::prelude::*;
 
 pub const THEMES_SIZE: usize = THEMES.len();
@@ -44,6 +44,7 @@ pub struct Config {
     pub theme_notification: RwSignal<bool>, //ISSUE : does it have to be signal
     pub slide_notification: RwSignal<bool>, //ISSUE : does it have to be signal
     pub live_config_reload: RwSignal<bool>, //ISSUE : does it have to be signal
+    pub keys: RwSignal<Keys>,
 }
 
 impl Config {
@@ -73,6 +74,7 @@ impl Config {
         if conf.slide_notification != self.slide_notification.get_untracked() {
             self.slide_notification.set(conf.slide_notification);
         }
+        self.keys.set(conf.keys);
     }
 
     pub fn update(
@@ -132,6 +134,7 @@ impl Default for Config {
             theme_notification: RwSignal::new(true),
             slide_notification: RwSignal::new(true),
             live_config_reload: RwSignal::new(true),
+            keys: RwSignal::new(Keys::default()),
         }
     }
 }
