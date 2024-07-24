@@ -18,13 +18,8 @@ lto = true
 tokio = { version = "1.38.1", features = ["full"] }
 ron = "0.8"
 serde = { version = "^1", features = ["derive"] }
-log = { version = "0.4", features = ["release_max_level_info"] }
-walkdir = "2.3.2"
 thiserror = "1.0.38"
 dirs = "5.0.0"
-getrandom = { version = "0.2.8", features = ["js"] }
 markdown = "1.0.0-alpha.18"
-urlencoding = "2.1.2"
 config = { path = "./ubi-crates/config" }
-mdtg = { path = "./ubi-crates/mdtg" }
 tauri-sys = { git = "https://github.com/JonasKruckenberg/tauri-sys", branch = "v2" , features = ["core","event"] }
