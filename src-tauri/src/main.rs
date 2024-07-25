@@ -1,7 +1,7 @@
 use config::GlobalConfig;
 use tauri::{generate_context, AppHandle, Manager, State};
 use tauri_plugin_notification::NotificationExt;
-use utils::{emit_markdown, read_markdown};
+use utils::{emit_markdown, markdown_compile, read_markdown};
 
 use std::{
     io::{stdout, Write},
@@ -133,12 +133,15 @@ async fn md_init(
 }
 
 #[tauri::command]
-async fn conf_init(paths: State<'_, Paths>) -> Result<GlobalConfig, String> {
+async fn conf_init(paths: State<'_, Paths>) -> Result<(GlobalConfig, String), String> {
     let config_path = paths.inner().config.clone();
     let config = GlobalConfig::get(&config_path)
         .await
         .map_err(|x| x.to_string())?;
-    Ok(config)
+
+    let keys_help = markdown_compile(&config.keys.to_string());
+
+    Ok((config, keys_help))
 }
 
 #[tauri::command]

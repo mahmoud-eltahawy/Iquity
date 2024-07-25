@@ -83,7 +83,9 @@ pub async fn watch_config(app: AppHandle) -> Result<(), Box<dyn std::error::Erro
 
         let global_config = GlobalConfig::get(&path).await?;
         let lch = global_config.live_config_reload;
-        let emitted_config = EmittedConfig::from(global_config);
+
+        let keys_help = markdown_compile(&global_config.keys.to_string());
+        let emitted_config = EmittedConfig::new(global_config, keys_help);
         emit_config(&app, emitted_config);
         if !lch {
             break;
@@ -102,18 +104,20 @@ pub async fn read_markdown<P: AsRef<Path>>(
         .split(SLIDES_SPLITTER)
         .collect::<Vec<_>>()
         .into_par_iter()
-        .map(|x| {
-            let compile = CompileOptions {
-                allow_dangerous_html: true,
-                allow_dangerous_protocol: true,
-                ..CompileOptions::default()
-            };
-            let parse = ParseOptions::gfm();
-            let options = Options { compile, parse };
-            markdown::to_html_with_options(x, &options).unwrap()
-        })
+        .map(markdown_compile)
         .collect();
     Ok(slides)
+}
+
+pub fn markdown_compile(source: &str) -> String {
+    let compile = CompileOptions {
+        allow_dangerous_html: true,
+        allow_dangerous_protocol: true,
+        ..CompileOptions::default()
+    };
+    let parse = ParseOptions::gfm();
+    let options = Options { compile, parse };
+    markdown::to_html_with_options(source, &options).unwrap()
 }
 
 pub fn emit_markdown(app: &AppHandle, index: usize, len: usize, slide: &String) {

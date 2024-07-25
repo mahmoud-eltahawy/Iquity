@@ -1,3 +1,5 @@
+use std::fmt::Display;
+
 use serde::{Deserialize, Serialize};
 
 mod error;
@@ -15,10 +17,11 @@ pub struct EmittedConfig {
     pub slide_notification: bool,
     pub live_config_reload: bool,
     pub keys: Keys,
+    pub keys_help: String,
 }
 
-impl From<GlobalConfig> for EmittedConfig {
-    fn from(
+impl EmittedConfig {
+    pub fn new(
         GlobalConfig {
             theme_notification,
             slide_notification,
@@ -26,12 +29,14 @@ impl From<GlobalConfig> for EmittedConfig {
             keys,
             ..
         }: GlobalConfig,
+        keys_help: String,
     ) -> Self {
         Self {
             theme_notification,
             slide_notification,
             live_config_reload,
             keys,
+            keys_help,
         }
     }
 }
@@ -82,6 +87,37 @@ pub struct Keys {
     pub increase_fontsize: String,
     pub decrease_fontsize: String,
     pub help: String,
+}
+
+impl Display for Keys {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let Self {
+            print,
+            next_theme,
+            prev_theme,
+            next_slide,
+            prev_slide,
+            increase_fontsize,
+            decrease_fontsize,
+            help,
+        } = self;
+        write!(
+            f,
+            r#"
+|         **key**          |       **Action**        |
+|:------------------------:|:-----------------------:|
+|       **{print}**        |        __print__        |
+|     **{next_theme}**     |      __next theme__     |
+|     **{prev_theme}**     |    __previous theme__   |
+|     **{next_slide}**     |      __next slide__     |
+|     **{prev_slide}**     |     __previous slide__  |
+| **{increase_fontsize}**  |   __increase fontsize__ |
+| **{decrease_fontsize}**  |   __decrease fontsize__ |
+|       **{help}**         |         __help__        |
+|       **Esc**            |   __hide this message__ |
+"#
+        )
+    }
 }
 
 impl Default for Keys {

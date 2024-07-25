@@ -45,7 +45,7 @@ pub fn silent_invoke(action: &'static str) {
 
 pub fn config_init(conf: Config) {
     spawn_local(async move {
-        conf.set(invoke::<GlobalConfig>("conf_init", Empty {}).await);
+        conf.set(invoke::<(GlobalConfig, String)>("conf_init", Empty {}).await);
     });
 }
 

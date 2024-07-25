@@ -47,10 +47,11 @@ pub struct Config {
     pub slide_notification: Rc<RefCell<bool>>,
     pub live_config_reload: Rc<RefCell<bool>>,
     pub keys: Rc<RefCell<Keys>>,
+    pub keys_help: RwSignal<String>,
 }
 
 impl Config {
-    pub fn set(&self, conf: GlobalConfig) {
+    pub fn set(&self, (conf, keys_help): (GlobalConfig, String)) {
         let theme_index = THEMES
             .iter()
             .enumerate()
@@ -70,13 +71,10 @@ impl Config {
         if font_size != self.font_size.get_untracked() {
             self.font_size.set(font_size);
         }
-        if conf.theme_notification != *self.theme_notification.borrow() {
-            *self.theme_notification.borrow_mut() = conf.theme_notification;
-        }
-        if conf.slide_notification != *self.slide_notification.borrow() {
-            *self.slide_notification.borrow_mut() = conf.slide_notification;
-        }
+        *self.theme_notification.borrow_mut() = conf.theme_notification;
+        *self.slide_notification.borrow_mut() = conf.slide_notification;
         *self.keys.borrow_mut() = conf.keys;
+        self.keys_help.set(keys_help);
     }
 
     pub fn update(
@@ -86,12 +84,14 @@ impl Config {
             slide_notification,
             live_config_reload,
             keys,
+            keys_help,
         }: EmittedConfig,
     ) {
         *self.theme_notification.borrow_mut() = theme_notification;
         *self.slide_notification.borrow_mut() = slide_notification;
         *self.live_config_reload.borrow_mut() = live_config_reload;
         *self.keys.borrow_mut() = keys;
+        self.keys_help.set(keys_help);
     }
 
     pub fn increase_font_size(&self) {
@@ -139,6 +139,7 @@ impl Default for Config {
             slide_notification: Rc::new(RefCell::new(true)),
             live_config_reload: Rc::new(RefCell::new(true)),
             keys: Rc::new(RefCell::new(Keys::default())),
+            keys_help: RwSignal::new("".to_string()),
         }
     }
 }

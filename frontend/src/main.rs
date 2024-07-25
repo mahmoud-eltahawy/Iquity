@@ -98,12 +98,13 @@ pub fn app() -> impl IntoView {
         }
     });
 
+    let keys_help = conf.keys_help;
     key_bindings(conf);
 
     html::main()
         .attr("data-theme", theme)
         .class(font_size)
-        .child((markdown_preview(), help()))
+        .child((markdown_preview(), help(keys_help)))
 }
 
 fn main() {
