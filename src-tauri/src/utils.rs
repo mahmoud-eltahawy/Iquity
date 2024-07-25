@@ -38,7 +38,8 @@ pub async fn watch_markdown(app: AppHandle) -> Result<(), Box<dyn std::error::Er
     if !path.exists() {
         return Ok(());
     }
-    watcher.watch(&path, RecursiveMode::NonRecursive)?;
+    let parent = path.parent().unwrap();
+    watcher.watch(parent, RecursiveMode::NonRecursive)?;
 
     let content = app.state::<Content>();
 
@@ -46,7 +47,7 @@ pub async fn watch_markdown(app: AppHandle) -> Result<(), Box<dyn std::error::Er
         let Some(Ok(ev)) = rx.next().await else {
             continue;
         };
-        let Modify(_) = ev.kind else {
+        let Modify(ModifyKind::Data(_)) = ev.kind else {
             continue;
         };
         let slides = read_markdown(&path).await?;
@@ -70,7 +71,7 @@ pub async fn watch_config(app: AppHandle) -> Result<(), Box<dyn std::error::Erro
     let path = &app.state::<Paths>().config;
     let watch_path = path.parent().unwrap();
 
-    watcher.watch(watch_path, RecursiveMode::Recursive)?;
+    watcher.watch(watch_path, RecursiveMode::NonRecursive)?;
 
     loop {
         let Some(Ok(ev)) = rx.next().await else {
