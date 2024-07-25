@@ -85,11 +85,13 @@ impl Config {
             theme_notification,
             slide_notification,
             live_config_reload,
+            keys,
         }: EmittedConfig,
     ) {
         *self.theme_notification.borrow_mut() = theme_notification;
         *self.slide_notification.borrow_mut() = slide_notification;
         *self.live_config_reload.borrow_mut() = live_config_reload;
+        *self.keys.borrow_mut() = keys;
     }
 
     pub fn increase_font_size(&self) {

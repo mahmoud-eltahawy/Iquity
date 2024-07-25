@@ -14,6 +14,7 @@ pub struct EmittedConfig {
     pub theme_notification: bool,
     pub slide_notification: bool,
     pub live_config_reload: bool,
+    pub keys: Keys,
 }
 
 impl From<GlobalConfig> for EmittedConfig {
@@ -22,6 +23,7 @@ impl From<GlobalConfig> for EmittedConfig {
             theme_notification,
             slide_notification,
             live_config_reload,
+            keys,
             ..
         }: GlobalConfig,
     ) -> Self {
@@ -29,6 +31,7 @@ impl From<GlobalConfig> for EmittedConfig {
             theme_notification,
             slide_notification,
             live_config_reload,
+            keys,
         }
     }
 }
@@ -98,10 +101,10 @@ impl Default for Keys {
 
 #[cfg(feature = "server")]
 pub mod server_only {
-    use std::path::Path;
+    use std::path::{Path, PathBuf};
 
     use crate::GlobalConfig;
-    const CONFIG_NAME: &str = ".iquity_config.toml";
+    const CONFIG_NAME: &str = ".iquity/config.toml";
 
     impl GlobalConfig {
         pub fn config_path() -> Option<std::path::PathBuf> {
@@ -118,6 +121,11 @@ pub mod server_only {
         }
 
         pub async fn get<P: AsRef<Path>>(path: P) -> Result<Self, Box<dyn std::error::Error>> {
+            let path = PathBuf::from(path.as_ref());
+            let parent = path.parent().unwrap();
+            if !parent.exists() {
+                let _ = tokio::fs::create_dir(parent).await;
+            }
             let text = tokio::fs::read_to_string(&path).await;
             let config = match text {
                 Ok(text) => GlobalConfig::from_toml(&text)?,

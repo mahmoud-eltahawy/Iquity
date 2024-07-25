@@ -7,7 +7,9 @@ use futures::{
     channel::mpsc::{channel, Receiver},
     SinkExt, StreamExt,
 };
-use notify::{Config, Event, EventKind::Modify, RecommendedWatcher, RecursiveMode, Watcher};
+use notify::{
+    event::ModifyKind, Config, Event, EventKind::Modify, RecommendedWatcher, RecursiveMode, Watcher,
+};
 
 use tauri::{AppHandle, Emitter, Manager};
 
@@ -66,16 +68,15 @@ pub async fn watch_markdown(app: AppHandle) -> Result<(), Box<dyn std::error::Er
 pub async fn watch_config(app: AppHandle) -> Result<(), Box<dyn std::error::Error>> {
     let (mut watcher, mut rx) = watcher()?;
     let path = &app.state::<Paths>().config;
-    if !path.exists() {
-        return Ok(());
-    }
-    watcher.watch(path, RecursiveMode::NonRecursive)?;
+    let watch_path = path.parent().unwrap();
+
+    watcher.watch(watch_path, RecursiveMode::Recursive)?;
 
     loop {
         let Some(Ok(ev)) = rx.next().await else {
             continue;
         };
-        let Modify(_) = ev.kind else {
+        let Modify(ModifyKind::Data(_)) = ev.kind else {
             continue;
         };
 
