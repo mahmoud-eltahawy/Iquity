@@ -49,4 +49,4 @@ at the moment. building from source is the only option
 - [X] **ADD**: slides feature
 - [X] **ADD**: a toml config file
 - [X] **ADD**: keybindings to config
-- [ ] **FIX BUG** : some editors make file watching breaks after first edit and notify crate has surprising behavior for that on some platforms
+- [ ] **FIX BUG** : some editors remove and retouch the file it edits and notify crate has surprising behavior for that on some platforms
