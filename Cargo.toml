@@ -15,7 +15,7 @@ codegen-units = 1
 lto = true
 
 [workspace.dependencies]
-tokio = { version = "1.38.1", features = ["full"] }
+tokio = { version = "1.39.1", features = ["full"] }
 ron = "0.8"
 serde = { version = "^1", features = ["derive"] }
 thiserror = "1.0.38"

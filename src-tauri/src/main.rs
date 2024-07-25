@@ -100,10 +100,14 @@ async fn main() {
             let markdown_handle = app.app_handle().to_owned();
             let config_handle = markdown_handle.clone();
             tokio::task::spawn(async move {
-                utils::watch_markdown(markdown_handle).await.unwrap();
+                if let Err(err) = utils::watch_markdown(markdown_handle).await {
+                    eprintln!("Watching error : {:#?}", err);
+                };
             });
             tokio::task::spawn(async move {
-                utils::watch_config(config_handle).await.unwrap();
+                if let Err(err) = utils::watch_config(config_handle).await {
+                    eprintln!("Watching error : {:#?}", err);
+                };
             });
 
             Ok(())

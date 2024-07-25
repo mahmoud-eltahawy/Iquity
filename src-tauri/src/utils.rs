@@ -7,7 +7,7 @@ use futures::{
     channel::mpsc::{channel, Receiver},
     SinkExt, StreamExt,
 };
-use notify::{Config, Event, RecommendedWatcher, RecursiveMode, Watcher};
+use notify::{Config, Event, EventKind::Modify, RecommendedWatcher, RecursiveMode, Watcher};
 
 use tauri::{AppHandle, Emitter, Manager};
 
@@ -32,15 +32,21 @@ fn watcher() -> notify::Result<(RecommendedWatcher, Receiver<notify::Result<Even
 
 pub async fn watch_markdown(app: AppHandle) -> Result<(), Box<dyn std::error::Error>> {
     let (mut watcher, mut rx) = watcher()?;
-    let path = &app.state::<Paths>().markdown;
-    watcher.watch(path, RecursiveMode::NonRecursive)?;
+    let path = app.state::<Paths>().markdown.clone();
+    if !path.exists() {
+        return Ok(());
+    }
+    watcher.watch(&path, RecursiveMode::NonRecursive)?;
 
     let content = app.state::<Content>();
 
     loop {
-        if rx.next().await.is_none() {
+        let Some(Ok(ev)) = rx.next().await else {
             continue;
-        }
+        };
+        let Modify(_) = ev.kind else {
+            continue;
+        };
         let slides = read_markdown(&path).await?;
         let mut content_slides = content.slides.lock().unwrap();
         *content_slides = slides;
@@ -60,12 +66,18 @@ pub async fn watch_markdown(app: AppHandle) -> Result<(), Box<dyn std::error::Er
 pub async fn watch_config(app: AppHandle) -> Result<(), Box<dyn std::error::Error>> {
     let (mut watcher, mut rx) = watcher()?;
     let path = &app.state::<Paths>().config;
+    if !path.exists() {
+        return Ok(());
+    }
     watcher.watch(path, RecursiveMode::NonRecursive)?;
 
     loop {
-        if rx.next().await.is_none() {
+        let Some(Ok(ev)) = rx.next().await else {
             continue;
-        }
+        };
+        let Modify(_) = ev.kind else {
+            continue;
+        };
 
         let global_config = GlobalConfig::get(&path).await?;
         let lch = global_config.live_config_reload;

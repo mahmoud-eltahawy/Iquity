@@ -48,5 +48,5 @@ at the moment. building from source is the only option
 ## todos
 - [X] **ADD**: slides feature
 - [X] **ADD**: a toml config file
-- [ ] **ADD**: keybindings to config
-- [ ] **FIX**: some editors make file watching breaks after first edit
+- [X] **ADD**: keybindings to config
+- [ ] **FIX BUG** : some editors make file watching breaks after first edit and notify crate has surprising behavior for that on some platforms
