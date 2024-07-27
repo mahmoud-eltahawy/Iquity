@@ -82,35 +82,35 @@ pub fn key_bindings(conf: Config) {
         let code = ke.code();
         let keys = conf.keys.borrow().clone();
 
-        if code.eq(&keys.print) {
+        if code.eq(&keys.print.to_string()) {
             window().print().unwrap_throw();
         }
 
-        if code.eq(&keys.next_theme) {
+        if code.eq(&keys.next_theme.to_string()) {
             conf.next_theme();
         }
 
-        if code.eq(&keys.prev_theme) {
+        if code.eq(&keys.prev_theme.to_string()) {
             conf.prev_theme();
         }
 
-        if code.eq(&keys.next_slide) {
+        if code.eq(&keys.next_slide.to_string()) {
             silent_invoke("next_slide");
         }
 
-        if code.eq(&keys.prev_slide) {
+        if code.eq(&keys.prev_slide.to_string()) {
             silent_invoke("prev_slide");
         }
 
-        if code.eq(&keys.increase_fontsize) {
+        if code.eq(&keys.increase_fontsize.to_string()) {
             conf.increase_font_size();
         }
 
-        if code.eq(&keys.decrease_fontsize) {
+        if code.eq(&keys.decrease_fontsize.to_string()) {
             conf.decrease_font_size();
         }
 
-        if code.eq(&keys.help) {
+        if code.eq(&keys.help.to_string()) {
             let dialog: HtmlDialogElement = document()
                 .get_element_by_id(HELP_ID)
                 .unwrap()

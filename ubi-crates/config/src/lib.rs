@@ -78,15 +78,65 @@ pub struct GlobalConfig {
 }
 
 #[derive(Clone, Deserialize, Serialize, Debug)]
+pub enum KeyName {
+    Number(u8),
+    Letter(char),
+    F(u8),
+    ShiftLeft,
+    ShiftRight,
+    ControlLeft,
+    ControlRight,
+    AltLeft,
+    AltRight,
+    Esc,
+    Tab,
+    Space,
+    Enter,
+    Equal,
+    Minus,
+    Slash,
+    Backslash,
+    Backquote,
+    Backspace,
+}
+
+impl Display for KeyName {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let name = match self {
+            KeyName::Number(number) => format!("Digit{}", number),
+            KeyName::Letter(letter) => format!("Key{}", letter.to_ascii_uppercase()),
+            KeyName::F(num) => format!("F{num}"),
+            KeyName::AltLeft => "AltLeft".to_string(),
+            KeyName::AltRight => "AltRight".to_string(),
+            KeyName::ShiftLeft => "ShiftLeft".to_string(),
+            KeyName::ShiftRight => "ShiftRight".to_string(),
+            KeyName::ControlLeft => "ControlLeft".to_string(),
+            KeyName::ControlRight => "ControlRight".to_string(),
+            KeyName::Esc => "Escape".to_string(),
+            KeyName::Tab => "Tab".to_string(),
+            KeyName::Space => "Space".to_string(),
+            KeyName::Equal => "Equal".to_string(),
+            KeyName::Minus => "Minus".to_string(),
+            KeyName::Enter => "Enter".to_string(),
+            KeyName::Slash => "Slash".to_string(),
+            KeyName::Backslash => "Backslash".to_string(),
+            KeyName::Backquote => "Backquote".to_string(),
+            KeyName::Backspace => "Backspace".to_string(),
+        };
+        write!(f, "{}", name)
+    }
+}
+
+#[derive(Clone, Deserialize, Serialize, Debug)]
 pub struct Keys {
-    pub print: String,
-    pub next_theme: String,
-    pub prev_theme: String,
-    pub next_slide: String,
-    pub prev_slide: String,
-    pub increase_fontsize: String,
-    pub decrease_fontsize: String,
-    pub help: String,
+    pub print: KeyName,
+    pub next_theme: KeyName,
+    pub prev_theme: KeyName,
+    pub next_slide: KeyName,
+    pub prev_slide: KeyName,
+    pub increase_fontsize: KeyName,
+    pub decrease_fontsize: KeyName,
+    pub help: KeyName,
 }
 
 impl Display for Keys {
@@ -123,14 +173,14 @@ impl Display for Keys {
 impl Default for Keys {
     fn default() -> Self {
         Self {
-            print: "KeyP".to_string(),
-            next_theme: "KeyJ".to_string(),
-            prev_theme: "KeyK".to_string(),
-            next_slide: "KeyL".to_string(),
-            prev_slide: "KeyH".to_string(),
-            increase_fontsize: "Minus".to_string(),
-            decrease_fontsize: "Equal".to_string(),
-            help: "Slash".to_string(),
+            print: KeyName::Letter('p'),
+            next_theme: KeyName::Letter('j'),
+            prev_theme: KeyName::Letter('k'),
+            next_slide: KeyName::Letter('l'),
+            prev_slide: KeyName::Letter('h'),
+            increase_fontsize: KeyName::Minus,
+            decrease_fontsize: KeyName::Equal,
+            help: KeyName::Slash,
         }
     }
 }
