@@ -104,7 +104,7 @@ fn progress_bar(markdown: Markdown) -> impl IntoView {
     let value = move || markdown.current.get();
     view! {
         <progress
-            class="fixed bottom-0 h-1 w-full"
+            class="progress progress-success fixed bottom-0 h-1 w-full"
             value=value
             max=max
         />
