@@ -77,7 +77,7 @@ pub struct GlobalConfig {
     pub keys: Keys,
 }
 
-#[derive(Clone, Deserialize, Serialize, Debug)]
+#[derive(Debug, Clone, Deserialize, Serialize, PartialEq, Eq)]
 pub enum KeyName {
     Number(u8),
     Letter(char),
@@ -98,6 +98,44 @@ pub enum KeyName {
     Backslash,
     Backquote,
     Backspace,
+}
+
+impl TryFrom<String> for KeyName {
+    type Error = String;
+    fn try_from(value: String) -> Result<Self, Self::Error> {
+        let key = if let Some(num) = value
+            .chars()
+            .nth("Digit".len())
+            .and_then(|x| x.to_string().parse::<u8>().ok())
+        {
+            Self::Number(num)
+        } else if let Ok(num) = value[1..].parse::<u8>() {
+            Self::F(num)
+        } else if value.starts_with("Key") && value.len() == 4 {
+            Self::Letter(value.chars().nth(3).unwrap().to_ascii_lowercase())
+        } else {
+            match value.as_str() {
+                "AltLeft" => Self::AltLeft,
+                "AltRight" => Self::AltRight,
+                "ShiftLeft" => Self::ShiftLeft,
+                "ShiftRight" => Self::ShiftRight,
+                "ControlLeft" => Self::ControlLeft,
+                "ControlRight" => Self::ControlRight,
+                "Escape" => Self::Esc,
+                "Tab" => Self::Tab,
+                "Space" => Self::Space,
+                "Equal" => Self::Equal,
+                "Minus" => Self::Minus,
+                "Enter" => Self::Enter,
+                "Slash" => Self::Slash,
+                "Backslash" => Self::Backslash,
+                "Backquote" => Self::Backquote,
+                "Backspace" => Self::Backspace,
+                _ => return Err("unlisted key name".to_string()),
+            }
+        };
+        Ok(key)
+    }
 }
 
 impl Display for KeyName {
@@ -178,8 +216,8 @@ impl Default for Keys {
             prev_theme: KeyName::Letter('k'),
             next_slide: KeyName::Letter('l'),
             prev_slide: KeyName::Letter('h'),
-            increase_fontsize: KeyName::Minus,
-            decrease_fontsize: KeyName::Equal,
+            increase_fontsize: KeyName::Equal,
+            decrease_fontsize: KeyName::Minus,
             help: KeyName::Slash,
         }
     }

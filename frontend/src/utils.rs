@@ -1,4 +1,4 @@
-use config::{EmittedConfig, EmittedMarkdown, CONTENT_EVENT};
+use config::{EmittedConfig, EmittedMarkdown, KeyName, CONTENT_EVENT};
 use config::{GlobalConfig, CONFIG_EVENT};
 use futures::StreamExt;
 use gloo::utils::{document, window};
@@ -79,38 +79,40 @@ pub fn listen_to_config(conf: Config) {
 
 pub fn key_bindings(conf: Config) {
     window_event_listener(ev::keydown, move |ke: ev::KeyboardEvent| {
-        let code = ke.code();
+        let Ok(code) = KeyName::try_from(ke.code()) else {
+            return;
+        };
         let keys = conf.keys.borrow().clone();
 
-        if code.eq(&keys.print.to_string()) {
+        if code.eq(&keys.print) {
             window().print().unwrap_throw();
         }
 
-        if code.eq(&keys.next_theme.to_string()) {
+        if code.eq(&keys.next_theme) {
             conf.next_theme();
         }
 
-        if code.eq(&keys.prev_theme.to_string()) {
+        if code.eq(&keys.prev_theme) {
             conf.prev_theme();
         }
 
-        if code.eq(&keys.next_slide.to_string()) {
+        if code.eq(&keys.next_slide) {
             silent_invoke("next_slide");
         }
 
-        if code.eq(&keys.prev_slide.to_string()) {
+        if code.eq(&keys.prev_slide) {
             silent_invoke("prev_slide");
         }
 
-        if code.eq(&keys.increase_fontsize.to_string()) {
+        if code.eq(&keys.increase_fontsize) {
             conf.increase_font_size();
         }
 
-        if code.eq(&keys.decrease_fontsize.to_string()) {
+        if code.eq(&keys.decrease_fontsize) {
             conf.decrease_font_size();
         }
 
-        if code.eq(&keys.help.to_string()) {
+        if code.eq(&keys.help) {
             let dialog: HtmlDialogElement = document()
                 .get_element_by_id(HELP_ID)
                 .unwrap()
