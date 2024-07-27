@@ -17,6 +17,9 @@ pub fn markdown_preview() -> impl IntoView {
         .child(
             div()
                 .attr("class", "overflow-auto")
-                .child(article().id("preview").class("prose prose-img:rounded-xl prose-pre:bg-base-300 prose-pre:text-base-content prose-pre:overflow-auto prose-code:bg-base-300 prose-code:px-[5.5px] prose-code:font-normal prose-code:rounded-[0.3125rem] prose-code:overflow-auto prose-a:no-underline prose-a:text-info print:block").inner_html(md)),
+                .child(article()
+                    .id("preview")
+                    .class("prose-img:rounded-xl prose-pre:bg-base-300 prose-pre:text-base-content prose-pre:overflow-auto prose-code:bg-base-300 prose-code:px-[5.5px] prose-code:font-normal prose-code:rounded-[0.3125rem] prose-code:overflow-auto prose-a:no-underline prose-a:text-info print:block")
+                    .inner_html(md)),
         )
 }
