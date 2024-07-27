@@ -1,4 +1,4 @@
-use config::{EmittedConfig, EmittedMarkdown, KeyName, CONTENT_EVENT};
+use config::{Action, EmittedConfig, EmittedMarkdown, KeyName, CONTENT_EVENT};
 use config::{GlobalConfig, CONFIG_EVENT};
 use futures::StreamExt;
 use gloo::utils::{document, window};
@@ -88,14 +88,14 @@ pub fn key_bindings(conf: Config) {
         };
 
         match action {
-            config::Action::Print => window().print().unwrap_throw(),
-            config::Action::NextTheme => conf.next_theme(),
-            config::Action::PrevTheme => conf.prev_theme(),
-            config::Action::NextSlide => silent_invoke("next_slide"),
-            config::Action::PrevSlide => silent_invoke("prev_slide"),
-            config::Action::IncreaseFontsize => conf.increase_font_size(),
-            config::Action::DecreaseFontsize => conf.decrease_font_size(),
-            config::Action::Help => {
+            Action::Print => window().print().unwrap_throw(),
+            Action::NextTheme => conf.next_theme(),
+            Action::PrevTheme => conf.prev_theme(),
+            Action::NextSlide => silent_invoke("next_slide"),
+            Action::PrevSlide => silent_invoke("prev_slide"),
+            Action::IncreaseFontsize => conf.increase_font_size(),
+            Action::DecreaseFontsize => conf.decrease_font_size(),
+            Action::Help => {
                 let dialog: HtmlDialogElement = document()
                     .get_element_by_id(HELP_ID)
                     .unwrap()

@@ -135,11 +135,18 @@ async fn md_init(
 }
 
 #[tauri::command]
-async fn conf_init(paths: State<'_, Paths>) -> Result<(GlobalConfig, String), String> {
+async fn conf_init(
+    app: AppHandle,
+    paths: State<'_, Paths>,
+) -> Result<(GlobalConfig, String), String> {
     let config_path = paths.inner().config.clone();
-    let config = GlobalConfig::get(&config_path)
-        .await
-        .map_err(|x| x.to_string())?;
+    let config = match GlobalConfig::get(&config_path).await {
+        Ok(conf) => conf,
+        Err(err) => {
+            message_notify(&app, "config init error".to_string(), err.to_string());
+            GlobalConfig::default()
+        }
+    };
 
     let keys_help = markdown_compile(&config.keys.to_string());
 
