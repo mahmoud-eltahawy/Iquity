@@ -5,11 +5,21 @@ slide_notification = true
 live_config_reload = true
 
 [keys]
-print = "KeyP"
-next_theme = "KeyJ"
-prev_theme = "KeyK"
-next_slide = "KeyL"
-prev_slide = "KeyH"
-increase_fontsize = "Minus"
-decrease_fontsize = "Equal"
-help = "Slash"
+increase_fontsize = "equal"
+decrease_fontsize = "minus"
+help = "slash"
+
+[keys.print]
+letter = "p"
+
+[keys.next_theme]
+letter = "j"
+
+[keys.prev_theme]
+letter = "k"
+
+[keys.next_slide]
+letter = "l"
+
+[keys.prev_slide]
+letter = "h"
