@@ -1,6 +1,6 @@
-use std::{cell::RefCell, rc::Rc};
+use std::{cell::RefCell, collections::HashMap, rc::Rc};
 
-use config::{EmittedConfig, GlobalConfig, Keys};
+use config::{Action, EmittedConfig, GlobalConfig, KeyName};
 use leptos::prelude::*;
 
 pub const THEMES_SIZE: usize = THEMES.len();
@@ -46,7 +46,7 @@ pub struct Config {
     pub theme_notification: Rc<RefCell<bool>>,
     pub slide_notification: Rc<RefCell<bool>>,
     pub live_config_reload: Rc<RefCell<bool>>,
-    pub keys: Rc<RefCell<Keys>>,
+    pub keys: Rc<RefCell<HashMap<KeyName, Action>>>,
     pub keys_help: RwSignal<String>,
 }
 
@@ -73,7 +73,7 @@ impl Config {
         }
         *self.theme_notification.borrow_mut() = conf.theme_notification;
         *self.slide_notification.borrow_mut() = conf.slide_notification;
-        *self.keys.borrow_mut() = conf.keys;
+        *self.keys.borrow_mut() = conf.keys.to_map();
         self.keys_help.set(keys_help);
     }
 
@@ -90,7 +90,7 @@ impl Config {
         *self.theme_notification.borrow_mut() = theme_notification;
         *self.slide_notification.borrow_mut() = slide_notification;
         *self.live_config_reload.borrow_mut() = live_config_reload;
-        *self.keys.borrow_mut() = keys;
+        *self.keys.borrow_mut() = keys.to_map();
         self.keys_help.set(keys_help);
     }
 
@@ -138,7 +138,7 @@ impl Default for Config {
             theme_notification: Rc::new(RefCell::new(true)),
             slide_notification: Rc::new(RefCell::new(true)),
             live_config_reload: Rc::new(RefCell::new(true)),
-            keys: Rc::new(RefCell::new(Keys::default())),
+            keys: Rc::new(RefCell::new(HashMap::new())),
             keys_help: RwSignal::new("".to_string()),
         }
     }

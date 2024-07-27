@@ -1,4 +1,4 @@
-use std::fmt::Display;
+use std::{collections::HashMap, fmt::Display};
 
 use serde::{Deserialize, Serialize};
 
@@ -67,6 +67,18 @@ pub enum FontSize {
     VeryBig,
 }
 
+#[derive(Debug, Clone)]
+pub enum Action {
+    Print,
+    NextTheme,
+    PrevTheme,
+    NextSlide,
+    PrevSlide,
+    IncreaseFontsize,
+    DecreaseFontsize,
+    Help,
+}
+
 #[derive(Clone, Deserialize, Serialize, Debug)]
 pub struct GlobalConfig {
     pub default_theme: String,
@@ -77,7 +89,7 @@ pub struct GlobalConfig {
     pub keys: Keys,
 }
 
-#[derive(Debug, Clone, Deserialize, Serialize, PartialEq, Eq)]
+#[derive(Debug, Clone, Deserialize, Serialize, PartialEq, Eq, Hash)]
 #[serde(rename_all = "snake_case")]
 pub enum KeyName {
     Number(u8),
@@ -188,6 +200,31 @@ pub struct Keys {
     pub increase_fontsize: KeyName,
     pub decrease_fontsize: KeyName,
     pub help: KeyName,
+}
+
+impl Keys {
+    pub fn to_map(self) -> HashMap<KeyName, Action> {
+        let Self {
+            print,
+            next_theme,
+            prev_theme,
+            next_slide,
+            prev_slide,
+            increase_fontsize,
+            decrease_fontsize,
+            help,
+        } = self;
+        HashMap::from([
+            (print, Action::Print),
+            (next_theme, Action::NextTheme),
+            (prev_theme, Action::PrevTheme),
+            (next_slide, Action::NextSlide),
+            (prev_slide, Action::PrevSlide),
+            (increase_fontsize, Action::IncreaseFontsize),
+            (decrease_fontsize, Action::DecreaseFontsize),
+            (help, Action::Help),
+        ])
+    }
 }
 
 impl Display for Keys {
