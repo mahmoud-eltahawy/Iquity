@@ -78,6 +78,7 @@ pub struct GlobalConfig {
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize, PartialEq, Eq)]
+#[serde(rename_all = "snake_case")]
 pub enum KeyName {
     Number(u8),
     Letter(char),
@@ -98,6 +99,10 @@ pub enum KeyName {
     Backslash,
     Backquote,
     Backspace,
+    Left,
+    Right,
+    Up,
+    Down,
 }
 
 impl TryFrom<String> for KeyName {
@@ -131,6 +136,10 @@ impl TryFrom<String> for KeyName {
                 "Backslash" => Self::Backslash,
                 "Backquote" => Self::Backquote,
                 "Backspace" => Self::Backspace,
+                "ArrowLeft" => Self::Left,
+                "ArrowRight" => Self::Right,
+                "ArrowUp" => Self::Up,
+                "ArrowDown" => Self::Down,
                 _ => return Err("unlisted key name".to_string()),
             }
         };
@@ -157,9 +166,13 @@ impl Display for KeyName {
             KeyName::Minus => "Minus".to_string(),
             KeyName::Enter => "Enter".to_string(),
             KeyName::Slash => "Slash".to_string(),
-            KeyName::Backslash => "Backslash".to_string(),
+            KeyName::Backslash => "/".to_string(),
             KeyName::Backquote => "Backquote".to_string(),
             KeyName::Backspace => "Backspace".to_string(),
+            KeyName::Left => "Left".to_string(),
+            KeyName::Right => "Right".to_string(),
+            KeyName::Up => "Up".to_string(),
+            KeyName::Down => "Down".to_string(),
         };
         write!(f, "{}", name)
     }
