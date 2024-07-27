@@ -1,4 +1,4 @@
-use crate::Paths;
+use crate::{message_notify, Paths};
 
 use super::{Content, SLIDES_SPLITTER};
 
@@ -81,7 +81,13 @@ pub async fn watch_config(app: AppHandle) -> Result<(), Box<dyn std::error::Erro
             continue;
         };
 
-        let global_config = GlobalConfig::get(&path).await?;
+        let global_config = match GlobalConfig::get(&path).await {
+            Ok(gc) => gc,
+            Err(err) => {
+                message_notify(&app, "Config File Error".to_string(), err.to_string());
+                continue;
+            }
+        };
         let lch = global_config.live_config_reload;
 
         let keys_help = markdown_compile(&global_config.keys.to_string());

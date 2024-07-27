@@ -148,6 +148,9 @@ async fn conf_init(paths: State<'_, Paths>) -> Result<(GlobalConfig, String), St
 
 #[tauri::command]
 fn notify(app: AppHandle, title: String, message: String) {
+    message_notify(&app, title, message);
+}
+pub fn message_notify(app: &AppHandle, title: String, message: String) {
     app.notification()
         .builder()
         .title(title)
