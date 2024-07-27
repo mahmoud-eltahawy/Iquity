@@ -13,6 +13,8 @@ A cross-platform markdown compiler.
 - [Tailwind](https://www.tailwindcss.com) - A CSS framework.
 - [DaisyUI](https://www.daisyui.com) - A Tailwind CSS component library.
 
+---
+
 ## how to install it
 at the moment. building from source is the only option
 
@@ -30,8 +32,10 @@ at the moment. building from source is the only option
   cargo install tauri-cli --version "^2.0.0-beta"
   cargo tauri build
 ```
-- the builded program is called iquity located at ./target/release/iquity
-- it is single executable so you just move it to a directory that is in your path
+1. the builded program is called iquity located at ./target/release/iquity
+1. you just move it to a directory that is in your path
+
+---
 
 ## how to use it
 ```bash
@@ -39,14 +43,14 @@ at the moment. building from source is the only option
   # you should use it like this
   iquity PATH_TO_README_FILE.md
 ```
-
-## how is this different from Ubiquity
-- Ubiquity ships it's own text editor side by side with the previewer while iquity trys to be minimal by watching the file you are editing with your favourite text editor and hot reloads it's content every time you change some thing in it
-- Ubiqity is using **Yew** while iquity using **Leptos**
-- some other minimal differencs you will notice while using it but as development goes on. the two projects will become very different
+--- 
 
 ## todos
 - [X] **ADD**: slides feature
 - [X] **ADD**: a toml config file
 - [X] **ADD**: keybindings to config
-- [ ] **FIX BUG** : some editors remove and retouch the file it edits and notify crate has surprising behavior for that on some platforms
+- [ ] **ALLOW**: using images and videos from local filesystem
+- [ ] **Explore Adding**: syntax highlighting on code snippets
+- [ ] **Explore Adding**: charts and boxes drawing
+
+
