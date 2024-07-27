@@ -14,7 +14,6 @@ pub struct EmittedMarkdown<T: ToString> {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct EmittedConfig {
     pub theme_notification: bool,
-    pub slide_notification: bool,
     pub live_config_reload: bool,
     pub keys: Keys,
     pub keys_help: String,
@@ -24,7 +23,6 @@ impl EmittedConfig {
     pub fn new(
         GlobalConfig {
             theme_notification,
-            slide_notification,
             live_config_reload,
             keys,
             ..
@@ -33,7 +31,6 @@ impl EmittedConfig {
     ) -> Self {
         Self {
             theme_notification,
-            slide_notification,
             live_config_reload,
             keys,
             keys_help,
@@ -84,7 +81,6 @@ pub struct GlobalConfig {
     pub default_theme: String,
     pub default_font_size: FontSize,
     pub theme_notification: bool,
-    pub slide_notification: bool,
     pub live_config_reload: bool,
     pub keys: Keys,
 }
@@ -321,7 +317,6 @@ impl Default for GlobalConfig {
             default_theme: "dracula".to_string(),
             default_font_size: FontSize::Small,
             theme_notification: true,
-            slide_notification: true,
             live_config_reload: true,
             keys: Keys::default(),
         }

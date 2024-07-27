@@ -4,7 +4,10 @@ mod utils;
 
 use components::help::help;
 use config::EmittedMarkdown;
-use leptos::{html, prelude::*};
+use leptos::{
+    html::{self},
+    prelude::*,
+};
 use local_config::{Config, THEMES, THEMES_SIZE};
 use utils::{
     config_init, key_bindings, listen_to_config, listen_to_markdown, notify, silent_invoke,
@@ -87,24 +90,25 @@ pub fn app() -> impl IntoView {
         }
     });
 
-    Effect::new({
-        let conf = conf.clone();
-        move |_| {
-            let current = markdown.current.get();
-            let len = markdown.len.get();
-            if current != 0 && len != 0 && *conf.slide_notification.borrow() {
-                notify("iquity slide", format!("[ {} / {} ]", current, len));
-            }
-        }
-    });
-
     let keys_help = conf.keys_help;
     key_bindings(conf);
 
     html::main()
         .attr("data-theme", theme)
         .class(font_size)
-        .child((markdown_preview(), help(keys_help)))
+        .child((markdown_preview(), help(keys_help), progress_bar(markdown)))
+}
+
+fn progress_bar(markdown: Markdown) -> impl IntoView {
+    let max = move || markdown.len.get();
+    let value = move || markdown.current.get();
+    view! {
+        <progress
+            class="fixed bottom-0 h-1 w-full"
+            value=value
+            max=max
+        />
+    }
 }
 
 fn main() {
