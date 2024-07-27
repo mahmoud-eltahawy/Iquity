@@ -1,5 +1,5 @@
 use config::GlobalConfig;
-use tauri::{generate_context, AppHandle, Manager, State};
+use tauri::{generate_context, App, AppHandle, Manager, State};
 use tauri_plugin_notification::NotificationExt;
 use utils::{emit_markdown, markdown_compile, read_markdown};
 
@@ -82,38 +82,40 @@ async fn main() {
         .invoke_handler(tauri::generate_handler![
             conf_init, md_init, next_slide, prev_slide, notify,
         ])
-        .setup(move |app| {
-            let matches = app.cli().matches().unwrap();
-            let Some(markdown_path) = matches
-                .args
-                .get("path")
-                .and_then(|x| x.value.as_str().and_then(|x| PathBuf::from_str(x).ok()))
-            else {
-                stdout().write_all(HELP_MESSAGE).unwrap();
-                std::process::exit(0x0100);
-            };
-            let paths = Paths {
-                markdown: markdown_path,
-                config: GlobalConfig::config_path().unwrap(),
-            };
-            app.manage(paths);
-            let markdown_handle = app.app_handle().to_owned();
-            let config_handle = markdown_handle.clone();
-            tokio::task::spawn(async move {
-                if let Err(err) = utils::watch_markdown(markdown_handle).await {
-                    eprintln!("Watching error : {:#?}", err);
-                };
-            });
-            tokio::task::spawn(async move {
-                if let Err(err) = utils::watch_config(config_handle).await {
-                    eprintln!("Watching error : {:#?}", err);
-                };
-            });
-
-            Ok(())
-        })
+        .setup(setup)
         .run(generate_context!())
         .expect("error while running tauri application");
+}
+
+fn setup(app: &mut App) -> Result<(), Box<dyn std::error::Error>> {
+    let matches = app.cli().matches().unwrap();
+    let Some(markdown_path) = matches
+        .args
+        .get("path")
+        .and_then(|x| x.value.as_str().and_then(|x| PathBuf::from_str(x).ok()))
+    else {
+        stdout().write_all(HELP_MESSAGE).unwrap();
+        std::process::exit(0x0100);
+    };
+    let paths = Paths {
+        markdown: markdown_path,
+        config: GlobalConfig::config_path().unwrap(),
+    };
+    app.manage(paths);
+    let markdown_handle = app.app_handle().to_owned();
+    let config_handle = markdown_handle.clone();
+    tokio::task::spawn(async move {
+        if let Err(err) = utils::watch_markdown(markdown_handle).await {
+            eprintln!("Watching error : {:#?}", err);
+        };
+    });
+    tokio::task::spawn(async move {
+        if let Err(err) = utils::watch_config(config_handle).await {
+            eprintln!("Watching error : {:#?}", err);
+        };
+    });
+
+    Ok(())
 }
 
 #[tauri::command]
