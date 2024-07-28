@@ -2,8 +2,7 @@ mod components;
 mod local_config;
 mod utils;
 
-use components::help::help;
-use config::EmittedMarkdown;
+use components::{help::help, markdown_preview::Markdown};
 use leptos::{
     html::{self},
     prelude::*,
@@ -14,58 +13,6 @@ use utils::{
 };
 
 use crate::components::markdown_preview::markdown_preview;
-
-#[derive(Clone, Copy, Debug)]
-pub struct Markdown {
-    content: RwSignal<String>,
-    current: RwSignal<usize>,
-    len: RwSignal<usize>,
-}
-
-impl From<EmittedMarkdown<String>> for Markdown {
-    fn from(
-        EmittedMarkdown {
-            current,
-            len,
-            content,
-        }: EmittedMarkdown<String>,
-    ) -> Self {
-        Self {
-            content: RwSignal::new(content),
-            current: RwSignal::new(current),
-            len: RwSignal::new(len),
-        }
-    }
-}
-
-impl Markdown {
-    pub fn set(
-        &self,
-        EmittedMarkdown {
-            current,
-            len,
-            content,
-        }: EmittedMarkdown<String>,
-    ) {
-        self.content.set(content);
-        if self.current.get_untracked() != current {
-            self.current.set(current);
-        }
-        if self.len.get_untracked() != len {
-            self.len.set(len);
-        }
-    }
-}
-
-impl Default for Markdown {
-    fn default() -> Self {
-        Markdown {
-            content: RwSignal::new(String::default()),
-            current: RwSignal::new(0),
-            len: RwSignal::new(0),
-        }
-    }
-}
 
 pub fn app() -> impl IntoView {
     let conf = Config::default();
