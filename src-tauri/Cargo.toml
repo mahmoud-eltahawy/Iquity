@@ -25,6 +25,8 @@ futures = "0.3.30"
 serde_json = "1.0.120"
 tauri-plugin-notification = "2.0.0-beta.10"
 rayon = "1.10.0"
+axum = "0.7.5"
+tower-http = { version = "0.5.2", features = ["fs"] }
 
 [features]
 # by default Tauri runs in production mode

@@ -3,11 +3,28 @@ use leptos::{
     html::{article, div},
     prelude::*,
 };
+use tachys::dom::document;
+use wasm_bindgen::JsCast;
+use web_sys::HtmlImageElement;
 
 pub fn markdown_preview() -> impl IntoView {
     let markdown = use_context::<Markdown>().unwrap();
 
     let md = move || markdown.content.get();
+
+    Effect::new(move |_| {
+        let _ = md();
+        let images = document().get_elements_by_tag_name("img");
+        for i in 0..images.length() {
+            let image: HtmlImageElement = images.item(i).unwrap().dyn_into().unwrap();
+            image.get_attribute("src").inspect(|x| {
+                if !x.starts_with("http") {
+                    let content = "http://localhost:8080/".to_string() + x;
+                    image.set_src(&content);
+                }
+            });
+        }
+    });
 
     div()
         .attr("class", "overflow-auto")

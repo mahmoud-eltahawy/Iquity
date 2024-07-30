@@ -1,3 +1,4 @@
+use axum::Router;
 use config::GlobalConfig;
 use tauri::{generate_context, App, AppHandle, Manager, State};
 use tauri_plugin_notification::NotificationExt;
@@ -5,11 +6,13 @@ use utils::{emit_markdown, markdown_compile, read_markdown};
 
 use std::{
     io::{stdout, Write},
+    net::SocketAddr,
     path::PathBuf,
     str::FromStr,
     sync::Mutex,
 };
 use tauri_plugin_cli::CliExt;
+use tower_http::services::ServeDir;
 
 mod utils;
 
@@ -97,6 +100,7 @@ fn setup(app: &mut App) -> Result<(), Box<dyn std::error::Error>> {
         stdout().write_all(HELP_MESSAGE).unwrap();
         std::process::exit(0x0100);
     };
+    let markdown_parent = PathBuf::from(markdown_path.clone().parent().unwrap());
     let paths = Paths {
         markdown: markdown_path,
         config: GlobalConfig::config_path().unwrap(),
@@ -104,6 +108,7 @@ fn setup(app: &mut App) -> Result<(), Box<dyn std::error::Error>> {
     app.manage(paths);
     let markdown_handle = app.app_handle().to_owned();
     let config_handle = markdown_handle.clone();
+    serve(markdown_parent);
     tokio::task::spawn(async move {
         if let Err(err) = utils::watch_markdown(markdown_handle).await {
             eprintln!("Watching error : {:#?}", err);
@@ -116,6 +121,19 @@ fn setup(app: &mut App) -> Result<(), Box<dyn std::error::Error>> {
     });
 
     Ok(())
+}
+
+fn serve(path: PathBuf) {
+    tokio::task::spawn(async move {
+        let addr = SocketAddr::from(([127, 0, 0, 1], 8080));
+        let listener = tokio::net::TcpListener::bind(addr)
+            .await
+            .expect("failed to bind address");
+        let app = Router::new().nest_service("/", ServeDir::new(path));
+        axum::serve(listener, app)
+            .await
+            .expect("failded to serve content");
+    });
 }
 
 #[tauri::command]
