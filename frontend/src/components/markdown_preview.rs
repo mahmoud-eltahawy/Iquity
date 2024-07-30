@@ -1,3 +1,5 @@
+use std::{cell::RefCell, rc::Rc};
+
 use config::EmittedMarkdown;
 use leptos::{
     html::{article, div},
@@ -7,7 +9,7 @@ use tachys::dom::document;
 use wasm_bindgen::JsCast;
 use web_sys::HtmlImageElement;
 
-pub fn markdown_preview() -> impl IntoView {
+pub fn markdown_preview(port: Rc<RefCell<u16>>) -> impl IntoView {
     let markdown = use_context::<Markdown>().unwrap();
 
     let md = move || markdown.content.get();
@@ -19,7 +21,7 @@ pub fn markdown_preview() -> impl IntoView {
             let image: HtmlImageElement = images.item(i).unwrap().dyn_into().unwrap();
             image.get_attribute("src").inspect(|x| {
                 if !x.starts_with("http") {
-                    let content = "http://localhost:8080/".to_string() + x;
+                    let content = format!("http://localhost:{}/{}", port.borrow(), x);
                     image.set_src(&content);
                 }
             });

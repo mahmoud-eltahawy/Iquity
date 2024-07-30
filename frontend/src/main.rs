@@ -16,8 +16,8 @@ use crate::components::markdown_preview::markdown_preview;
 
 pub fn app() -> impl IntoView {
     let conf = Config::default();
-    listen_to_config(conf.clone());
     config_init(conf.clone());
+    listen_to_config(conf.clone());
 
     let markdown = Markdown::default();
     listen_to_markdown(markdown);
@@ -38,12 +38,17 @@ pub fn app() -> impl IntoView {
     });
 
     let keys_help = conf.keys_help;
+    let port = conf.port.clone();
     key_bindings(conf);
 
     html::main()
         .attr("data-theme", theme)
         .class(font_size)
-        .child((markdown_preview(), help(keys_help), progress_bar(markdown)))
+        .child((
+            markdown_preview(port),
+            help(keys_help),
+            progress_bar(markdown),
+        ))
 }
 
 fn progress_bar(markdown: Markdown) -> impl IntoView {

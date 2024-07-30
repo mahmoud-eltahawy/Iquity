@@ -17,6 +17,7 @@ pub struct EmittedConfig {
     pub live_config_reload: bool,
     pub keys: Keys,
     pub keys_help: String,
+    pub port: u16,
 }
 
 impl EmittedConfig {
@@ -28,12 +29,14 @@ impl EmittedConfig {
             ..
         }: GlobalConfig,
         keys_help: String,
+        port: u16,
     ) -> Self {
         Self {
             theme_notification,
             live_config_reload,
             keys,
             keys_help,
+            port,
         }
     }
 }
@@ -74,6 +77,13 @@ pub enum Action {
     IncreaseFontsize,
     DecreaseFontsize,
     Help,
+}
+
+#[derive(Clone, Deserialize, Serialize, Debug)]
+pub struct InitConfig {
+    pub conf: GlobalConfig,
+    pub keys_help: String,
+    pub port: u16,
 }
 
 #[derive(Clone, Deserialize, Serialize, Debug)]

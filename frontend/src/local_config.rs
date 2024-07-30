@@ -1,6 +1,6 @@
 use std::{cell::RefCell, collections::HashMap, rc::Rc};
 
-use config::{Action, EmittedConfig, GlobalConfig, KeyName};
+use config::{Action, EmittedConfig, InitConfig, KeyName};
 use leptos::prelude::*;
 
 pub const THEMES_SIZE: usize = THEMES.len();
@@ -47,10 +47,18 @@ pub struct Config {
     pub live_config_reload: Rc<RefCell<bool>>,
     pub keys: Rc<RefCell<HashMap<KeyName, Action>>>,
     pub keys_help: RwSignal<String>,
+    pub port: Rc<RefCell<u16>>,
 }
 
 impl Config {
-    pub fn set(&self, (conf, keys_help): (GlobalConfig, String)) {
+    pub fn set(
+        &self,
+        InitConfig {
+            conf,
+            keys_help,
+            port,
+        }: InitConfig,
+    ) {
         let theme_index = THEMES
             .iter()
             .enumerate()
@@ -73,6 +81,7 @@ impl Config {
         *self.theme_notification.borrow_mut() = conf.theme_notification;
         *self.keys.borrow_mut() = conf.keys.to_map();
         self.keys_help.set(keys_help);
+        *self.port.borrow_mut() = port;
     }
 
     pub fn update(
@@ -82,12 +91,14 @@ impl Config {
             live_config_reload,
             keys,
             keys_help,
+            port,
         }: EmittedConfig,
     ) {
         *self.theme_notification.borrow_mut() = theme_notification;
         *self.live_config_reload.borrow_mut() = live_config_reload;
         *self.keys.borrow_mut() = keys.to_map();
         self.keys_help.set(keys_help);
+        *self.port.borrow_mut() = port;
     }
 
     pub fn increase_font_size(&self) {
@@ -135,6 +146,7 @@ impl Default for Config {
             live_config_reload: Rc::new(RefCell::new(true)),
             keys: Rc::new(RefCell::new(HashMap::new())),
             keys_help: RwSignal::new("".to_string()),
+            port: Rc::new(RefCell::new(80)),
         }
     }
 }

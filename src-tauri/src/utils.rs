@@ -34,12 +34,13 @@ fn watcher() -> notify::Result<(RecommendedWatcher, Receiver<notify::Result<Even
 
 pub async fn watch_markdown(app: AppHandle) -> Result<(), Box<dyn std::error::Error>> {
     let (mut watcher, mut rx) = watcher()?;
-    let path = app.state::<Paths>().markdown.clone();
-    if !path.exists() {
+    let paths = app.state::<Paths>();
+    let path = paths.markdown.clone();
+    let parent = &paths.markdown_parent;
+    if !path.exists() || !parent.exists() {
         return Ok(());
     }
-    let parent = path.parent().unwrap();
-    watcher.watch(parent, RecursiveMode::NonRecursive)?;
+    watcher.watch(parent.as_path(), RecursiveMode::NonRecursive)?;
 
     let content = app.state::<Content>();
 
@@ -66,7 +67,7 @@ pub async fn watch_markdown(app: AppHandle) -> Result<(), Box<dyn std::error::Er
     }
 }
 
-pub async fn watch_config(app: AppHandle) -> Result<(), Box<dyn std::error::Error>> {
+pub async fn watch_config(app: AppHandle, port: u16) -> Result<(), Box<dyn std::error::Error>> {
     let (mut watcher, mut rx) = watcher()?;
     let path = &app.state::<Paths>().config;
     let watch_path = path.parent().unwrap();
@@ -91,7 +92,7 @@ pub async fn watch_config(app: AppHandle) -> Result<(), Box<dyn std::error::Erro
         let lch = global_config.live_config_reload;
 
         let keys_help = markdown_compile(&global_config.keys.to_string());
-        let emitted_config = EmittedConfig::new(global_config, keys_help);
+        let emitted_config = EmittedConfig::new(global_config, keys_help, port);
         emit_config(&app, emitted_config);
         if !lch {
             break;

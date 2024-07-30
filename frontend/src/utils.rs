@@ -1,5 +1,5 @@
-use config::{Action, EmittedConfig, EmittedMarkdown, KeyName, CONTENT_EVENT};
-use config::{GlobalConfig, CONFIG_EVENT};
+use config::CONFIG_EVENT;
+use config::{Action, EmittedConfig, EmittedMarkdown, InitConfig, KeyName, CONTENT_EVENT};
 use futures::StreamExt;
 use gloo::utils::{document, window};
 use tauri_sys::{core::invoke, event::listen};
@@ -45,7 +45,7 @@ pub fn silent_invoke(action: &'static str) {
 
 pub fn config_init(conf: Config) {
     spawn_local(async move {
-        conf.set(invoke::<(GlobalConfig, String)>("conf_init", Empty {}).await);
+        conf.set(invoke::<InitConfig>("conf_init", Empty {}).await);
     });
 }
 

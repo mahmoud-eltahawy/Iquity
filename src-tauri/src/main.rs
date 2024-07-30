@@ -1,5 +1,6 @@
 use axum::Router;
-use config::GlobalConfig;
+use config::{GlobalConfig, InitConfig};
+use portpicker::pick_unused_port;
 use tauri::{generate_context, App, AppHandle, Manager, State};
 use tauri_plugin_notification::NotificationExt;
 use utils::{emit_markdown, markdown_compile, read_markdown};
@@ -73,6 +74,7 @@ impl Default for Content {
 
 struct Paths {
     markdown: PathBuf,
+    markdown_parent: PathBuf,
     config: PathBuf,
 }
 
@@ -92,6 +94,7 @@ async fn main() {
 
 fn setup(app: &mut App) -> Result<(), Box<dyn std::error::Error>> {
     let matches = app.cli().matches().unwrap();
+    let port = pick_unused_port().unwrap();
     let Some(markdown_path) = matches
         .args
         .get("path")
@@ -103,19 +106,21 @@ fn setup(app: &mut App) -> Result<(), Box<dyn std::error::Error>> {
     let markdown_parent = PathBuf::from(markdown_path.clone().parent().unwrap());
     let paths = Paths {
         markdown: markdown_path,
+        markdown_parent,
         config: GlobalConfig::config_path().unwrap(),
     };
+    serve(paths.markdown_parent.clone(), port);
     app.manage(paths);
     let markdown_handle = app.app_handle().to_owned();
     let config_handle = markdown_handle.clone();
-    serve(markdown_parent);
+    app.manage(port);
     tokio::task::spawn(async move {
         if let Err(err) = utils::watch_markdown(markdown_handle).await {
             eprintln!("Watching error : {:#?}", err);
         };
     });
     tokio::task::spawn(async move {
-        if let Err(err) = utils::watch_config(config_handle).await {
+        if let Err(err) = utils::watch_config(config_handle, port).await {
             eprintln!("Watching error : {:#?}", err);
         };
     });
@@ -123,9 +128,9 @@ fn setup(app: &mut App) -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 
-fn serve(path: PathBuf) {
+fn serve(path: PathBuf, port: u16) {
     tokio::task::spawn(async move {
-        let addr = SocketAddr::from(([127, 0, 0, 1], 8080));
+        let addr = SocketAddr::from(([127, 0, 0, 1], port));
         let listener = tokio::net::TcpListener::bind(addr)
             .await
             .expect("failed to bind address");
@@ -156,9 +161,10 @@ async fn md_init(
 async fn conf_init(
     app: AppHandle,
     paths: State<'_, Paths>,
-) -> Result<(GlobalConfig, String), String> {
+    port: State<'_, u16>,
+) -> Result<InitConfig, String> {
     let config_path = paths.inner().config.clone();
-    let config = match GlobalConfig::get(&config_path).await {
+    let conf = match GlobalConfig::get(&config_path).await {
         Ok(conf) => conf,
         Err(err) => {
             message_notify(&app, "config init error".to_string(), err.to_string());
@@ -166,9 +172,13 @@ async fn conf_init(
         }
     };
 
-    let keys_help = markdown_compile(&config.keys.to_string());
+    let keys_help = markdown_compile(&conf.keys.to_string());
 
-    Ok((config, keys_help))
+    Ok(InitConfig {
+        conf,
+        keys_help,
+        port: *port.inner(),
+    })
 }
 
 #[tauri::command]
