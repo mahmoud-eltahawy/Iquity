@@ -117,39 +117,16 @@ pub async fn read_markdown<P: AsRef<Path>>(
     Ok(slides)
 }
 
+struct CodeBlock {
+    begin: usize,
+    end: usize,
+    content: Vec<char>,
+}
+
 pub fn code_syntax_highlight(source: &str) -> String {
     let mut source = source.chars().collect::<Vec<_>>();
-    struct Code {
-        begin: usize,
-        end: usize,
-        content: Vec<char>,
-    }
-    let mut codes = Vec::<Code>::new();
-    let mut code = Vec::<char>::new();
-    let mut code_began = None::<usize>;
-    for (i, cs) in source.as_slice().windows(3).enumerate() {
-        if cs.iter().all(|x| *x == '`') {
-            if let Some(begin) = code_began {
-                let c = Code {
-                    begin,
-                    end: i,
-                    content: code.clone(),
-                };
-                codes.push(c);
-                code.clear();
-                code_began = None;
-            } else {
-                code_began = Some(i);
-            }
-        }
-        if let Some(_) = code_began {
-            code.push(*cs.first().unwrap());
-        }
-    }
-    for mut code in codes {
-        if code.content.len() > 3 {
-            code.content = code.content[3..].to_vec();
-        };
+    let codes = extract_code_blocks(&source);
+    for code in codes {
         let code_content = String::from_iter(code.content);
         let (lang, code_content) = match code_content.split_once('\n') {
             Some((lang, code)) => (lang.to_string(), code.to_string()),
@@ -167,6 +144,35 @@ pub fn code_syntax_highlight(source: &str) -> String {
     }
 
     String::from_iter(source)
+}
+
+fn extract_code_blocks(source: &[char]) -> Vec<CodeBlock> {
+    let mut all_blocks = Vec::<CodeBlock>::new();
+    let mut code_block = Vec::<char>::new();
+    let mut code_began = None::<usize>;
+    for (i, three_chars) in source.windows(3).enumerate() {
+        let three_chars_are_seperator = three_chars.iter().all(|x| *x == '`');
+        if let Some(begin) = code_began {
+            if three_chars_are_seperator {
+                let block = CodeBlock {
+                    begin,
+                    end: i,
+                    content: code_block.clone(),
+                };
+                all_blocks.push(block);
+                code_block.clear();
+                code_began = None;
+            }
+            if i.checked_sub(begin).is_some_and(|i| i >= three_chars.len()) {
+                code_block.push(three_chars[0]);
+            }
+        } else {
+            if three_chars_are_seperator {
+                code_began = Some(i);
+            }
+        }
+    }
+    all_blocks
 }
 
 pub fn markdown_compile(source: String) -> String {
