@@ -117,26 +117,19 @@ pub async fn read_markdown<P: AsRef<Path>>(
     Ok(slides)
 }
 
+#[derive(Debug)]
 struct CodeBlock {
     begin: usize,
     end: usize,
-    content: Vec<char>,
+    content: String,
+    lang: String,
 }
 
 pub fn code_syntax_highlight(source: &str) -> String {
     let mut source = source.chars().collect::<Vec<_>>();
     let codes = extract_code_blocks(&source);
     for code in codes {
-        let code_content = String::from_iter(code.content);
-        let (lang, code_content) = match code_content.split_once('\n') {
-            Some((lang, code)) => (lang.to_string(), code.to_string()),
-            None => ("".to_string(), code_content),
-        };
-
-        println!(
-            "\nlang : {}\ncode :\n{}\nbegin : {} , end : {}",
-            lang, code_content, code.begin, code.end
-        );
+        println!("{:#?}", code);
         source.splice(
             code.begin..code.end,
             "```HELLO CODE".chars().collect::<Vec<_>>(),
@@ -149,26 +142,40 @@ pub fn code_syntax_highlight(source: &str) -> String {
 fn extract_code_blocks(source: &[char]) -> Vec<CodeBlock> {
     let mut all_blocks = Vec::<CodeBlock>::new();
     let mut code_block = Vec::<char>::new();
+    let mut code_lang = Vec::<char>::new();
     let mut code_began = None::<usize>;
+    let mut lang_done = false;
     for (i, three_chars) in source.windows(3).enumerate() {
         let three_chars_are_seperator = three_chars.iter().all(|x| *x == '`');
-        if let Some(begin) = code_began {
-            if three_chars_are_seperator {
-                let block = CodeBlock {
-                    begin,
-                    end: i,
-                    content: code_block.clone(),
-                };
-                all_blocks.push(block);
-                code_block.clear();
-                code_began = None;
+        match code_began {
+            Some(begin) => {
+                if three_chars_are_seperator {
+                    let block = CodeBlock {
+                        begin,
+                        end: i,
+                        content: String::from_iter(code_block.iter()),
+                        lang: String::from_iter(code_lang.iter()),
+                    };
+                    all_blocks.push(block);
+                    code_block.clear();
+                    code_lang.clear();
+                    code_began = None;
+                    lang_done = false;
+                }
+                if i.checked_sub(begin).is_some_and(|i| i >= three_chars.len()) {
+                    let c = three_chars[0];
+                    if lang_done {
+                        code_block.push(c);
+                    } else {
+                        code_lang.push(c);
+                        lang_done = c == '\n';
+                    }
+                }
             }
-            if i.checked_sub(begin).is_some_and(|i| i >= three_chars.len()) {
-                code_block.push(three_chars[0]);
-            }
-        } else {
-            if three_chars_are_seperator {
-                code_began = Some(i);
+            None => {
+                if three_chars_are_seperator {
+                    code_began = Some(i);
+                }
             }
         }
     }
