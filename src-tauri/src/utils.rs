@@ -118,39 +118,55 @@ pub async fn read_markdown<P: AsRef<Path>>(
 }
 
 pub fn code_syntax_highlight(source: &str) -> String {
-    let mut codes = Vec::new();
+    let mut source = source.chars().collect::<Vec<_>>();
+    struct Code {
+        begin: usize,
+        end: usize,
+        content: Vec<char>,
+    }
+    let mut codes = Vec::<Code>::new();
     let mut code = Vec::<char>::new();
-    let mut on = false;
-    let chars = source.chars().collect::<Vec<_>>();
-    for cs in chars.as_slice().windows(3) {
+    let mut code_began = None::<usize>;
+    for (i, cs) in source.as_slice().windows(3).enumerate() {
         if cs.iter().all(|x| *x == '`') {
-            if on {
-                codes.push(code.clone());
+            if let Some(begin) = code_began {
+                let c = Code {
+                    begin,
+                    end: i,
+                    content: code.clone(),
+                };
+                codes.push(c);
                 code.clear();
-                on = false;
+                code_began = None;
             } else {
-                on = true;
+                code_began = Some(i);
             }
         }
-        if on {
+        if let Some(_) = code_began {
             code.push(*cs.first().unwrap());
         }
     }
-    for code in codes {
-        let code = String::from_iter(if code.len() > 3 {
-            code[3..].to_vec()
-        } else {
-            code
-        });
-        let (lang, code) = match code.split_once('\n') {
+    for mut code in codes {
+        if code.content.len() > 3 {
+            code.content = code.content[3..].to_vec();
+        };
+        let code_content = String::from_iter(code.content);
+        let (lang, code_content) = match code_content.split_once('\n') {
             Some((lang, code)) => (lang.to_string(), code.to_string()),
-            None => ("".to_string(), code),
+            None => ("".to_string(), code_content),
         };
 
-        println!("\nlang : {}\ncode :\n{}", lang, code);
+        println!(
+            "\nlang : {}\ncode :\n{}\nbegin : {} , end : {}",
+            lang, code_content, code.begin, code.end
+        );
+        source.splice(
+            code.begin..code.end,
+            "```HELLO CODE".chars().collect::<Vec<_>>(),
+        );
     }
 
-    source.to_string()
+    String::from_iter(source)
 }
 
 pub fn markdown_compile(source: String) -> String {
