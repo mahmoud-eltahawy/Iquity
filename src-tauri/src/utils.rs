@@ -91,7 +91,7 @@ pub async fn watch_config(app: AppHandle, port: u16) -> Result<(), Box<dyn std::
         };
         let lch = global_config.live_config_reload;
 
-        let keys_help = markdown_compile(&global_config.keys.to_string());
+        let keys_help = markdown_compile(global_config.keys.to_string());
         let emitted_config = EmittedConfig::new(global_config, keys_help, port);
         emit_config(&app, emitted_config);
         if !lch {
@@ -111,12 +111,49 @@ pub async fn read_markdown<P: AsRef<Path>>(
         .split(SLIDES_SPLITTER)
         .collect::<Vec<_>>()
         .into_par_iter()
+        .map(code_syntax_highlight)
         .map(markdown_compile)
         .collect();
     Ok(slides)
 }
 
-pub fn markdown_compile(source: &str) -> String {
+pub fn code_syntax_highlight(source: &str) -> String {
+    let mut codes = Vec::new();
+    let mut code = Vec::<char>::new();
+    let mut on = false;
+    let chars = source.chars().collect::<Vec<_>>();
+    for cs in chars.as_slice().windows(3) {
+        if cs.iter().all(|x| *x == '`') {
+            if on {
+                codes.push(code.clone());
+                code.clear();
+                on = false;
+            } else {
+                on = true;
+            }
+        }
+        if on {
+            code.push(*cs.first().unwrap());
+        }
+    }
+    for code in codes {
+        let code = String::from_iter(if code.len() > 3 {
+            code[3..].to_vec()
+        } else {
+            code
+        });
+        let (lang, code) = match code.split_once('\n') {
+            Some((lang, code)) => (lang.to_string(), code.to_string()),
+            None => ("".to_string(), code),
+        };
+
+        println!("\nlang : {}\ncode :\n{}", lang, code);
+    }
+
+    source.to_string()
+}
+
+pub fn markdown_compile(source: String) -> String {
     let compile = CompileOptions {
         allow_dangerous_html: true,
         allow_dangerous_protocol: true,
@@ -124,7 +161,7 @@ pub fn markdown_compile(source: &str) -> String {
     };
     let parse = ParseOptions::gfm();
     let options = Options { compile, parse };
-    markdown::to_html_with_options(source, &options).unwrap()
+    markdown::to_html_with_options(&source, &options).unwrap()
 }
 
 pub fn emit_markdown(app: &AppHandle, index: usize, len: usize, slide: &String) {

@@ -172,7 +172,7 @@ async fn conf_init(
         }
     };
 
-    let keys_help = markdown_compile(&conf.keys.to_string());
+    let keys_help = markdown_compile(conf.keys.to_string());
 
     Ok(InitConfig {
         conf,
