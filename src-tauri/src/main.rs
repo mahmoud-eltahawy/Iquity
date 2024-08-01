@@ -72,10 +72,12 @@ impl Default for Content {
     }
 }
 
-struct Paths {
-    markdown: PathBuf,
-    markdown_parent: PathBuf,
-    config: PathBuf,
+struct BackendContext {
+    markdown_path: PathBuf,
+    markdown_parent_path: PathBuf,
+    config_path: PathBuf,
+    port: u16,
+    content: Content,
 }
 
 #[tokio::main]
@@ -83,7 +85,6 @@ async fn main() {
     tauri::Builder::default()
         .plugin(tauri_plugin_notification::init())
         .plugin(tauri_plugin_cli::init())
-        .manage(Content::default())
         .invoke_handler(tauri::generate_handler![
             conf_init, md_init, next_slide, prev_slide, notify,
         ])
@@ -94,7 +95,6 @@ async fn main() {
 
 fn setup(app: &mut App) -> Result<(), Box<dyn std::error::Error>> {
     let matches = app.cli().matches().unwrap();
-    let port = pick_unused_port().unwrap();
     let Some(markdown_path) = matches
         .args
         .get("path")
@@ -104,23 +104,25 @@ fn setup(app: &mut App) -> Result<(), Box<dyn std::error::Error>> {
         std::process::exit(0x0100);
     };
     let markdown_parent = PathBuf::from(markdown_path.clone().parent().unwrap());
-    let paths = Paths {
-        markdown: markdown_path,
-        markdown_parent,
-        config: GlobalConfig::config_path().unwrap(),
+    let port = pick_unused_port().unwrap();
+    let context = BackendContext {
+        markdown_path,
+        markdown_parent_path: markdown_parent,
+        config_path: GlobalConfig::config_path().unwrap(),
+        port,
+        content: Content::default(),
     };
-    serve(paths.markdown_parent.clone(), port);
-    app.manage(paths);
-    let markdown_handle = app.app_handle().to_owned();
-    let config_handle = markdown_handle.clone();
-    app.manage(port);
+    serve(context.markdown_parent_path.clone(), context.port);
+    app.manage(context);
+    let app_handle = app.app_handle().to_owned();
+    let app_handle_clone = app_handle.clone();
     tokio::task::spawn(async move {
-        if let Err(err) = utils::watch_markdown(markdown_handle).await {
+        if let Err(err) = utils::watch_markdown(app_handle).await {
             eprintln!("Watching error : {:#?}", err);
         };
     });
     tokio::task::spawn(async move {
-        if let Err(err) = utils::watch_config(config_handle, port).await {
+        if let Err(err) = utils::watch_config(app_handle_clone, port).await {
             eprintln!("Watching error : {:#?}", err);
         };
     });
@@ -142,16 +144,12 @@ fn serve(path: PathBuf, port: u16) {
 }
 
 #[tauri::command]
-async fn md_init(
-    app: AppHandle,
-    content: State<'_, Content>,
-    path: State<'_, Paths>,
-) -> Result<(), String> {
-    let markdown_path = path.inner().markdown.clone();
+async fn md_init(app: AppHandle, context: State<'_, BackendContext>) -> Result<(), String> {
+    let markdown_path = context.inner().markdown_path.clone();
     let slides = read_markdown(&markdown_path)
         .await
         .map_err(|x| x.to_string())?;
-    let mut content_slides = content.slides.lock().unwrap();
+    let mut content_slides = context.content.slides.lock().unwrap();
     emit_markdown(&app, 0, slides.len(), &slides[0]);
     *content_slides = slides;
     Ok(())
@@ -160,10 +158,9 @@ async fn md_init(
 #[tauri::command]
 async fn conf_init(
     app: AppHandle,
-    paths: State<'_, Paths>,
-    port: State<'_, u16>,
+    context: State<'_, BackendContext>,
 ) -> Result<InitConfig, String> {
-    let config_path = paths.inner().config.clone();
+    let config_path = context.inner().config_path.clone();
     let conf = match GlobalConfig::get(&config_path).await {
         Ok(conf) => conf,
         Err(err) => {
@@ -177,7 +174,7 @@ async fn conf_init(
     Ok(InitConfig {
         conf,
         keys_help,
-        port: *port.inner(),
+        port: context.port,
     })
 }
 
@@ -195,9 +192,9 @@ pub fn message_notify(app: &AppHandle, title: String, message: String) {
 }
 
 #[tauri::command]
-fn next_slide(app: AppHandle, content: State<'_, Content>) {
-    let slides = content.slides.lock().unwrap();
-    let mut index = content.index.lock().unwrap();
+fn next_slide(app: AppHandle, context: State<'_, BackendContext>) {
+    let slides = context.content.slides.lock().unwrap();
+    let mut index = context.content.index.lock().unwrap();
     let slide = if *index < slides.len() - 1 {
         *index += 1;
         slides.get(*index).unwrap()
@@ -208,9 +205,9 @@ fn next_slide(app: AppHandle, content: State<'_, Content>) {
 }
 
 #[tauri::command]
-fn prev_slide(app: AppHandle, content: State<'_, Content>) {
-    let slides = content.slides.lock().unwrap();
-    let mut index = content.index.lock().unwrap();
+fn prev_slide(app: AppHandle, context: State<'_, BackendContext>) {
+    let slides = context.content.slides.lock().unwrap();
+    let mut index = context.content.index.lock().unwrap();
     *index = index.checked_sub(1).unwrap_or(0);
     let slide = slides.get(*index).unwrap();
     emit_markdown(&app, *index, slides.len(), slide);

@@ -1,4 +1,4 @@
-use crate::{message_notify, Paths};
+use crate::{message_notify, BackendContext};
 
 use super::{Content, SLIDES_SPLITTER};
 
@@ -11,12 +11,7 @@ use notify::{
     event::ModifyKind, Config, Event, EventKind::Modify, RecommendedWatcher, RecursiveMode, Watcher,
 };
 
-use syntect::{
-    easy::HighlightLines,
-    highlighting::ThemeSet,
-    html::{highlighted_html_for_string, styled_line_to_highlighted_html, IncludeBackground},
-    parsing::SyntaxSet,
-};
+use syntect::{highlighting::ThemeSet, html::highlighted_html_for_string, parsing::SyntaxSet};
 use tauri::{AppHandle, Emitter, Manager};
 
 use std::path::Path;
@@ -40,9 +35,9 @@ fn watcher() -> notify::Result<(RecommendedWatcher, Receiver<notify::Result<Even
 
 pub async fn watch_markdown(app: AppHandle) -> Result<(), Box<dyn std::error::Error>> {
     let (mut watcher, mut rx) = watcher()?;
-    let paths = app.state::<Paths>();
-    let path = paths.markdown.clone();
-    let parent = &paths.markdown_parent;
+    let paths = app.state::<BackendContext>();
+    let path = paths.markdown_path.clone();
+    let parent = &paths.markdown_parent_path;
     if !path.exists() || !parent.exists() {
         return Ok(());
     }
@@ -75,7 +70,7 @@ pub async fn watch_markdown(app: AppHandle) -> Result<(), Box<dyn std::error::Er
 
 pub async fn watch_config(app: AppHandle, port: u16) -> Result<(), Box<dyn std::error::Error>> {
     let (mut watcher, mut rx) = watcher()?;
-    let path = &app.state::<Paths>().config;
+    let path = &app.state::<BackendContext>().config_path;
     let watch_path = path.parent().unwrap();
 
     watcher.watch(watch_path, RecursiveMode::NonRecursive)?;
