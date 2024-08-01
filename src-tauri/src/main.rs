@@ -1,6 +1,5 @@
 use axum::Router;
 use config::{GlobalConfig, InitConfig};
-use portpicker::pick_unused_port;
 use tauri::{generate_context, App, AppHandle, Manager, State};
 use tauri_plugin_notification::NotificationExt;
 use utils::{emit_markdown, markdown_compile, read_markdown};
@@ -80,6 +79,45 @@ struct BackendContext {
     content: Content,
 }
 
+impl BackendContext {
+    fn new(path: PathBuf) -> Result<Self, &'static str> {
+        let port = portpicker::pick_unused_port().unwrap();
+        let (markdown_path, markdown_parent_path) = if path.is_file() {
+            (path.clone(), path.parent().unwrap().into())
+        } else if path.is_dir() {
+            let mut son = path.clone();
+            son.push("index.md");
+            if son.exists() {
+                (son, path)
+            } else {
+                return Err("can not find index.md");
+            }
+        } else {
+            return Err("provided path does not exist");
+        };
+        Ok(BackendContext {
+            markdown_path,
+            markdown_parent_path,
+            config_path: GlobalConfig::config_path().unwrap(),
+            port,
+            content: Content::default(),
+        })
+    }
+
+    fn serve_assets(&self) {
+        let addr = SocketAddr::from(([127, 0, 0, 1], self.port));
+        let app = Router::new().nest_service("/", ServeDir::new(&self.markdown_parent_path));
+        tokio::task::spawn(async move {
+            let listener = tokio::net::TcpListener::bind(addr)
+                .await
+                .expect("failed to bind address");
+            axum::serve(listener, app)
+                .await
+                .expect("failded to serve content");
+        });
+    }
+}
+
 #[tokio::main]
 async fn main() {
     tauri::Builder::default()
@@ -103,16 +141,9 @@ fn setup(app: &mut App) -> Result<(), Box<dyn std::error::Error>> {
         stdout().write_all(HELP_MESSAGE).unwrap();
         std::process::exit(0x0100);
     };
-    let markdown_parent = PathBuf::from(markdown_path.clone().parent().unwrap());
-    let port = pick_unused_port().unwrap();
-    let context = BackendContext {
-        markdown_path,
-        markdown_parent_path: markdown_parent,
-        config_path: GlobalConfig::config_path().unwrap(),
-        port,
-        content: Content::default(),
-    };
-    serve(context.markdown_parent_path.clone(), context.port);
+    let context = BackendContext::new(markdown_path).unwrap();
+    let port = context.port;
+    context.serve_assets();
     app.manage(context);
     let app_handle = app.app_handle().to_owned();
     let app_handle_clone = app_handle.clone();
@@ -128,19 +159,6 @@ fn setup(app: &mut App) -> Result<(), Box<dyn std::error::Error>> {
     });
 
     Ok(())
-}
-
-fn serve(path: PathBuf, port: u16) {
-    tokio::task::spawn(async move {
-        let addr = SocketAddr::from(([127, 0, 0, 1], port));
-        let listener = tokio::net::TcpListener::bind(addr)
-            .await
-            .expect("failed to bind address");
-        let app = Router::new().nest_service("/", ServeDir::new(path));
-        axum::serve(listener, app)
-            .await
-            .expect("failded to serve content");
-    });
 }
 
 #[tauri::command]
