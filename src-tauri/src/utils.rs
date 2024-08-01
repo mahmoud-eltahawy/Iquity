@@ -1,6 +1,6 @@
 use crate::{message_notify, BackendContext};
 
-use super::{Content, SLIDES_SPLITTER};
+use super::SLIDES_SPLITTER;
 
 use config::{EmittedConfig, EmittedMarkdown, GlobalConfig, CONFIG_EVENT, CONTENT_EVENT};
 use futures::{
@@ -35,15 +35,10 @@ fn watcher() -> notify::Result<(RecommendedWatcher, Receiver<notify::Result<Even
 
 pub async fn watch_markdown(app: AppHandle) -> Result<(), Box<dyn std::error::Error>> {
     let (mut watcher, mut rx) = watcher()?;
-    let paths = app.state::<BackendContext>();
-    let path = paths.markdown_path.clone();
-    let parent = &paths.markdown_parent_path;
-    if !path.exists() || !parent.exists() {
-        return Ok(());
-    }
+    let context = app.state::<BackendContext>();
+    let path = context.markdown_path.clone();
+    let parent = &context.markdown_parent_path;
     watcher.watch(parent.as_path(), RecursiveMode::NonRecursive)?;
-
-    let content = app.state::<Content>();
 
     loop {
         let Some(Ok(ev)) = rx.next().await else {
@@ -53,9 +48,9 @@ pub async fn watch_markdown(app: AppHandle) -> Result<(), Box<dyn std::error::Er
             continue;
         };
         let slides = read_markdown(&path).await?;
-        let mut content_slides = content.slides.lock().unwrap();
+        let mut content_slides = context.content.slides.lock().unwrap();
         *content_slides = slides;
-        let mut index = content.index.lock().unwrap();
+        let mut index = context.content.index.lock().unwrap();
         if *index > content_slides.len() - 1 {
             *index = content_slides.len() - 1;
         };

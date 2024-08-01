@@ -1,6 +1,6 @@
 use axum::Router;
 use config::{GlobalConfig, InitConfig};
-use tauri::{generate_context, App, AppHandle, Manager, State};
+use tauri::{generate_context, App, AppHandle, Manager};
 use tauri_plugin_notification::NotificationExt;
 use utils::{emit_markdown, markdown_compile, read_markdown};
 
@@ -162,7 +162,8 @@ fn setup(app: &mut App) -> Result<(), Box<dyn std::error::Error>> {
 }
 
 #[tauri::command]
-async fn md_init(app: AppHandle, context: State<'_, BackendContext>) -> Result<(), String> {
+async fn md_init(app: AppHandle) -> Result<(), String> {
+    let context = app.state::<BackendContext>();
     let markdown_path = context.inner().markdown_path.clone();
     let slides = read_markdown(&markdown_path)
         .await
@@ -174,10 +175,8 @@ async fn md_init(app: AppHandle, context: State<'_, BackendContext>) -> Result<(
 }
 
 #[tauri::command]
-async fn conf_init(
-    app: AppHandle,
-    context: State<'_, BackendContext>,
-) -> Result<InitConfig, String> {
+async fn conf_init(app: AppHandle) -> Result<InitConfig, String> {
+    let context = app.state::<BackendContext>();
     let config_path = context.inner().config_path.clone();
     let conf = match GlobalConfig::get(&config_path).await {
         Ok(conf) => conf,
@@ -210,7 +209,8 @@ pub fn message_notify(app: &AppHandle, title: String, message: String) {
 }
 
 #[tauri::command]
-fn next_slide(app: AppHandle, context: State<'_, BackendContext>) {
+fn next_slide(app: AppHandle) {
+    let context = app.state::<BackendContext>();
     let slides = context.content.slides.lock().unwrap();
     let mut index = context.content.index.lock().unwrap();
     let slide = if *index < slides.len() - 1 {
@@ -223,7 +223,8 @@ fn next_slide(app: AppHandle, context: State<'_, BackendContext>) {
 }
 
 #[tauri::command]
-fn prev_slide(app: AppHandle, context: State<'_, BackendContext>) {
+fn prev_slide(app: AppHandle) {
+    let context = app.state::<BackendContext>();
     let slides = context.content.slides.lock().unwrap();
     let mut index = context.content.index.lock().unwrap();
     *index = index.checked_sub(1).unwrap_or(0);
