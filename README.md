@@ -24,7 +24,7 @@ at the moment. building from source is the only option
 4. install [Bun](https://bun.sh/) to download tailwind and daisyui
 
 ### Installing
-```bash
+```sh
   git clone --depth=1 https://github.com/mahmoud-eltahawy/Iquity.git
   cd iquity
   cargo install trunk
@@ -38,7 +38,7 @@ at the moment. building from source is the only option
 ---
 
 ## how to use it
-```bash
+```sh
   iquity # will print help messge
   # you should use it like this
   iquity PATH_TO_README_FILE.md

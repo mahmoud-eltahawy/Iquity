@@ -28,6 +28,7 @@ rayon = "1.10.0"
 axum = "0.7.5"
 tower-http = { version = "0.5.2", features = ["fs"] }
 portpicker = "0.1.1"
+syntect = "5.2.0"
 
 [features]
 # by default Tauri runs in production mode

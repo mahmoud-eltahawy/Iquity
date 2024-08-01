@@ -11,6 +11,12 @@ use notify::{
     event::ModifyKind, Config, Event, EventKind::Modify, RecommendedWatcher, RecursiveMode, Watcher,
 };
 
+use syntect::{
+    easy::HighlightLines,
+    highlighting::ThemeSet,
+    html::{highlighted_html_for_string, styled_line_to_highlighted_html, IncludeBackground},
+    parsing::SyntaxSet,
+};
 use tauri::{AppHandle, Emitter, Manager};
 
 use std::path::Path;
@@ -128,12 +134,14 @@ struct CodeBlock {
 pub fn code_syntax_highlight(source: &str) -> String {
     let mut source = source.chars().collect::<Vec<_>>();
     let codes = extract_code_blocks(&source);
+    let ps = SyntaxSet::load_defaults_newlines();
+    let ts = ThemeSet::load_defaults();
+    let theme = &ts.themes["base16-ocean.dark"];
     for code in codes {
         println!("{:#?}", code);
-        source.splice(
-            code.begin..code.end,
-            "```HELLO CODE".chars().collect::<Vec<_>>(),
-        );
+        let syntax = ps.find_syntax_by_extension(&code.lang).unwrap();
+        let html = highlighted_html_for_string(&code.content, &ps, syntax, theme).unwrap();
+        source.splice(code.begin..(code.end + 3), html.chars().collect::<Vec<_>>());
     }
 
     String::from_iter(source)
@@ -154,7 +162,7 @@ fn extract_code_blocks(source: &[char]) -> Vec<CodeBlock> {
                         begin,
                         end: i,
                         content: String::from_iter(code_block.iter()),
-                        lang: String::from_iter(code_lang.iter()),
+                        lang: String::from_iter(code_lang.iter()).trim().to_string(),
                     };
                     all_blocks.push(block);
                     code_block.clear();
