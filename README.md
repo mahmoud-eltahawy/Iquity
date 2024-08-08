@@ -21,7 +21,6 @@ at the moment. building from source is the only option
 ### Prerequisites
 1. install [Rust](https://www.rust-lang.org/)
 2. make sure your machine have [Tauri V2](https://v2.tauri.app/start/prerequisites/) Prerequisites
-4. install [Bun](https://bun.sh/) to download tailwind and daisyui
 
 ### Installing
 ```sh

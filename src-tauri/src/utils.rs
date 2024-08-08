@@ -48,9 +48,9 @@ pub async fn watch_markdown(app: AppHandle) -> Result<(), Box<dyn std::error::Er
             continue;
         };
         let slides = read_markdown(&path).await?;
-        let mut content_slides = context.content.slides.lock().unwrap();
+        let mut content_slides = context.slides.lock().unwrap();
         *content_slides = slides;
-        let mut index = context.content.index.lock().unwrap();
+        let mut index = context.slide_index.lock().unwrap();
         if *index > content_slides.len() - 1 {
             *index = content_slides.len() - 1;
         };

@@ -3,7 +3,7 @@
   "version": "0.4.0",
   "identifier": "com.eltahawy.iquity",
   "build": {
-    "beforeBuildCommand": "cd frontend && bun install && trunk build --release index.html",
+    "beforeBuildCommand": "cd frontend && npm install && trunk build --release index.html",
     "beforeDevCommand": "cd frontend && trunk serve index.html",
     "frontendDist": "../frontend/dist",
     "devUrl": "http://localhost:1420"
