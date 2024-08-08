@@ -128,8 +128,9 @@ pub fn code_syntax_highlight(source: &str) -> String {
     let ts = ThemeSet::load_defaults();
     let theme = &ts.themes["base16-ocean.dark"];
     for code in codes {
-        println!("{:#?}", code);
-        let syntax = ps.find_syntax_by_extension(&code.lang).unwrap();
+        let syntax = ps
+            .find_syntax_by_extension(&code.lang)
+            .unwrap_or(ps.find_syntax_by_extension("sh").unwrap());
         let html = highlighted_html_for_string(&code.content, &ps, syntax, theme).unwrap();
         source.splice(code.begin..(code.end + 3), html.chars().collect::<Vec<_>>());
     }
