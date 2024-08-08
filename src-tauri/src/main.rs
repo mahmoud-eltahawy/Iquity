@@ -32,12 +32,13 @@ const HELP_MESSAGE: &[u8] = r#"
 .as_bytes();
 
 struct BackendContext {
-    markdown_path: PathBuf,
-    markdown_parent_path: PathBuf,
-    config_path: PathBuf,
     port: u16,
+    slides_path: PathBuf,
+    slides_home_path: PathBuf,
     slides: Mutex<Vec<String>>,
     slide_index: Mutex<usize>,
+    config_path: PathBuf,
+    config: GlobalConfig,
 }
 
 impl BackendContext {
@@ -59,19 +60,30 @@ impl BackendContext {
         let slides = read_markdown(&markdown_path)
             .await
             .map_err(|x| x.to_string())?;
+
+        let config_path = GlobalConfig::config_path().unwrap();
+        let config = match GlobalConfig::get(&config_path).await {
+            Ok(conf) => conf,
+            Err(err) => {
+                eprintln!("config init error : {}", err.to_string());
+                GlobalConfig::default()
+            }
+        };
+
         Ok(BackendContext {
-            markdown_path,
-            markdown_parent_path,
-            config_path: GlobalConfig::config_path().unwrap(),
+            slides_path: markdown_path,
+            slides_home_path: markdown_parent_path,
+            config_path,
             port,
             slides: Mutex::new(slides),
             slide_index: Mutex::new(0),
+            config,
         })
     }
 
     fn serve_assets(&self) {
         let addr = SocketAddr::from(([127, 0, 0, 1], self.port));
-        let app = Router::new().nest_service("/", ServeDir::new(&self.markdown_parent_path));
+        let app = Router::new().nest_service("/", ServeDir::new(&self.slides_home_path));
         tokio::task::spawn(async move {
             let listener = tokio::net::TcpListener::bind(addr)
                 .await
@@ -139,31 +151,23 @@ fn md_init(app: AppHandle) {
 }
 
 #[tauri::command]
-async fn conf_init(app: AppHandle) -> Result<InitConfig, String> {
+fn conf_init(app: AppHandle) -> InitConfig {
     let context = app.state::<BackendContext>();
-    let config_path = context.inner().config_path.clone();
-    let conf = match GlobalConfig::get(&config_path).await {
-        Ok(conf) => conf,
-        Err(err) => {
-            message_notify(&app, "config init error".to_string(), err.to_string());
-            GlobalConfig::default()
-        }
-    };
-
+    let conf = context.config.clone();
     let keys_help = markdown_compile(conf.keys.to_string());
 
-    Ok(InitConfig {
+    InitConfig {
         conf,
         keys_help,
         port: context.port,
-    })
+    }
 }
 
 #[tauri::command]
 fn notify(app: AppHandle, title: String, message: String) {
-    message_notify(&app, title, message);
+    message_notify(&app, &title, &message);
 }
-pub fn message_notify(app: &AppHandle, title: String, message: String) {
+pub fn message_notify(app: &AppHandle, title: &str, message: &str) {
     app.notification()
         .builder()
         .title(title)

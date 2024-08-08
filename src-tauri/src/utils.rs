@@ -14,6 +14,8 @@ use notify::{
 use syntect::{highlighting::ThemeSet, html::highlighted_html_for_string, parsing::SyntaxSet};
 use tauri::{AppHandle, Emitter, Manager};
 
+use markdown::{self, CompileOptions, Options, ParseOptions};
+use rayon::prelude::*;
 use std::path::Path;
 
 fn watcher() -> notify::Result<(RecommendedWatcher, Receiver<notify::Result<Event>>)> {
@@ -36,8 +38,8 @@ fn watcher() -> notify::Result<(RecommendedWatcher, Receiver<notify::Result<Even
 pub async fn watch_markdown(app: AppHandle) -> Result<(), Box<dyn std::error::Error>> {
     let (mut watcher, mut rx) = watcher()?;
     let context = app.state::<BackendContext>();
-    let path = context.markdown_path.clone();
-    let parent = &context.markdown_parent_path;
+    let path = context.slides_path.clone();
+    let parent = &context.slides_home_path;
     watcher.watch(parent.as_path(), RecursiveMode::NonRecursive)?;
 
     loop {
@@ -81,7 +83,7 @@ pub async fn watch_config(app: AppHandle, port: u16) -> Result<(), Box<dyn std::
         let global_config = match GlobalConfig::get(&path).await {
             Ok(gc) => gc,
             Err(err) => {
-                message_notify(&app, "Config File Error".to_string(), err.to_string());
+                message_notify(&app, "Config File Error", &err.to_string());
                 continue;
             }
         };
@@ -96,8 +98,6 @@ pub async fn watch_config(app: AppHandle, port: u16) -> Result<(), Box<dyn std::
     }
     Ok(())
 }
-use markdown::{self, CompileOptions, Options, ParseOptions};
-use rayon::prelude::*;
 
 pub async fn read_markdown<P: AsRef<Path>>(
     path: P,
