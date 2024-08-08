@@ -97,13 +97,13 @@ async fn main() {
 }
 
 fn setup(app: &mut App) -> Result<(), Box<dyn std::error::Error>> {
-    let matches = app.cli().matches().unwrap();
+    let matches = app.cli().matches()?;
     let Some(markdown_path) = matches
         .args
         .get("path")
         .and_then(|x| x.value.as_str().and_then(|x| PathBuf::from_str(x).ok()))
     else {
-        stdout().write_all(HELP_MESSAGE).unwrap();
+        stdout().write_all(HELP_MESSAGE)?;
         std::process::exit(0x0100);
     };
 
@@ -132,11 +132,10 @@ fn setup(app: &mut App) -> Result<(), Box<dyn std::error::Error>> {
 }
 
 #[tauri::command]
-async fn md_init(app: AppHandle) -> Result<(), String> {
+fn md_init(app: AppHandle) {
     let context = app.state::<BackendContext>();
     let slides = context.slides.lock().unwrap();
     emit_markdown(&app, 0, slides.len(), &slides[0]);
-    Ok(())
 }
 
 #[tauri::command]
