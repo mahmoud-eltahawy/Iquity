@@ -1,7 +1,9 @@
 # Iquity
-A cross-platform markdown compiler.
+A cross-platform markdown previewer.
 
 ## Why should I use it?
+- slides 
+- syntax highlighting on code snippets
 - ✨ Over 30 themes. ✨
 - 🦋 Beautiful UI - Tailwind and DaisyUI. 🦋
 - 📂 PDF Export - Printable markdown preview. 📂
@@ -21,6 +23,7 @@ at the moment. building from source is the only option
 ### Prerequisites
 1. install [Rust](https://www.rust-lang.org/)
 2. make sure your machine have [Tauri V2](https://v2.tauri.app/start/prerequisites/) Prerequisites
+3. npm and nodejs are required for tailwind
 
 ### Installing
 ```sh
@@ -41,4 +44,6 @@ at the moment. building from source is the only option
   iquity # will print help messge
   # you should use it like this
   iquity PATH_TO_README_FILE.md
+  # or like this
+  iquity PATH_TO_DIRECTORY_THAT_CONTAINS_FILE_NAMED_index.md
 ```
