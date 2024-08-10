@@ -4,6 +4,7 @@ A cross-platform markdown previewer.
 ## Why should I use it?
 - slides 
 - syntax highlighting on code snippets
+- config.toml file
 - ✨ Over 30 themes. ✨
 - 🦋 Beautiful UI - Tailwind and DaisyUI. 🦋
 - 📂 PDF Export - Printable markdown preview. 📂
@@ -31,7 +32,7 @@ at the moment. building from source is the only option
   cd iquity
   cargo install trunk
   rustup target add wasm32-unknown-unknown
-  cargo install tauri-cli --version "^2.0.0-beta"
+  cargo install tauri-cli --version "^2.0.0-rc"
   cargo tauri build
 ```
 1. the builded program is called iquity located at ./target/release/iquity
@@ -40,6 +41,7 @@ at the moment. building from source is the only option
 ---
 
 ## how to use it
+-
 ```sh
   iquity # will print help messge
   # you should use it like this
@@ -47,3 +49,6 @@ at the moment. building from source is the only option
   # or like this
   iquity PATH_TO_DIRECTORY_THAT_CONTAINS_FILE_NAMED_index.md
 ```
+- after the window is launched you can press slash key for help
+
+
