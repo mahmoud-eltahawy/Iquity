@@ -1,4 +1,4 @@
-use crate::{message_notify, BackendContext};
+use crate::{local_context::BackendContext, message_notify};
 
 use super::SLIDES_SPLITTER;
 

@@ -7,5 +7,6 @@
 - [ ] **REVISIT**: not sure that key codes are correct && try remove the unsafe block
 - [ ] **Explore Adding**: charts and boxes drawing
 - [ ] **FIX**: links are broken on first slide
+- [ ] **FIX**: light themes are missed up
 
 

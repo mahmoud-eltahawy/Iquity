@@ -1,19 +1,16 @@
-use axum::Router;
-use config::{GlobalConfig, InitConfig};
+use config::InitConfig;
 use tauri::{generate_context, App, AppHandle, Manager};
 use tauri_plugin_notification::NotificationExt;
-use utils::{emit_markdown, markdown_compile, read_markdown};
+use utils::{emit_markdown, markdown_compile};
 
 use std::{
     io::{stdout, Write},
-    net::SocketAddr,
     path::PathBuf,
     str::FromStr,
-    sync::Mutex,
 };
 use tauri_plugin_cli::CliExt;
-use tower_http::services::ServeDir;
 
+mod local_context;
 mod utils;
 
 const SLIDES_SPLITTER: &str = "\n---";
@@ -30,70 +27,6 @@ const HELP_MESSAGE: &[u8] = r#"
     directory content every time you change something in it. 
 "#
 .as_bytes();
-
-struct BackendContext {
-    port: u16,
-    slides_path: PathBuf,
-    slides_home_path: PathBuf,
-    slides: Mutex<Vec<String>>,
-    slide_index: Mutex<usize>,
-    config_path: PathBuf,
-    config: GlobalConfig,
-}
-
-impl BackendContext {
-    async fn new(path: PathBuf, port: u16) -> Result<Self, String> {
-        let (markdown_path, markdown_parent_path) = if path.is_file() {
-            (path.clone(), path.parent().unwrap().into())
-        } else if path.is_dir() {
-            let mut son = path.clone();
-            son.push("index.md");
-            if son.exists() {
-                (son, path)
-            } else {
-                return Err("can not find index.md".to_string());
-            }
-        } else {
-            return Err("provided path does not exist".to_string());
-        };
-
-        let slides = read_markdown(&markdown_path)
-            .await
-            .map_err(|x| x.to_string())?;
-
-        let config_path = GlobalConfig::config_path().unwrap();
-        let config = match GlobalConfig::get(&config_path).await {
-            Ok(conf) => conf,
-            Err(err) => {
-                eprintln!("config init error : {}", err.to_string());
-                GlobalConfig::default()
-            }
-        };
-
-        Ok(BackendContext {
-            slides_path: markdown_path,
-            slides_home_path: markdown_parent_path,
-            config_path,
-            port,
-            slides: Mutex::new(slides),
-            slide_index: Mutex::new(0),
-            config,
-        })
-    }
-
-    fn serve_assets(&self) {
-        let addr = SocketAddr::from(([127, 0, 0, 1], self.port));
-        let app = Router::new().nest_service("/", ServeDir::new(&self.slides_home_path));
-        tokio::task::spawn(async move {
-            let listener = tokio::net::TcpListener::bind(addr)
-                .await
-                .expect("failed to bind address");
-            axum::serve(listener, app)
-                .await
-                .expect("failded to serve content");
-        });
-    }
-}
 
 #[tokio::main]
 async fn main() {
@@ -122,7 +55,9 @@ fn setup(app: &mut App) -> Result<(), Box<dyn std::error::Error>> {
     let app_handle_1 = app.app_handle().clone();
     tokio::task::spawn(async move {
         let port = portpicker::pick_unused_port().unwrap();
-        let context = BackendContext::new(markdown_path, port).await.unwrap();
+        let context = local_context::BackendContext::new(markdown_path, port)
+            .await
+            .unwrap();
         context.serve_assets();
         app_handle_1.manage(context);
         let app_handle_2 = app_handle_1.clone();
@@ -145,14 +80,14 @@ fn setup(app: &mut App) -> Result<(), Box<dyn std::error::Error>> {
 
 #[tauri::command]
 fn md_init(app: AppHandle) {
-    let context = app.state::<BackendContext>();
+    let context = app.state::<local_context::BackendContext>();
     let slides = context.slides.lock().unwrap();
     emit_markdown(&app, 0, slides.len(), &slides[0]);
 }
 
 #[tauri::command]
 fn conf_init(app: AppHandle) -> InitConfig {
-    let context = app.state::<BackendContext>();
+    let context = app.state::<local_context::BackendContext>();
     let conf = context.config.clone();
     let keys_help = markdown_compile(conf.keys.to_string());
 
@@ -178,7 +113,7 @@ pub fn message_notify(app: &AppHandle, title: &str, message: &str) {
 
 #[tauri::command]
 fn next_slide(app: AppHandle) {
-    let context = app.state::<BackendContext>();
+    let context = app.state::<local_context::BackendContext>();
     let slides = context.slides.lock().unwrap();
     let mut index = context.slide_index.lock().unwrap();
     let slide = if *index < slides.len() - 1 {
@@ -192,7 +127,7 @@ fn next_slide(app: AppHandle) {
 
 #[tauri::command]
 fn prev_slide(app: AppHandle) {
-    let context = app.state::<BackendContext>();
+    let context = app.state::<local_context::BackendContext>();
     let slides = context.slides.lock().unwrap();
     let mut index = context.slide_index.lock().unwrap();
     *index = index.checked_sub(1).unwrap_or(0);
