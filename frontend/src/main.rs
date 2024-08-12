@@ -44,14 +44,11 @@ pub fn app() -> impl IntoView {
     html::main()
         .attr("data-theme", theme)
         .class(font_size)
-        .child((
-            markdown_preview(port),
-            help(keys_help),
-            progress_bar(markdown),
-        ))
+        .child((markdown_preview(port), help(keys_help), progress_bar()))
 }
 
-fn progress_bar(markdown: Markdown) -> impl IntoView {
+fn progress_bar() -> impl IntoView {
+    let markdown = use_context::<Markdown>().unwrap();
     let max = move || markdown.len.get();
     let value = move || markdown.current.get();
     view! {

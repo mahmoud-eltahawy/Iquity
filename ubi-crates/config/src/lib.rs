@@ -98,17 +98,23 @@ pub struct GlobalConfig {
 #[derive(Debug, Clone, Deserialize, Serialize, PartialEq, Eq, Hash)]
 #[serde(rename_all = "snake_case")]
 pub enum KeyName {
-    Space = 32,
-    #[serde(rename = "'")]
-    Quote = 39,
-    #[serde(rename = ",")]
-    Comma = 44,
-    #[serde(rename = "-")]
-    Minus = 189,
-    #[serde(rename = ".")]
-    Period = 46,
-    #[serde(rename = "/")]
-    Slash = 191,
+    //line 1
+    Esc = 27,
+    F1 = 112,
+    F2 = 113,
+    F3 = 114,
+    F4 = 115,
+    F5 = 116,
+    F6 = 117,
+    F7 = 118,
+    F8 = 119,
+    F9 = 120,
+    F10 = 121,
+    F11 = 122,
+    F12 = 123,
+    // line 2
+    #[serde(rename = "`")]
+    Backquote = 192,
     #[serde(rename = "0")]
     Digit0 = 48,
     #[serde(rename = "1")]
@@ -129,105 +135,73 @@ pub enum KeyName {
     Digit8 = 56,
     #[serde(rename = "9")]
     Digit9 = 57,
-    #[serde(rename = ";")]
-    Semicolon = 59,
+    #[serde(rename = "-")]
+    Minus = 189,
     #[serde(rename = "=")]
     Equal = 187,
-    A = 65,
-    B = 66,
-    C = 67,
-    D = 68,
+    Backspace = 8,
+    // line 3
+    Tab = 9,
+    Q = 81,
+    W = 87,
     E = 69,
+    R = 82,
+    T = 84,
+    Y = 89,
+    U = 85,
+    I = 73,
+    O = 79,
+    P = 80,
+    #[serde(rename = "[")]
+    BracketLeft = 219,
+    #[serde(rename = "]")]
+    BracketRight = 221,
+    #[serde(rename = "\\")]
+    Backslash = 220,
+    //line 4
+    A = 65,
+    S = 83,
+    D = 68,
     F = 70,
     G = 71,
     H = 72,
-    I = 73,
     J = 74,
     K = 75,
     L = 76,
-    M = 77,
-    N = 78,
-    O = 79,
-    P = 80,
-    Q = 81,
-    R = 82,
-    S = 83,
-    T = 84,
-    U = 85,
-    V = 86,
-    W = 87,
-    X = 88,
-    Y = 89,
+    #[serde(rename = ";")]
+    Semicolon = 186,
+    #[serde(rename = "'")]
+    Quote = 222,
+    Enter = 13,
+    //line 5
+    Shift = 16,
     Z = 90,
-    #[serde(rename = "[")]
-    BracketLeft = 91,
-    #[serde(rename = "\\")]
-    Backslash = 92,
-    #[serde(rename = "]")]
-    BracketRight = 93,
+    X = 88,
+    C = 67,
+    V = 86,
+    B = 66,
+    N = 78,
+    M = 77,
+    #[serde(rename = ",")]
+    Comma = 188,
+    #[serde(rename = ".")]
+    Period = 190,
+    #[serde(rename = "/")]
+    Slash = 191,
     #[serde(rename = "`")]
-    Backquote = 96,
-    Escape = 256,
-    Enter = 257,
-    Tab = 258,
-    Backspace = 259,
-    Insert = 260,
-    Delete = 261,
-    Right = 262,
-    Left = 263,
-    Down = 264,
-    Up = 265,
-    PageUp = 266,
-    PageDown = 267,
-    Home = 268,
-    End = 269,
-    CapsLock = 280,
-    ScrollLock = 281,
-    NumLock = 282,
-    PrintScreen = 283,
-    Pause = 284,
-    F1 = 290,
-    F2 = 291,
-    F3 = 292,
-    F4 = 293,
-    F5 = 294,
-    F6 = 295,
-    F7 = 296,
-    F8 = 297,
-    F9 = 298,
-    F10 = 299,
-    F11 = 300,
-    F12 = 301,
-    NumPad0 = 320,
-    NumPad1 = 321,
-    NumPad2 = 322,
-    NumPad3 = 323,
-    NumPad4 = 324,
-    NumPad5 = 325,
-    NumPad6 = 326,
-    NumPad7 = 327,
-    NumPad8 = 328,
-    NumPad9 = 329,
-    NumpadDecimal = 330,
-    NumpadDivide = 331,
-    NumpadMultiply = 332,
-    NumpadSubtract = 333,
-    NumpadAdd = 334,
-    NumpadEnter = 335,
-    NumpadEqual = 336,
-    ShiftLeft = 340,
-    ControlLeft = 341,
-    AltLeft = 342,
-    MetaLeft = 343,
-    ShiftRight = 344,
-    ControlRight = 345,
-    AltRight = 346,
-    MetaRight = 347,
-    ContextMenu = 348,
+    //line 6
+    Alt = 18,
+    Control = 17,
+    Space = 32,
+    //arrows
+    Up = 38,
+    Down = 40,
+    Right = 39,
+    Left = 37,
 }
 
-impl From<u16> for KeyName {
-    fn from(value: u16) -> Self {
+impl From<u8> for KeyName {
+    fn from(value: u8) -> Self {
         unsafe { transmute(value) }
     }
 }
