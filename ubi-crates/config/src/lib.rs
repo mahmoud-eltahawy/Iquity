@@ -1,4 +1,4 @@
-use std::{collections::HashMap, fmt::Display, mem::transmute};
+use std::{collections::HashMap, fmt::Display};
 
 use serde::{Deserialize, Serialize};
 
@@ -99,110 +99,196 @@ pub struct GlobalConfig {
 #[serde(rename_all = "snake_case")]
 pub enum KeyName {
     //line 1
-    Esc = 27,
-    F1 = 112,
-    F2 = 113,
-    F3 = 114,
-    F4 = 115,
-    F5 = 116,
-    F6 = 117,
-    F7 = 118,
-    F8 = 119,
-    F9 = 120,
-    F10 = 121,
-    F11 = 122,
-    F12 = 123,
+    Esc,
+    F1,
+    F2,
+    F3,
+    F4,
+    F5,
+    F6,
+    F7,
+    F8,
+    F9,
+    F10,
+    F11,
+    F12,
     // line 2
     #[serde(rename = "`")]
-    Backquote = 192,
+    Backquote,
     #[serde(rename = "0")]
-    Digit0 = 48,
+    Digit0,
     #[serde(rename = "1")]
-    Digit1 = 49,
+    Digit1,
     #[serde(rename = "2")]
-    Digit2 = 50,
+    Digit2,
     #[serde(rename = "3")]
-    Digit3 = 51,
+    Digit3,
     #[serde(rename = "4")]
-    Digit4 = 52,
+    Digit4,
     #[serde(rename = "5")]
-    Digit5 = 53,
+    Digit5,
     #[serde(rename = "6")]
-    Digit6 = 54,
+    Digit6,
     #[serde(rename = "7")]
-    Digit7 = 55,
+    Digit7,
     #[serde(rename = "8")]
-    Digit8 = 56,
+    Digit8,
     #[serde(rename = "9")]
-    Digit9 = 57,
+    Digit9,
     #[serde(rename = "-")]
-    Minus = 189,
+    Minus,
     #[serde(rename = "=")]
-    Equal = 187,
-    Backspace = 8,
+    Equal,
+    Backspace,
     // line 3
-    Tab = 9,
-    Q = 81,
-    W = 87,
-    E = 69,
-    R = 82,
-    T = 84,
-    Y = 89,
-    U = 85,
-    I = 73,
-    O = 79,
-    P = 80,
+    Tab,
+    Q,
+    W,
+    E,
+    R,
+    T,
+    Y,
+    U,
+    I,
+    O,
+    P,
     #[serde(rename = "[")]
-    BracketLeft = 219,
+    BracketLeft,
     #[serde(rename = "]")]
-    BracketRight = 221,
+    BracketRight,
     #[serde(rename = "\\")]
-    Backslash = 220,
+    Backslash,
     //line 4
-    A = 65,
-    S = 83,
-    D = 68,
-    F = 70,
-    G = 71,
-    H = 72,
-    J = 74,
-    K = 75,
-    L = 76,
+    CapsLock,
+    A,
+    S,
+    D,
+    F,
+    G,
+    H,
+    J,
+    K,
+    L,
     #[serde(rename = ";")]
-    Semicolon = 186,
+    Semicolon,
     #[serde(rename = "'")]
-    Quote = 222,
-    Enter = 13,
+    Quote,
+    Enter,
     //line 5
-    Shift = 16,
-    Z = 90,
-    X = 88,
-    C = 67,
-    V = 86,
-    B = 66,
-    N = 78,
-    M = 77,
+    Shift,
+    Z,
+    X,
+    C,
+    V,
+    B,
+    N,
+    M,
     #[serde(rename = ",")]
-    Comma = 188,
+    Comma,
     #[serde(rename = ".")]
-    Period = 190,
+    Period,
     #[serde(rename = "/")]
-    Slash = 191,
+    Slash,
     #[serde(rename = "`")]
     //line 6
-    Alt = 18,
-    Control = 17,
-    Space = 32,
+    Alt,
+    Control,
+    Space,
+    Menu,
     //arrows
-    Up = 38,
-    Down = 40,
-    Right = 39,
-    Left = 37,
+    Up,
+    Down,
+    Right,
+    Left,
+
+    Unrecognized,
 }
 
-impl From<u8> for KeyName {
-    fn from(value: u8) -> Self {
-        unsafe { transmute(value) }
+impl From<&str> for KeyName {
+    fn from(value: &str) -> Self {
+        match value {
+            //row 1
+            "Escape" => Self::Esc,
+            "F1" => Self::F1,
+            "F2" => Self::F2,
+            "F3" => Self::F3,
+            "F4" => Self::F4,
+            "F5" => Self::F5,
+            "F6" => Self::F6,
+            "F7" => Self::F7,
+            "F8" => Self::F8,
+            "F9" => Self::F9,
+            "F10" => Self::F10,
+            "F11" => Self::F11,
+            "F12" => Self::F12,
+            //row 2
+            "Backquote" => Self::Backquote,
+            "Digit1" => Self::Digit1,
+            "Digit2" => Self::Digit2,
+            "Digit3" => Self::Digit3,
+            "Digit4" => Self::Digit4,
+            "Digit5" => Self::Digit5,
+            "Digit6" => Self::Digit6,
+            "Digit7" => Self::Digit7,
+            "Digit8" => Self::Digit8,
+            "Digit9" => Self::Digit9,
+            "Digit0" => Self::Digit0,
+            "Minus" => Self::Minus,
+            "Equal" => Self::Equal,
+            "Backspace" => Self::Backspace,
+            //row 3
+            "Tab" => Self::Tab,
+            "KeyQ" => Self::Q,
+            "KeyW" => Self::W,
+            "KeyE" => Self::E,
+            "KeyR" => Self::R,
+            "KeyT" => Self::T,
+            "KeyY" => Self::Y,
+            "KeyU" => Self::U,
+            "KeyI" => Self::I,
+            "KeyO" => Self::O,
+            "KeyP" => Self::P,
+            "BracketLeft" => Self::BracketLeft,
+            "BracketRight" => Self::BracketRight,
+            "Backslash" => Self::Backslash,
+            //row 4
+            "CapsLock" => Self::CapsLock,
+            "KeyA" => Self::A,
+            "KeyS" => Self::S,
+            "KeyD" => Self::D,
+            "KeyF" => Self::F,
+            "KeyG" => Self::G,
+            "KeyH" => Self::H,
+            "KeyJ" => Self::J,
+            "KeyK" => Self::K,
+            "KeyL" => Self::L,
+            "Semicolon" => Self::Semicolon,
+            "Quote" => Self::Quote,
+            "Enter" => Self::Enter,
+            //row 5
+            "ShiftLeft" | "ShiftRight" => Self::Shift,
+            "KeyZ" => Self::Z,
+            "KeyX" => Self::X,
+            "KeyC" => Self::C,
+            "KeyV" => Self::V,
+            "KeyB" => Self::B,
+            "KeyN" => Self::N,
+            "KeyM" => Self::M,
+            "Comma" => Self::Comma,
+            "Period" => Self::Period,
+            "Slash" => Self::Slash,
+            //row 6
+            "ControlLeft" | "ControlRight" => Self::Control,
+            "AltLeft" | "AltRight" => Self::Alt,
+            "Space" => Self::Space,
+            "ContextMenu" => Self::Menu,
+            //arrows
+            "ArrowUp" => Self::Up,
+            "ArrowDown" => Self::Down,
+            "ArrowRight" => Self::Right,
+            "ArrowLeft" => Self::Left,
+            _ => Self::Unrecognized,
+        }
     }
 }
 

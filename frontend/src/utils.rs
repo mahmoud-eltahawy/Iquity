@@ -80,8 +80,7 @@ pub fn listen_to_config(conf: Config) {
 pub fn key_bindings(conf: Config) {
     window_event_listener(ev::keydown, move |ke: ev::KeyboardEvent| {
         let keys = conf.keys.borrow();
-        log!("{} = {}", ke.code(), ke.key_code());
-        let Some(action) = keys.get(&KeyName::from(ke.key_code() as u8)) else {
+        let Some(action) = keys.get(&KeyName::from(ke.code().as_str())) else {
             return;
         };
 
