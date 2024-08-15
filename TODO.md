@@ -7,8 +7,11 @@
 - [X] **REVISIT**: not sure that key codes are correct
 - [X] **REVISIT**: not sure that key codes are cross platform
 - [X] **REMEMBER**: remove the unsafe block
+- [X] **ADD**: html exporting 
 - [ ] **Explore Adding**: charts and boxes drawing
 - [ ] **FIX**: links are broken on first slide
 - [ ] **FIX**: light themes are missed up
+- [ ] **FIX**: remove scripts and links instead of clearing their attributes and content
+- [ ] **FIX**: fix links to images and videos on exported html
 
 

@@ -117,8 +117,10 @@ pub fn key_bindings(conf: Config) {
                 let scripts = doc.get_elements_by_tag_name("script");
                 for i in 0..scripts.length() {
                     let script = scripts.item(i).unwrap();
-                    script.set_inner_html("")
-                    //FIX : remove script itself instead of removing it's content;
+                    script.set_inner_html("");
+                    let _ = script.remove_attribute("type");
+                    let _ = script.remove_attribute("nonce");
+                    //FIX : remove script itself instead of removing it's content and attributes;
                 }
                 let links = doc.get_elements_by_tag_name("link");
                 for i in 0..links.length() {
