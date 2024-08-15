@@ -1,12 +1,11 @@
 use config::CONFIG_EVENT;
 use config::{Action, EmittedConfig, EmittedMarkdown, InitConfig, KeyName, CONTENT_EVENT};
 use futures::StreamExt;
-use gloo::utils::{document, window};
 use tauri_sys::{core::invoke, event::listen};
 
 use leptos::{ev, prelude::*, spawn::spawn_local};
 
-use serde::{de::DeserializeOwned, Deserialize, Serialize};
+use serde::{de::DeserializeOwned, Serialize};
 use wasm_bindgen::JsCast;
 use wasm_bindgen::UnwrapThrowExt;
 use web_sys::HtmlDialogElement;
@@ -34,7 +33,7 @@ where
         }
     });
 }
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize)]
 struct Empty {}
 
 pub fn silent_invoke(action: &'static str) {
@@ -50,13 +49,23 @@ pub fn config_init(conf: Config) {
 }
 
 pub fn notify(title: &'static str, message: String) {
-    #[derive(Serialize, Deserialize)]
+    #[derive(Serialize)]
     struct Content {
         title: &'static str,
         message: String,
     }
     spawn_local(async move {
         invoke::<()>("notify", Content { title, message }).await;
+    });
+}
+
+pub fn export_html(html: String) {
+    #[derive(Serialize)]
+    struct Content {
+        html: String,
+    }
+    spawn_local(async move {
+        invoke::<()>("export_html", Content { html }).await;
     });
 }
 
@@ -131,7 +140,7 @@ pub fn key_bindings(conf: Config) {
                     .unwrap()
                     .remove();
                 let html = format!("<!DOCTYPE html><html>{}</html>", doc.inner_html());
-                log!("{:#?}", html);
+                export_html(html);
             }
         }
     });
