@@ -100,6 +100,39 @@ pub fn key_bindings(conf: Config) {
                     .unwrap();
                 dialog.show_modal().unwrap();
             }
+            Action::SpitHtmlOut => {
+                let html = document().first_element_child().unwrap().inner_html();
+
+                let doc = document().create_element("div").unwrap();
+                doc.set_inner_html(&html);
+                let scripts = doc.get_elements_by_tag_name("script");
+                for i in 0..scripts.length() {
+                    let script = scripts.item(i).unwrap();
+                    script.set_inner_html("")
+                    //FIX : remove script itself instead of removing it's content;
+                }
+                let links = doc.get_elements_by_tag_name("link");
+                for i in 0..links.length() {
+                    let link = links.item(i).unwrap();
+                    let _ = link.remove_attribute("rel");
+                    let _ = link.remove_attribute("href");
+                    let _ = link.remove_attribute("crossorigin");
+                    let _ = link.remove_attribute("integrity");
+                    let _ = link.remove_attribute("type");
+                    let _ = link.remove_attribute("as");
+                    //FIX : remove links instead of clearing it's attributes;
+                }
+                doc.get_elements_by_tag_name("progress")
+                    .item(0)
+                    .unwrap()
+                    .remove();
+                doc.get_elements_by_tag_name("dialog")
+                    .item(0)
+                    .unwrap()
+                    .remove();
+                let html = format!("<!DOCTYPE html><html>{}</html>", doc.inner_html());
+                log!("{:#?}", html);
+            }
         }
     });
 }
