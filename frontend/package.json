@@ -4,8 +4,6 @@
   "version": "0.0.0",
   "description": "iquity is a cross-platform markdown compiler.",
   "devDependencies": {
-    "@tailwindcss/typography": "^0.5.13",
-    "daisyui": "^4.12.10",
     "internal-ip": "^8.0.0"
   },
   "dependencies": {

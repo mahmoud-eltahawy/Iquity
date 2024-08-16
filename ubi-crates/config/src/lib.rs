@@ -57,21 +57,9 @@ where
 pub const CONTENT_EVENT: &str = "content";
 pub const CONFIG_EVENT: &str = "config";
 
-#[derive(Clone, Deserialize, Serialize, Debug, PartialEq)]
-#[serde(rename_all = "snake_case")]
-pub enum FontSize {
-    VerySmall,
-    Small,
-    Middle,
-    Big,
-    VeryBig,
-}
-
 #[derive(Debug, Clone)]
 pub enum Action {
     Print,
-    NextTheme,
-    PrevTheme,
     NextSlide,
     PrevSlide,
     IncreaseFontsize,
@@ -90,7 +78,7 @@ pub struct InitConfig {
 #[derive(Clone, Deserialize, Serialize, Debug)]
 pub struct GlobalConfig {
     pub default_theme: String,
-    pub default_font_size: FontSize,
+    pub default_font_size: u8,
     pub theme_notification: bool,
     pub live_config_reload: bool,
     pub keys: Keys,
@@ -296,8 +284,6 @@ impl From<&str> for KeyName {
 #[derive(Clone, Deserialize, Serialize, Debug)]
 pub struct Keys {
     pub print: KeyName,
-    pub next_theme: KeyName,
-    pub prev_theme: KeyName,
     pub next_slide: KeyName,
     pub prev_slide: KeyName,
     pub increase_fontsize: KeyName,
@@ -310,8 +296,6 @@ impl Keys {
     pub fn to_map(self) -> HashMap<KeyName, Action> {
         let Self {
             print,
-            next_theme,
-            prev_theme,
             next_slide,
             prev_slide,
             increase_fontsize,
@@ -321,8 +305,6 @@ impl Keys {
         } = self;
         HashMap::from([
             (print, Action::Print),
-            (next_theme, Action::NextTheme),
-            (prev_theme, Action::PrevTheme),
             (next_slide, Action::NextSlide),
             (prev_slide, Action::PrevSlide),
             (increase_fontsize, Action::IncreaseFontsize),
@@ -337,8 +319,6 @@ impl Display for Keys {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let Self {
             print,
-            next_theme,
-            prev_theme,
             next_slide,
             prev_slide,
             increase_fontsize,
@@ -352,8 +332,6 @@ impl Display for Keys {
 |         **key**          |       **Action**        |
 |:------------------------:|:-----------------------:|
 |       **{print:?}**        |        __print__        |
-|     **{next_theme:?}**     |      __next theme__     |
-|     **{prev_theme:?}**     |    __previous theme__   |
 |     **{next_slide:?}**     |      __next slide__     |
 |     **{prev_slide:?}**     |     __previous slide__  |
 | **{increase_fontsize:?}**  |   __increase fontsize__ |
@@ -370,8 +348,6 @@ impl Default for Keys {
     fn default() -> Self {
         Self {
             print: KeyName::P,
-            next_theme: KeyName::J,
-            prev_theme: KeyName::K,
             next_slide: KeyName::L,
             prev_slide: KeyName::H,
             increase_fontsize: KeyName::Equal,
@@ -428,7 +404,7 @@ impl Default for GlobalConfig {
     fn default() -> Self {
         Self {
             default_theme: "dracula".to_string(),
-            default_font_size: FontSize::Small,
+            default_font_size: 16,
             theme_notification: true,
             live_config_reload: true,
             keys: Keys::default(),

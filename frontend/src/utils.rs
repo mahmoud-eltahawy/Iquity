@@ -95,8 +95,6 @@ pub fn key_bindings(conf: Config) {
 
         match action {
             Action::Print => window().print().unwrap_throw(),
-            Action::NextTheme => conf.next_theme(),
-            Action::PrevTheme => conf.prev_theme(),
             Action::NextSlide => silent_invoke("next_slide"),
             Action::PrevSlide => silent_invoke("prev_slide"),
             Action::IncreaseFontsize => conf.increase_font_size(),

@@ -37,8 +37,6 @@ cargo = false
 
 [tools]
 # Default wasm-bindgen version to download.
-wasm_bindgen = "0.2.92"
+wasm_bindgen = "0.2.93"
 # Default wasm-opt version to download.
 wasm_opt = "version_116"
-# Default tailwindcss-cli version to download.
-tailwindcss = "3.4.6"

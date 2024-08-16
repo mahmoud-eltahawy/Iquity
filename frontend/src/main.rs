@@ -7,10 +7,8 @@ use leptos::{
     html::{self},
     prelude::*,
 };
-use local_config::{Config, THEMES, THEMES_SIZE};
-use utils::{
-    config_init, key_bindings, listen_to_config, listen_to_markdown, notify, silent_invoke,
-};
+use local_config::Config;
+use utils::{config_init, key_bindings, listen_to_config, listen_to_markdown, silent_invoke};
 
 use crate::components::markdown_preview::markdown_preview;
 
@@ -24,26 +22,14 @@ pub fn app() -> impl IntoView {
     silent_invoke("md_init");
     provide_context(markdown);
 
-    let theme = move || THEMES[conf.theme_index.get() % THEMES_SIZE];
-    let font_size = move || conf.font_size.get();
-
-    Effect::new({
-        let theme_notification = conf.theme_notification.clone();
-        move |_| {
-            let theme = theme().to_string();
-            if *theme_notification.borrow() {
-                notify("iquity theme", theme);
-            }
-        }
-    });
+    let font_size = move || format!("font-size : {}px;", conf.font_size.get());
 
     let keys_help = conf.keys_help;
     let port = conf.port.clone();
     key_bindings(conf);
 
     html::main()
-        .attr("data-theme", theme)
-        .class(font_size)
+        .style(font_size)
         .child((markdown_preview(port), help(keys_help), progress_bar()))
 }
 
@@ -53,7 +39,6 @@ fn progress_bar() -> impl IntoView {
     let value = move || markdown.current.get();
     view! {
         <progress
-            class="progress progress-success fixed bottom-0 h-1 w-full"
             value=value
             max=max
         />
