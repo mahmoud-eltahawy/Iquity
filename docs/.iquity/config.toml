@@ -1,14 +1,13 @@
 default_theme = "dracula"
-default_font_size = "small"
+default_font_size = 16
 theme_notification = true
 live_config_reload = true
 
 [keys]
 print = "p"
-next_theme = "j"
-prev_theme = "k"
 next_slide = "l"
 prev_slide = "h"
 increase_fontsize = "="
 decrease_fontsize = "-"
+export_html = "s"
 help = "/"

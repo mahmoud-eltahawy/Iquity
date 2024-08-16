@@ -64,7 +64,7 @@ pub enum Action {
     PrevSlide,
     IncreaseFontsize,
     DecreaseFontsize,
-    SpitHtmlOut,
+    ExportHtml,
     Help,
 }
 
@@ -288,7 +288,7 @@ pub struct Keys {
     pub prev_slide: KeyName,
     pub increase_fontsize: KeyName,
     pub decrease_fontsize: KeyName,
-    pub spite_html_out: KeyName,
+    pub export_html: KeyName,
     pub help: KeyName,
 }
 
@@ -300,7 +300,7 @@ impl Keys {
             prev_slide,
             increase_fontsize,
             decrease_fontsize,
-            spite_html_out,
+            export_html: spite_html_out,
             help,
         } = self;
         HashMap::from([
@@ -309,7 +309,7 @@ impl Keys {
             (prev_slide, Action::PrevSlide),
             (increase_fontsize, Action::IncreaseFontsize),
             (decrease_fontsize, Action::DecreaseFontsize),
-            (spite_html_out, Action::SpitHtmlOut),
+            (spite_html_out, Action::ExportHtml),
             (help, Action::Help),
         ])
     }
@@ -323,7 +323,7 @@ impl Display for Keys {
             prev_slide,
             increase_fontsize,
             decrease_fontsize,
-            spite_html_out,
+            export_html: spite_html_out,
             help,
         } = self;
         write!(
@@ -352,7 +352,7 @@ impl Default for Keys {
             prev_slide: KeyName::H,
             increase_fontsize: KeyName::Equal,
             decrease_fontsize: KeyName::Minus,
-            spite_html_out: KeyName::S,
+            export_html: KeyName::S,
             help: KeyName::Slash,
         }
     }

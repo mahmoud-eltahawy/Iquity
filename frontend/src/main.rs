@@ -37,8 +37,10 @@ fn progress_bar() -> impl IntoView {
     let markdown = use_context::<Markdown>().unwrap();
     let max = move || markdown.len.get();
     let value = move || markdown.current.get();
+    let style = "background-color: #4CAF50;position: fixed;bottom: 0;height: 4px;width: 100%;";
     view! {
         <progress
+            style=style
             value=value
             max=max
         />

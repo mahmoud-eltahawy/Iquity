@@ -107,7 +107,7 @@ pub fn key_bindings(conf: Config) {
                     .unwrap();
                 dialog.show_modal().unwrap();
             }
-            Action::SpitHtmlOut => {
+            Action::ExportHtml => {
                 let html = document().first_element_child().unwrap().inner_html();
 
                 let doc = document().create_element("div").unwrap();

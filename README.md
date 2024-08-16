@@ -5,16 +5,13 @@ A cross-platform markdown previewer.
 - slides 
 - syntax highlighting on code snippets
 - config.toml file
-- ✨ Over 30 themes. ✨
-- 🦋 Beautiful UI - Tailwind and DaisyUI. 🦋
 - 📂 PDF Export - Printable markdown preview. 📂
+- 📂 HTML Export. 📂
 - 🦀 Rusty - Built with Rust, frontend and backend. 🦀
 
 ## How is it made?
 - [Leptos](https://www.leptos.dev) - A web application framework.
 - [Tauri](https://www.tauri.app) - A desktop application framework.
-- [Tailwind](https://www.tailwindcss.com) - A CSS framework.
-- [DaisyUI](https://www.daisyui.com) - A Tailwind CSS component library.
 
 ---
 
@@ -24,7 +21,7 @@ at the moment. building from source is the only option
 ### Prerequisites
 1. install [Rust](https://www.rust-lang.org/)
 2. make sure your machine have [Tauri V2](https://v2.tauri.app/start/prerequisites/) Prerequisites
-3. npm and nodejs are required for tailwind
+3. npm and nodejs
 
 ### Installing
 ```sh
