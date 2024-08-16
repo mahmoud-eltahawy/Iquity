@@ -21,7 +21,6 @@ at the moment. building from source is the only option
 ### Prerequisites
 1. install [Rust](https://www.rust-lang.org/)
 2. make sure your machine have [Tauri V2](https://v2.tauri.app/start/prerequisites/) Prerequisites
-3. npm and nodejs
 
 ### Installing
 ```sh
