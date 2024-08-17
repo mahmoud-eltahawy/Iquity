@@ -1,5 +1,3 @@
-use gloo::console::assert;
-
 struct Style(Vec<CssAttribute>);
 
 pub fn style(attrs: Vec<CssAttribute>) -> String {

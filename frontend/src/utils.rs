@@ -48,7 +48,7 @@ pub fn config_init(conf: Config) {
     });
 }
 
-pub fn notify(title: &'static str, message: String) {
+pub fn _notify(title: &'static str, message: String) {
     #[derive(Serialize)]
     struct Content {
         title: &'static str,

@@ -1,5 +1,5 @@
 [workspace]
-members = ["src-tauri", "frontend", "ubi-crates/*"]
+members = ["src-tauri", "frontend", "crates/*"]
 resolver = "2"
 
 [workspace.package]
@@ -15,11 +15,12 @@ codegen-units = 1
 lto = true
 
 [workspace.dependencies]
-tokio = { version = "1.39.1", features = ["full"] }
+tokio = { version = "1.39.3", features = ["full"] }
 ron = "0.8"
 serde = { version = "^1", features = ["derive"] }
 thiserror = "1.0.38"
 dirs = "5.0.0"
-markdown = "1.0.0-alpha.18"
-config = { path = "./ubi-crates/config" }
+markdown = "1.0.0-alpha.20"
+config = { path = "./crates/config" }
+styling = { path = "./crates/styling" }
 tauri-sys = { git = "https://github.com/JonasKruckenberg/tauri-sys", branch = "v2" , features = ["core","event"] }

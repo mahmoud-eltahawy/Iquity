@@ -1,0 +1,9 @@
+[package]
+name = "styling"
+version.workspace = true
+authors.workspace = true
+description.workspace = true
+license.workspace = true
+edition.workspace = true
+
+[dependencies]

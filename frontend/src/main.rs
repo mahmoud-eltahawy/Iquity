@@ -1,6 +1,5 @@
 mod components;
 mod local_config;
-mod style;
 mod utils;
 
 use components::{help::help, markdown_preview::Markdown};
@@ -14,7 +13,7 @@ use utils::{config_init, key_bindings, listen_to_config, listen_to_markdown, sil
 use crate::components::markdown_preview::markdown_preview;
 
 pub fn app() -> impl IntoView {
-    use style::{
+    use styling::{
         style,
         CssAttribute::{FontSize, Margin, Padding},
         Length,
@@ -46,7 +45,7 @@ pub fn app() -> impl IntoView {
 }
 
 fn progress_bar() -> impl IntoView {
-    use style::{
+    use styling::{
         style,
         Color::Hex,
         CssAttribute::*,
