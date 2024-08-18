@@ -116,29 +116,9 @@ pub fn key_bindings(conf: Config) {
                 dialog.show_modal().unwrap();
             }
             Action::ExportHtml => {
-                let html = document().first_element_child().unwrap().inner_html();
-
+                let html = document().body().unwrap().inner_html();
                 let doc = document().create_element("div").unwrap();
                 doc.set_inner_html(&html);
-                let scripts = doc.get_elements_by_tag_name("script");
-                for i in 0..scripts.length() {
-                    let script = scripts.item(i).unwrap();
-                    script.set_inner_html("");
-                    let _ = script.remove_attribute("type");
-                    let _ = script.remove_attribute("nonce");
-                    //FIX : remove script itself instead of removing it's content and attributes;
-                }
-                let links = doc.get_elements_by_tag_name("link");
-                for i in 0..links.length() {
-                    let link = links.item(i).unwrap();
-                    let _ = link.remove_attribute("rel");
-                    let _ = link.remove_attribute("href");
-                    let _ = link.remove_attribute("crossorigin");
-                    let _ = link.remove_attribute("integrity");
-                    let _ = link.remove_attribute("type");
-                    let _ = link.remove_attribute("as");
-                    //FIX : remove links instead of clearing it's attributes;
-                }
                 doc.get_elements_by_tag_name("progress")
                     .item(0)
                     .unwrap()
@@ -147,7 +127,10 @@ pub fn key_bindings(conf: Config) {
                     .item(0)
                     .unwrap()
                     .remove();
-                let html = format!("<!DOCTYPE html><html>{}</html>", doc.inner_html());
+                let html = format!(
+                    "<!DOCTYPE html><html><body>{}</body></html>",
+                    doc.inner_html()
+                );
                 export_html(html);
             }
             Action::JoinSlides => join_slides(),
