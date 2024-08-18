@@ -79,7 +79,6 @@ pub struct InitConfig {
 
 #[derive(Clone, Deserialize, Serialize, Debug)]
 pub struct GlobalConfig {
-    pub default_theme: String,
     pub default_font_size: u8,
     pub theme_notification: bool,
     pub live_config_reload: bool,
@@ -417,7 +416,6 @@ pub mod server_only {
 impl Default for GlobalConfig {
     fn default() -> Self {
         Self {
-            default_theme: "dracula".to_string(),
             default_font_size: 16,
             theme_notification: true,
             live_config_reload: true,

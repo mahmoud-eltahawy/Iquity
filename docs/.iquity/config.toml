@@ -1,4 +1,3 @@
-default_theme = "dracula"
 default_font_size = 16
 theme_notification = true
 live_config_reload = true
