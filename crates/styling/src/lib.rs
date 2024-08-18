@@ -1,7 +1,125 @@
-struct Style(Vec<CssAttribute>);
+pub struct Style(Vec<CssAttribute>);
 
-pub fn style(attrs: Vec<CssAttribute>) -> String {
-    Style(attrs).get()
+pub fn styling() -> Style {
+    Style(vec![])
+}
+
+impl Style {
+    pub fn fontsize(self) -> MedAttribute<Length> {
+        MedAttribute {
+            style: self,
+            fun: Box::new(|x| CssAttribute::FontSize(x)),
+        }
+    }
+
+    pub fn margin(self) -> MedAttribute<Length> {
+        MedAttribute {
+            style: self,
+            fun: Box::new(|x| CssAttribute::Margin(x)),
+        }
+    }
+
+    pub fn padding(self) -> MedAttribute<Length> {
+        MedAttribute {
+            style: self,
+            fun: Box::new(|x| CssAttribute::Padding(x)),
+        }
+    }
+
+    pub fn bottom(self) -> MedAttribute<Length> {
+        MedAttribute {
+            style: self,
+            fun: Box::new(|x| CssAttribute::Bottom(x)),
+        }
+    }
+
+    pub fn height(self) -> MedAttribute<Length> {
+        MedAttribute {
+            style: self,
+            fun: Box::new(|x| CssAttribute::Height(x)),
+        }
+    }
+
+    pub fn width(self) -> MedAttribute<Length> {
+        MedAttribute {
+            style: self,
+            fun: Box::new(|x| CssAttribute::Width(x)),
+        }
+    }
+
+    pub fn position(self) -> MedAttribute<CssPosition> {
+        MedAttribute {
+            style: self,
+            fun: Box::new(|x| CssAttribute::Position(x)),
+        }
+    }
+
+    pub fn background_color(self) -> MedAttribute<Color> {
+        MedAttribute {
+            style: self,
+            fun: Box::new(|x| CssAttribute::BackgroundColor(x)),
+        }
+    }
+}
+
+pub struct MedAttribute<T> {
+    style: Style,
+    fun: Box<dyn Fn(T) -> CssAttribute>,
+}
+
+impl MedAttribute<Color> {
+    pub fn hex(self, hex: u32) -> Style {
+        let Self { mut style, fun } = self;
+        let attr = fun(Color::Hex(hex));
+        style.0.push(attr);
+        style
+    }
+}
+
+impl MedAttribute<Length> {
+    pub fn px(self, num: u8) -> Style {
+        let Self { mut style, fun } = self;
+        let attr = fun(Length::Px(num));
+        style.0.push(attr);
+        style
+    }
+
+    pub fn percent(self, num: u8) -> Style {
+        assert!(num <= 100, "percent number should be from 0 to 100");
+        let Self { mut style, fun } = self;
+        let attr = fun(Length::Percent(num));
+        style.0.push(attr);
+        style
+    }
+}
+
+impl MedAttribute<CssPosition> {
+    fn inner(self, position: CssPosition) -> Style {
+        let Self { mut style, fun } = self;
+        let attr = fun(position);
+        style.0.push(attr);
+        style
+    }
+
+    pub fn fixed(self) -> Style {
+        self.inner(CssPosition::Fixed)
+    }
+
+    pub fn relative(self) -> Style {
+        self.inner(CssPosition::Relative)
+    }
+
+    pub fn static_p(self) -> Style {
+        self.inner(CssPosition::Static)
+    }
+
+    pub fn absolute(self) -> Style {
+        self.inner(CssPosition::Absolute)
+    }
+
+    pub fn sticky(self) -> Style {
+        self.inner(CssPosition::Sticky)
+    }
 }
 
 pub enum CssAttribute {
@@ -55,10 +173,7 @@ impl Length {
             Length::Vh(num) => format!("{num}vh"),
             Length::Vmin(num) => format!("{num}vmin"),
             Length::Vmax(num) => format!("{num}vmax"),
-            Length::Percent(num) => {
-                assert!(num <= &100, "percent number should be from 0 to 100");
-                format!("{num}%")
-            }
+            Length::Percent(num) => format!("{num}%"),
         }
     }
 }
@@ -410,7 +525,7 @@ impl CssPosition {
 }
 
 impl Style {
-    pub fn get(&self) -> String {
+    pub fn build(&self) -> String {
         self.0
             .iter()
             .map(|x| match x {

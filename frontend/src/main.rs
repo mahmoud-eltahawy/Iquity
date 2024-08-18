@@ -8,16 +8,12 @@ use leptos::{
     prelude::*,
 };
 use local_config::Config;
+use styling::styling;
 use utils::{config_init, key_bindings, listen_to_config, listen_to_markdown, md_init};
 
 use crate::components::markdown_preview::markdown_preview;
 
 pub fn app() -> impl IntoView {
-    use styling::{
-        style,
-        CssAttribute::{FontSize, Margin, Padding},
-        Length,
-    };
     let conf = Config::default();
     config_init(conf.clone());
     listen_to_config(conf.clone());
@@ -28,11 +24,14 @@ pub fn app() -> impl IntoView {
     provide_context(markdown);
 
     let style = move || {
-        style(vec![
-            Margin(Length::Px(5)),
-            Padding(Length::Px(5)),
-            FontSize(Length::Px(conf.font_size.get())),
-        ])
+        styling()
+            .fontsize()
+            .px(conf.font_size.get())
+            .margin()
+            .px(5)
+            .padding()
+            .px(5)
+            .build()
     };
 
     let keys_help = conf.keys_help;
@@ -45,23 +44,21 @@ pub fn app() -> impl IntoView {
 }
 
 fn progress_bar() -> impl IntoView {
-    use styling::{
-        style,
-        Color::Hex,
-        CssAttribute::*,
-        CssPosition::Fixed,
-        Length::{Percent, Px},
-    };
     let markdown = use_context::<Markdown>().unwrap();
     let max = move || markdown.len.get();
     let value = move || markdown.current.get();
-    let style = style(vec![
-        Position(Fixed),
-        BackgroundColor(Hex(0x4CAF50)),
-        Bottom(Px(0)),
-        Height(Px(4)),
-        Width(Percent(100)),
-    ]);
+    let style = styling()
+        .position()
+        .fixed()
+        .background_color()
+        .hex(0x4CAF50)
+        .bottom()
+        .px(0)
+        .height()
+        .px(4)
+        .width()
+        .percent(100)
+        .build();
     view! {
         <progress
             style=style
