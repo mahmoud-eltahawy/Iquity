@@ -1,7 +1,9 @@
-pub struct Style(Vec<CssAttribute>);
+use std::collections::HashSet;
+
+pub struct Style(HashSet<CssAttribute>);
 
 pub fn styling() -> Style {
-    Style(vec![])
+    Style(HashSet::new())
 }
 
 impl Style {
@@ -67,23 +69,23 @@ pub struct MedAttribute<T> {
     fun: Box<dyn Fn(T) -> CssAttribute>,
 }
 
-impl MedAttribute<Color> {
-    pub fn hex(self, hex: u32) -> Style {
+impl<T> MedAttribute<T> {
+    fn inner(self, position: T) -> Style {
         let Self { mut style, fun } = self;
-        let attr = fun(Color::Hex(hex));
-        style.0.push(attr);
+        let attr = fun(position);
+        let success = style.0.insert(attr);
+        debug_assert!(success, "value already exists");
         style
     }
 }
 
-impl MedAttribute<Length> {
-    pub fn inner(self, length: Length) -> Style {
-        let Self { mut style, fun } = self;
-        let attr = fun(length);
-        style.0.push(attr);
-        style
+impl MedAttribute<Color> {
+    pub fn hex(self, hex: u32) -> Style {
+        self.inner(Color::Hex(hex))
     }
+}
 
+impl MedAttribute<Length> {
     pub fn px(self, num: u8) -> Style {
         self.inner(Length::Px(num))
     }
@@ -93,19 +95,12 @@ impl MedAttribute<Length> {
     }
 
     pub fn percent(self, num: u8) -> Style {
-        assert!(num <= 100, "percent number should be from 0 to 100");
+        debug_assert!(num <= 100, "percent number should be from 0 to 100");
         self.inner(Length::Percent(num))
     }
 }
 
 impl MedAttribute<CssPosition> {
-    fn inner(self, position: CssPosition) -> Style {
-        let Self { mut style, fun } = self;
-        let attr = fun(position);
-        style.0.push(attr);
-        style
-    }
-
     pub fn fixed(self) -> Style {
         self.inner(CssPosition::Fixed)
     }
@@ -127,6 +122,7 @@ impl MedAttribute<CssPosition> {
     }
 }
 
+#[derive(Hash, Eq, PartialEq)]
 pub enum CssAttribute {
     FontSize(Length),
     Position(CssPosition),
@@ -141,6 +137,7 @@ pub enum CssAttribute {
     Padding(Length),
 }
 
+#[derive(Hash, Eq, PartialEq)]
 pub enum Length {
     //absolute
     Cm(u8),
@@ -183,6 +180,7 @@ impl Length {
     }
 }
 
+#[derive(Hash, Eq, PartialEq)]
 pub enum Color {
     Hex(u32),
     THex(u32),
@@ -345,22 +343,21 @@ impl Color {
             }
             Color::Rgb(red, green, blue) => format!("rgb({red},{green},{blue})"),
             Color::Rgba(red, green, blue, opacity) => {
-                assert!(*opacity <= 100, "opacity should be from 0 to 100");
+                debug_assert!(*opacity <= 100, "opacity should be from 0 to 100");
                 let opacity = *opacity as f32 / 100.;
-                // let i: u32 = 0xffffff;
                 format!("rgba({red},{green},{blue},{opacity})")
             }
             Color::Hsl(hue, saturation, lightness) => {
-                assert!(hue <= &360, "hue should be from 0 to 360");
-                assert!(saturation <= &100, "saturation should be from 0 to 100");
-                assert!(lightness <= &100, "lightness should be from 0 to 100");
+                debug_assert!(hue <= &360, "hue should be from 0 to 360");
+                debug_assert!(saturation <= &100, "saturation should be from 0 to 100");
+                debug_assert!(lightness <= &100, "lightness should be from 0 to 100");
                 format!("hsl({hue},{saturation}%,{lightness}%)")
             }
             Color::Hsla(hue, saturation, lightness, opacity) => {
-                assert!(hue <= &360, "hue should be from 0 to 360");
-                assert!(saturation <= &100, "saturation should be from 0 to 100");
-                assert!(lightness <= &100, "lightness should be from 0 to 100");
-                assert!(opacity <= &100, "opacity should be from 0 to 100");
+                debug_assert!(hue <= &360, "hue should be from 0 to 360");
+                debug_assert!(saturation <= &100, "saturation should be from 0 to 100");
+                debug_assert!(lightness <= &100, "lightness should be from 0 to 100");
+                debug_assert!(opacity <= &100, "opacity should be from 0 to 100");
                 let opacity = *opacity as f32 / 100.;
                 format!("hsl({hue},{saturation}%,{lightness}%,{opacity})")
             }
@@ -508,6 +505,7 @@ impl Color {
     }
 }
 
+#[derive(Hash, Eq, PartialEq)]
 pub enum CssPosition {
     Static,
     Relative,

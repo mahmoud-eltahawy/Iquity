@@ -13,5 +13,6 @@
 - [ ] **Explore Adding**: charts and boxes drawing
 - [ ] **FIX**: links are broken on first slide
 - [ ] **FIX**: fix links to images and videos on exported html
+- [ ] **CONSIDER**: tailwindcss classes in the styling crate
 
 
