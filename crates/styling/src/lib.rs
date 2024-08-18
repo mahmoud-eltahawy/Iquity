@@ -77,19 +77,24 @@ impl MedAttribute<Color> {
 }
 
 impl MedAttribute<Length> {
-    pub fn px(self, num: u8) -> Style {
+    pub fn inner(self, length: Length) -> Style {
         let Self { mut style, fun } = self;
-        let attr = fun(Length::Px(num));
+        let attr = fun(length);
         style.0.push(attr);
         style
     }
 
+    pub fn px(self, num: u8) -> Style {
+        self.inner(Length::Px(num))
+    }
+
+    pub fn cm(self, num: u8) -> Style {
+        self.inner(Length::Cm(num))
+    }
+
     pub fn percent(self, num: u8) -> Style {
         assert!(num <= 100, "percent number should be from 0 to 100");
-        let Self { mut style, fun } = self;
-        let attr = fun(Length::Percent(num));
-        style.0.push(attr);
-        style
+        self.inner(Length::Percent(num))
     }
 }
 
@@ -520,7 +525,7 @@ impl CssPosition {
             CssPosition::Absolute => "absolute",
             CssPosition::Sticky => "sticky",
         };
-        format!("position : {result};")
+        format!("position:{result};")
     }
 }
 
@@ -532,7 +537,7 @@ impl Style {
                 CssAttribute::FontSize(distance) => format!("font-size:{};", distance.get()),
                 CssAttribute::Position(position) => position.get(),
                 CssAttribute::BackgroundColor(color) => {
-                    format!("background-color : {};", color.css())
+                    format!("background-color:{};", color.css())
                 }
                 CssAttribute::Top(distance) => format!("top:{};", distance.get()),
                 CssAttribute::Bottom(distance) => format!("bottom:{};", distance.get()),
@@ -543,6 +548,6 @@ impl Style {
                 CssAttribute::Margin(distance) => format!("margin:{};", distance.get()),
                 CssAttribute::Padding(distance) => format!("padding:{};", distance.get()),
             })
-            .fold(String::new(), move |acc, x| acc + " " + &x)
+            .fold(String::new(), move |acc, x| acc + &x)
     }
 }
