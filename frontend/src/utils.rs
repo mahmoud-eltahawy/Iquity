@@ -36,10 +36,18 @@ where
 #[derive(Serialize)]
 struct Empty {}
 
-pub fn silent_invoke(action: &'static str) {
+fn silent_invoke(action: &'static str) {
     spawn_local(async move {
         invoke::<()>(action, Empty {}).await;
     });
+}
+
+pub fn md_init() {
+    silent_invoke("md_init")
+}
+
+pub fn join_slides() {
+    silent_invoke("join_slides")
 }
 
 pub fn config_init(conf: Config) {
@@ -142,6 +150,8 @@ pub fn key_bindings(conf: Config) {
                 let html = format!("<!DOCTYPE html><html>{}</html>", doc.inner_html());
                 export_html(html);
             }
+            Action::JoinSlides => join_slides(),
+            Action::SplitSlides => md_init(),
         }
     });
 }

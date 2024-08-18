@@ -8,6 +8,7 @@ use std::{
     io::{stdout, Write},
     path::PathBuf,
     str::FromStr,
+    sync::LazyLock,
 };
 use tauri_plugin_cli::CliExt;
 
@@ -15,6 +16,8 @@ mod local_context;
 mod utils;
 
 const SLIDES_SPLITTER: &str = "\n---";
+const SLIDES_SPLITTER_AS_MD: LazyLock<String> =
+    LazyLock::new(|| markdown_compile(SLIDES_SPLITTER.to_string()));
 
 const HELP_MESSAGE: &[u8] = r#"
     Welcom to iquity 
@@ -40,7 +43,8 @@ async fn main() {
             next_slide,
             prev_slide,
             notify,
-            export_html
+            export_html,
+            join_slides,
         ])
         .setup(setup)
         .run(generate_context!())
@@ -87,6 +91,13 @@ fn md_init(app: AppHandle) {
     let context = app.state::<BackendContext>();
     let slides = context.slides.lock().unwrap();
     emit_markdown(&app, 0, slides.len(), &slides[0]);
+}
+
+#[tauri::command]
+fn join_slides(app: AppHandle) {
+    let context = app.state::<BackendContext>();
+    let slides = context.slides.lock().unwrap().join(&SLIDES_SPLITTER_AS_MD);
+    emit_markdown(&app, 0, 1, &slides);
 }
 
 #[tauri::command]

@@ -65,6 +65,8 @@ pub enum Action {
     IncreaseFontsize,
     DecreaseFontsize,
     ExportHtml,
+    JoinSlides,
+    SplitSlides,
     Help,
 }
 
@@ -289,6 +291,8 @@ pub struct Keys {
     pub increase_fontsize: KeyName,
     pub decrease_fontsize: KeyName,
     pub export_html: KeyName,
+    pub join_slides: KeyName,
+    pub split_slides: KeyName,
     pub help: KeyName,
 }
 
@@ -300,7 +304,9 @@ impl Keys {
             prev_slide,
             increase_fontsize,
             decrease_fontsize,
-            export_html: spite_html_out,
+            export_html,
+            join_slides,
+            split_slides,
             help,
         } = self;
         HashMap::from([
@@ -309,7 +315,9 @@ impl Keys {
             (prev_slide, Action::PrevSlide),
             (increase_fontsize, Action::IncreaseFontsize),
             (decrease_fontsize, Action::DecreaseFontsize),
-            (spite_html_out, Action::ExportHtml),
+            (export_html, Action::ExportHtml),
+            (join_slides, Action::JoinSlides),
+            (split_slides, Action::SplitSlides),
             (help, Action::Help),
         ])
     }
@@ -324,6 +332,8 @@ impl Display for Keys {
             increase_fontsize,
             decrease_fontsize,
             export_html: spite_html_out,
+            join_slides,
+            split_slides,
             help,
         } = self;
         write!(
@@ -336,7 +346,9 @@ impl Display for Keys {
 |     **{prev_slide:?}**     |     __previous slide__  |
 | **{increase_fontsize:?}**  |   __increase fontsize__ |
 | **{decrease_fontsize:?}**  |   __decrease fontsize__ |
-| **{spite_html_out:?}**     |   __spite_html_out__    |
+|   **{spite_html_out:?}**   |      __export html__    |
+|    **{join_slides:?}**     |     __join slides__     |
+|    **{split_slides:?}**    |     __split slides__    |
 |       **{help:?}**         |         __help__        |
 |       **Esc**              |   __hide this message__ |
 "#
@@ -353,6 +365,8 @@ impl Default for Keys {
             increase_fontsize: KeyName::Equal,
             decrease_fontsize: KeyName::Minus,
             export_html: KeyName::S,
+            join_slides: KeyName::J,
+            split_slides: KeyName::K,
             help: KeyName::Slash,
         }
     }

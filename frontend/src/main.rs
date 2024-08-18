@@ -8,7 +8,7 @@ use leptos::{
     prelude::*,
 };
 use local_config::Config;
-use utils::{config_init, key_bindings, listen_to_config, listen_to_markdown, silent_invoke};
+use utils::{config_init, key_bindings, listen_to_config, listen_to_markdown, md_init};
 
 use crate::components::markdown_preview::markdown_preview;
 
@@ -24,7 +24,7 @@ pub fn app() -> impl IntoView {
 
     let markdown = Markdown::default();
     listen_to_markdown(markdown);
-    silent_invoke("md_init");
+    md_init();
     provide_context(markdown);
 
     let style = move || {
