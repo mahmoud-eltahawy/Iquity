@@ -1,4 +1,4 @@
-use std::collections::HashSet;
+use std::{collections::HashSet, fmt::Display};
 
 mod color;
 
@@ -12,56 +12,56 @@ impl Style {
     pub fn fontsize(self) -> MedAttribute<Length> {
         MedAttribute {
             style: self,
-            fun: Box::new(|x| CssAttribute::FontSize(x)),
+            fun: Box::new(CssAttribute::FontSize),
         }
     }
 
     pub fn margin(self) -> MedAttribute<Length> {
         MedAttribute {
             style: self,
-            fun: Box::new(|x| CssAttribute::Margin(x)),
+            fun: Box::new(CssAttribute::Margin),
         }
     }
 
     pub fn padding(self) -> MedAttribute<Length> {
         MedAttribute {
             style: self,
-            fun: Box::new(|x| CssAttribute::Padding(x)),
+            fun: Box::new(CssAttribute::Padding),
         }
     }
 
     pub fn bottom(self) -> MedAttribute<Length> {
         MedAttribute {
             style: self,
-            fun: Box::new(|x| CssAttribute::Bottom(x)),
+            fun: Box::new(CssAttribute::Bottom),
         }
     }
 
     pub fn height(self) -> MedAttribute<Length> {
         MedAttribute {
             style: self,
-            fun: Box::new(|x| CssAttribute::Height(x)),
+            fun: Box::new(CssAttribute::Height),
         }
     }
 
     pub fn width(self) -> MedAttribute<Length> {
         MedAttribute {
             style: self,
-            fun: Box::new(|x| CssAttribute::Width(x)),
+            fun: Box::new(CssAttribute::Width),
         }
     }
 
     pub fn position(self) -> MedAttribute<CssPosition> {
         MedAttribute {
             style: self,
-            fun: Box::new(|x| CssAttribute::Position(x)),
+            fun: Box::new(CssAttribute::Position),
         }
     }
 
     pub fn background_color(self) -> MedAttribute<color::Color> {
         MedAttribute {
             style: self,
-            fun: Box::new(|x| CssAttribute::BackgroundColor(x)),
+            fun: Box::new(CssAttribute::BackgroundColor),
         }
     }
 }
@@ -79,6 +79,27 @@ impl<T> MedAttribute<T> {
         debug_assert!(success, "value already exists");
         style
     }
+}
+
+#[derive(Hash, Eq, PartialEq)]
+pub enum Length {
+    //absolute
+    Cm(u8),
+    Mm(u8),
+    In(u8),
+    Px(u8),
+    Pt(u8),
+    Pc(u8),
+    //relative
+    Em(u8),
+    Ex(u8),
+    Ch(u8),
+    Rem(u8),
+    Vw(u8),
+    Vh(u8),
+    Vmin(u8),
+    Vmax(u8),
+    Percent(u8),
 }
 
 impl MedAttribute<Length> {
@@ -134,49 +155,6 @@ pub enum CssAttribute {
 }
 
 #[derive(Hash, Eq, PartialEq)]
-pub enum Length {
-    //absolute
-    Cm(u8),
-    Mm(u8),
-    In(u8),
-    Px(u8),
-    Pt(u8),
-    Pc(u8),
-    //relative
-    Em(u8),
-    Ex(u8),
-    Ch(u8),
-    Rem(u8),
-    Vw(u8),
-    Vh(u8),
-    Vmin(u8),
-    Vmax(u8),
-    Percent(u8),
-}
-
-impl Length {
-    fn get(&self) -> String {
-        match self {
-            Length::Cm(num) => format!("{num}cm"),
-            Length::Mm(num) => format!("{num}mm"),
-            Length::In(num) => format!("{num}in"),
-            Length::Px(num) => format!("{num}px"),
-            Length::Pt(num) => format!("{num}pt"),
-            Length::Pc(num) => format!("{num}pc"),
-            Length::Em(num) => format!("{num}em"),
-            Length::Ex(num) => format!("{num}ex"),
-            Length::Ch(num) => format!("{num}ch"),
-            Length::Rem(num) => format!("{num}rem"),
-            Length::Vw(num) => format!("{num}vw"),
-            Length::Vh(num) => format!("{num}vh"),
-            Length::Vmin(num) => format!("{num}vmin"),
-            Length::Vmax(num) => format!("{num}vmax"),
-            Length::Percent(num) => format!("{num}%"),
-        }
-    }
-}
-
-#[derive(Hash, Eq, PartialEq)]
 pub enum CssPosition {
     Static,
     Relative,
@@ -185,8 +163,30 @@ pub enum CssPosition {
     Sticky,
 }
 
-impl CssPosition {
-    fn get(&self) -> String {
+impl Display for Length {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Length::Cm(num) => write!(f, "{num}cm"),
+            Length::Mm(num) => write!(f, "{num}mm"),
+            Length::In(num) => write!(f, "{num}in"),
+            Length::Px(num) => write!(f, "{num}px"),
+            Length::Pt(num) => write!(f, "{num}pt"),
+            Length::Pc(num) => write!(f, "{num}pc"),
+            Length::Em(num) => write!(f, "{num}em"),
+            Length::Ex(num) => write!(f, "{num}ex"),
+            Length::Ch(num) => write!(f, "{num}ch"),
+            Length::Rem(num) => write!(f, "{num}rem"),
+            Length::Vw(num) => write!(f, "{num}vw"),
+            Length::Vh(num) => write!(f, "{num}vh"),
+            Length::Vmin(num) => write!(f, "{num}vmin"),
+            Length::Vmax(num) => write!(f, "{num}vmax"),
+            Length::Percent(num) => write!(f, "{num}%"),
+        }
+    }
+}
+
+impl Display for CssPosition {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let result = match self {
             CssPosition::Static => "static",
             CssPosition::Relative => "relative",
@@ -194,29 +194,31 @@ impl CssPosition {
             CssPosition::Absolute => "absolute",
             CssPosition::Sticky => "sticky",
         };
-        format!("position:{result};")
+        write!(f, "position:{result};")
     }
 }
 
-impl Style {
-    pub fn build(&self) -> String {
-        self.0
+impl Display for Style {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let result = self
+            .0
             .iter()
             .map(|x| match x {
-                CssAttribute::FontSize(distance) => format!("font-size:{};", distance.get()),
-                CssAttribute::Position(position) => position.get(),
+                CssAttribute::FontSize(distance) => format!("font-size:{};", distance),
+                CssAttribute::Position(position) => position.to_string(),
                 CssAttribute::BackgroundColor(color) => {
-                    format!("background-color:{};", color.css())
+                    format!("background-color:{};", color)
                 }
-                CssAttribute::Top(distance) => format!("top:{};", distance.get()),
-                CssAttribute::Bottom(distance) => format!("bottom:{};", distance.get()),
-                CssAttribute::Right(distance) => format!("right:{};", distance.get()),
-                CssAttribute::Left(distance) => format!("left:{};", distance.get()),
-                CssAttribute::Height(distance) => format!("height:{};", distance.get()),
-                CssAttribute::Width(distance) => format!("width:{};", distance.get()),
-                CssAttribute::Margin(distance) => format!("margin:{};", distance.get()),
-                CssAttribute::Padding(distance) => format!("padding:{};", distance.get()),
+                CssAttribute::Top(distance) => format!("top:{};", distance),
+                CssAttribute::Bottom(distance) => format!("bottom:{};", distance),
+                CssAttribute::Right(distance) => format!("right:{};", distance),
+                CssAttribute::Left(distance) => format!("left:{};", distance),
+                CssAttribute::Height(distance) => format!("height:{};", distance),
+                CssAttribute::Width(distance) => format!("width:{};", distance),
+                CssAttribute::Margin(distance) => format!("margin:{};", distance),
+                CssAttribute::Padding(distance) => format!("padding:{};", distance),
             })
-            .fold(String::new(), move |acc, x| acc + &x)
+            .fold(String::new(), move |acc, x| acc + &x);
+        write!(f, "{}", result)
     }
 }

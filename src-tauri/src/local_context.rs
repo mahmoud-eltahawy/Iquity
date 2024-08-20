@@ -39,7 +39,7 @@ impl BackendContext {
         let config = match GlobalConfig::get(&config_path).await {
             Ok(conf) => conf,
             Err(err) => {
-                eprintln!("config init error : {}", err.to_string());
+                eprintln!("config init error : {}", err);
                 GlobalConfig::default()
             }
         };

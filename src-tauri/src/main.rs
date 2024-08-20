@@ -16,7 +16,7 @@ mod local_context;
 mod utils;
 
 const SLIDES_SPLITTER: &str = "\n---";
-const SLIDES_SPLITTER_AS_MD: LazyLock<String> =
+static SLIDES_SPLITTER_AS_MD: LazyLock<String> =
     LazyLock::new(|| markdown_compile(SLIDES_SPLITTER.to_string()));
 
 const HELP_MESSAGE: &[u8] = r#"

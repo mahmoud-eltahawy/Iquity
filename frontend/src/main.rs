@@ -31,7 +31,7 @@ pub fn app() -> impl IntoView {
             .px(5)
             .padding()
             .px(5)
-            .build()
+            .to_string()
     };
 
     let keys_help = conf.keys_help;
@@ -58,7 +58,7 @@ fn progress_bar() -> impl IntoView {
         .px(4)
         .width()
         .percent(100)
-        .build();
+        .to_string();
     view! {
         <progress
             style=style
