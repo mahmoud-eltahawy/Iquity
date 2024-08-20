@@ -1,4 +1,4 @@
-use background::{Attachment, DuetPosition, MedBackground, Repeat};
+use background::{Attachment, DuetPosition, MedBackground, PositionX, PositionY, Repeat};
 use color::Color;
 use length::Length;
 use position::CssPosition;
@@ -26,6 +26,8 @@ pub enum CssAttribute {
     BackgroundRepeat(Repeat),
     BackgroundAttachment(Attachment),
     BackgroundPosition(DuetPosition),
+    BackgroundPositionX(PositionX),
+    BackgroundPositionY(PositionY),
     Top(Length),
     Bottom(Length),
     Right(Length),
@@ -96,6 +98,9 @@ impl Display for Style {
                 CssAttribute::BackgroundAttachment(attachment) => {
                     format!("background-attachment:{attachment};")
                 }
+                CssAttribute::BackgroundPosition(p) => format!("background-position:{p};"),
+                CssAttribute::BackgroundPositionX(p) => format!("background-position-x:{p};"),
+                CssAttribute::BackgroundPositionY(p) => format!("background-position-y:{p};"),
                 CssAttribute::Top(distance) => format!("top:{};", distance),
                 CssAttribute::Bottom(distance) => format!("bottom:{};", distance),
                 CssAttribute::Right(distance) => format!("right:{};", distance),
@@ -104,7 +109,6 @@ impl Display for Style {
                 CssAttribute::Width(distance) => format!("width:{};", distance),
                 CssAttribute::Margin(distance) => format!("margin:{};", distance),
                 CssAttribute::Padding(distance) => format!("padding:{};", distance),
-                CssAttribute::BackgroundPosition(p) => format!("background-position:{p};"),
             })
             .fold(String::new(), move |acc, x| acc + &x);
         write!(f, "{}", result)
