@@ -1,9 +1,10 @@
 use super::{Attribute, MedAttribute, Style};
-use crate::color::Color;
-use std::fmt::Display;
+use crate::{color::Color, length::Length};
+use std::{fmt::Display, marker::PhantomData};
 
-pub struct MedBackground {
+pub struct MedBackground<T> {
     pub(crate) style: Style,
+    _phantom: PhantomData<T>,
 }
 
 pub struct MedPosition {
@@ -16,7 +17,7 @@ pub struct MedPositionX {
 }
 
 #[derive(Hash, Eq, PartialEq)]
-pub struct DuetPosition(PositionX, PositionY);
+pub struct XYPosition(PositionX, PositionY);
 
 #[derive(Hash, Eq, PartialEq)]
 pub enum PositionY {
@@ -63,14 +64,80 @@ pub enum BlendMode {
 }
 
 #[derive(Hash, Eq, PartialEq)]
+pub enum Size {
+    Auto,
+    Initial,
+    Inherit,
+    Contain,
+    Cover,
+    Length(Length),
+}
+
+#[derive(Hash, Eq, PartialEq)]
 pub enum Attachment {
     Fixed,
     Scroll,
 }
 
-impl MedBackground {
+pub struct BaseState;
+pub struct SizeState;
+
+impl MedBackground<SizeState> {
+    fn from(base: MedBackground<BaseState>) -> Self {
+        let MedBackground { style, _phantom } = base;
+        MedBackground {
+            style,
+            _phantom: PhantomData {},
+        }
+    }
+
+    fn inner(self, size: Size) -> Style {
+        let Self {
+            mut style,
+            _phantom,
+        } = self;
+        style.0.insert(Attribute::BackgroundSize(size));
+        style
+    }
+
+    pub fn initial(self) -> Style {
+        self.inner(Size::Initial)
+    }
+
+    pub fn auto(self) -> Style {
+        self.inner(Size::Auto)
+    }
+
+    pub fn inherit(self) -> Style {
+        self.inner(Size::Inherit)
+    }
+
+    pub fn contain(self) -> Style {
+        self.inner(Size::Contain)
+    }
+
+    pub fn cover(self) -> Style {
+        self.inner(Size::Cover)
+    }
+
+    pub fn length(self) -> MedAttribute<Length> {
+        let Self { style, .. } = self;
+        MedAttribute {
+            core: style,
+            fun: Box::new(|x| Attribute::BackgroundSize(Size::Length(x))),
+        }
+    }
+}
+
+impl MedBackground<BaseState> {
+    pub(crate) fn new(style: Style) -> Self {
+        Self {
+            style,
+            _phantom: PhantomData {},
+        }
+    }
     pub fn med_attr<T>(self, fun: Box<dyn FnOnce(T) -> Attribute>) -> MedAttribute<T> {
-        let Self { style } = self;
+        let Self { style, .. } = self;
         MedAttribute { core: style, fun }
     }
 
@@ -78,8 +145,12 @@ impl MedBackground {
         self.med_attr(Box::new(Attribute::BackgroundColor))
     }
 
+    pub fn size(self) -> MedBackground<SizeState> {
+        MedBackground::from(self)
+    }
+
     pub fn image(self, source: &str) -> Style {
-        let Self { mut style } = self;
+        let Self { mut style, .. } = self;
         style
             .0
             .insert(Attribute::BackgroundImage(source.to_string()));
@@ -107,12 +178,12 @@ impl MedBackground {
     }
 
     pub fn position(self) -> MedPosition {
-        let Self { style } = self;
+        let Self { style, .. } = self;
         MedPosition { style }
     }
 
     pub fn position_x(self) -> MedAttribute<PositionX> {
-        let Self { style } = self;
+        let Self { style, .. } = self;
         MedAttribute {
             core: style,
             fun: Box::new(Attribute::BackgroundPositionX),
@@ -120,7 +191,7 @@ impl MedBackground {
     }
 
     pub fn position_y(self) -> MedAttribute<PositionY> {
-        let Self { style } = self;
+        let Self { style, .. } = self;
         MedAttribute {
             core: style,
             fun: Box::new(Attribute::BackgroundPositionY),
@@ -244,7 +315,7 @@ impl MedPositionX {
         let Self { mut style, x: left } = self;
         style
             .0
-            .insert(Attribute::BackgroundPosition(DuetPosition(left, position)));
+            .insert(Attribute::BackgroundPosition(XYPosition(left, position)));
         style
     }
 
@@ -282,9 +353,9 @@ impl Display for PositionY {
         write!(f, "{result}")
     }
 }
-impl Display for DuetPosition {
+impl Display for XYPosition {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let DuetPosition(x, y) = self;
+        let XYPosition(x, y) = self;
         write!(f, "{x} {y}",)
     }
 }
@@ -358,6 +429,20 @@ impl Display for BlendMode {
             BlendMode::Saturation => "saturation",
             BlendMode::Color => "color",
             BlendMode::Luminosity => "luminosity",
+        };
+        write!(f, "{result}")
+    }
+}
+
+impl Display for Size {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let result = match self {
+            Size::Auto => "auto",
+            Size::Initial => "initial",
+            Size::Inherit => "inherit",
+            Size::Contain => "contain",
+            Size::Cover => "cover",
+            Size::Length(len) => &len.to_string(),
         };
         write!(f, "{result}")
     }

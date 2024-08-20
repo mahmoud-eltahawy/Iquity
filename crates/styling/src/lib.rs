@@ -35,10 +35,11 @@ pub enum Attribute {
     BackgroundAttachment(background::Attachment),
     BackgroundPositionX(background::PositionX),
     BackgroundPositionY(background::PositionY),
-    BackgroundPosition(background::DuetPosition),
+    BackgroundPosition(background::XYPosition),
     BackgroundOrigin(background::Origin),
     BackgroundClip(background::Origin),
     BackgroundBlendMode(background::BlendMode),
+    BackgroundSize(background::Size),
 }
 
 impl Style {
@@ -50,8 +51,8 @@ impl Style {
         Self(HashSet::with_capacity(capacity))
     }
 
-    pub fn background(self) -> MedBackground {
-        MedBackground { style: self }
+    pub fn background(self) -> MedBackground<background::BaseState> {
+        MedBackground::new(self)
     }
 
     pub fn fontsize(self) -> MedAttribute<Length> {
@@ -117,6 +118,7 @@ impl Display for Style {
                 Attribute::BackgroundBlendMode(blend) => {
                     format!("background-blend-mode:{blend};")
                 }
+                Attribute::BackgroundSize(size) => format!("background-size:{size};"),
             })
             .fold(String::new(), move |acc, x| acc + &x);
         write!(f, "{}", result)
