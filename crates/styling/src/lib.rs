@@ -1,7 +1,7 @@
-use background::{Attachment, MedBackground, Repeat};
+use background::{Attachment, DuetPosition, MedBackground, Repeat};
 use color::Color;
 use length::Length;
-use position::Position;
+use position::CssPosition;
 use std::{collections::HashSet, fmt::Display};
 
 mod background;
@@ -20,11 +20,12 @@ pub struct MedAttribute<T> {
 #[derive(Hash, Eq, PartialEq)]
 pub enum CssAttribute {
     FontSize(Length),
-    Position(Position),
+    Position(CssPosition),
     BackgroundColor(Color),
     BackgroundImage(String),
     BackgroundRepeat(Repeat),
     BackgroundAttachment(Attachment),
+    BackgroundPosition(DuetPosition),
     Top(Length),
     Bottom(Length),
     Right(Length),
@@ -72,7 +73,7 @@ impl Style {
         self.med_attr(Box::new(CssAttribute::Width))
     }
 
-    pub fn position(self) -> MedAttribute<Position> {
+    pub fn position(self) -> MedAttribute<CssPosition> {
         self.med_attr(Box::new(CssAttribute::Position))
     }
 }
@@ -103,6 +104,7 @@ impl Display for Style {
                 CssAttribute::Width(distance) => format!("width:{};", distance),
                 CssAttribute::Margin(distance) => format!("margin:{};", distance),
                 CssAttribute::Padding(distance) => format!("padding:{};", distance),
+                CssAttribute::BackgroundPosition(p) => format!("background-position:{p};"),
             })
             .fold(String::new(), move |acc, x| acc + &x);
         write!(f, "{}", result)

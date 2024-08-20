@@ -2,7 +2,7 @@ use super::{MedAttribute, Style};
 use std::fmt::Display;
 
 #[derive(Hash, Eq, PartialEq)]
-pub enum Position {
+pub enum CssPosition {
     Static,
     Relative,
     Fixed,
@@ -10,36 +10,36 @@ pub enum Position {
     Sticky,
 }
 
-impl MedAttribute<Position> {
+impl MedAttribute<CssPosition> {
     pub fn fixed(self) -> Style {
-        self.inner(Position::Fixed)
+        self.inner(CssPosition::Fixed)
     }
 
     pub fn relative(self) -> Style {
-        self.inner(Position::Relative)
+        self.inner(CssPosition::Relative)
     }
 
     pub fn static_(self) -> Style {
-        self.inner(Position::Static)
+        self.inner(CssPosition::Static)
     }
 
     pub fn absolute(self) -> Style {
-        self.inner(Position::Absolute)
+        self.inner(CssPosition::Absolute)
     }
 
     pub fn sticky(self) -> Style {
-        self.inner(Position::Sticky)
+        self.inner(CssPosition::Sticky)
     }
 }
 
-impl Display for Position {
+impl Display for CssPosition {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let result = match self {
-            Position::Static => "static",
-            Position::Relative => "relative",
-            Position::Fixed => "fixed",
-            Position::Absolute => "absolute",
-            Position::Sticky => "sticky",
+            CssPosition::Static => "static",
+            CssPosition::Relative => "relative",
+            CssPosition::Fixed => "fixed",
+            CssPosition::Absolute => "absolute",
+            CssPosition::Sticky => "sticky",
         };
         write!(f, "position:{result};")
     }
