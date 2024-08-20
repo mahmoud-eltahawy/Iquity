@@ -49,6 +49,20 @@ pub enum Origin {
 }
 
 #[derive(Hash, Eq, PartialEq)]
+pub enum BlendMode {
+    Normal,
+    Multiply,
+    Screen,
+    Overlay,
+    Darken,
+    Lighten,
+    ColorDodge,
+    Saturation,
+    Color,
+    Luminosity,
+}
+
+#[derive(Hash, Eq, PartialEq)]
 pub enum Attachment {
     Fixed,
     Scroll,
@@ -78,6 +92,14 @@ impl MedBackground {
 
     pub fn origin(self) -> MedAttribute<Origin> {
         self.med_attr(Box::new(Attribute::BackgroundOrigin))
+    }
+
+    pub fn clip(self) -> MedAttribute<Origin> {
+        self.med_attr(Box::new(Attribute::BackgroundClip))
+    }
+
+    pub fn blend_mode(self) -> MedAttribute<BlendMode> {
+        self.med_attr(Box::new(Attribute::BackgroundBlendMode))
     }
 
     pub fn attachment(self) -> MedAttribute<Attachment> {
@@ -153,6 +175,48 @@ impl MedAttribute<Origin> {
 
     pub fn inherit(self) -> Style {
         self.inner(Origin::Inherit)
+    }
+}
+
+impl MedAttribute<BlendMode> {
+    pub fn normal(self) -> Style {
+        self.inner(BlendMode::Normal)
+    }
+
+    pub fn multiply(self) -> Style {
+        self.inner(BlendMode::Multiply)
+    }
+
+    pub fn screen(self) -> Style {
+        self.inner(BlendMode::Screen)
+    }
+
+    pub fn overlay(self) -> Style {
+        self.inner(BlendMode::Overlay)
+    }
+
+    pub fn darken(self) -> Style {
+        self.inner(BlendMode::Darken)
+    }
+
+    pub fn lighten(self) -> Style {
+        self.inner(BlendMode::Lighten)
+    }
+
+    pub fn color_dodge(self) -> Style {
+        self.inner(BlendMode::ColorDodge)
+    }
+
+    pub fn saturation(self) -> Style {
+        self.inner(BlendMode::Saturation)
+    }
+
+    pub fn color(self) -> Style {
+        self.inner(BlendMode::Color)
+    }
+
+    pub fn luminosity(self) -> Style {
+        self.inner(BlendMode::Luminosity)
     }
 }
 
@@ -276,6 +340,24 @@ impl Display for Origin {
             Origin::ContentBox => "content-box",
             Origin::Initial => "initial",
             Origin::Inherit => "inherit",
+        };
+        write!(f, "{result}")
+    }
+}
+
+impl Display for BlendMode {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let result = match self {
+            BlendMode::Normal => "normal",
+            BlendMode::Multiply => "multiply",
+            BlendMode::Screen => "screen",
+            BlendMode::Overlay => "overlay",
+            BlendMode::Darken => "darken",
+            BlendMode::Lighten => "lighten",
+            BlendMode::ColorDodge => "colorDodge",
+            BlendMode::Saturation => "saturation",
+            BlendMode::Color => "color",
+            BlendMode::Luminosity => "luminosity",
         };
         write!(f, "{result}")
     }

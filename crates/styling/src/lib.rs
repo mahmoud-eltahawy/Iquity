@@ -37,6 +37,8 @@ pub enum Attribute {
     BackgroundPositionY(background::PositionY),
     BackgroundPosition(background::DuetPosition),
     BackgroundOrigin(background::Origin),
+    BackgroundClip(background::Origin),
+    BackgroundBlendMode(background::BlendMode),
 }
 
 impl Style {
@@ -111,6 +113,10 @@ impl Display for Style {
                 Attribute::BackgroundPositionX(p) => format!("background-position-x:{p};"),
                 Attribute::BackgroundPositionY(p) => format!("background-position-y:{p};"),
                 Attribute::BackgroundOrigin(origin) => format!("background-origin:{origin};"),
+                Attribute::BackgroundClip(origin) => format!("background-clip:{origin};"),
+                Attribute::BackgroundBlendMode(blend) => {
+                    format!("background-blend-mode:{blend};")
+                }
             })
             .fold(String::new(), move |acc, x| acc + &x);
         write!(f, "{}", result)
