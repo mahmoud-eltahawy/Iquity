@@ -1,8 +1,10 @@
+use background::{Attachment, MedBackground, Repeat};
 use color::Color;
 use length::Length;
 use position::Position;
 use std::{collections::HashSet, fmt::Display};
 
+mod background;
 mod color;
 mod length;
 mod position;
@@ -20,6 +22,9 @@ pub enum CssAttribute {
     FontSize(Length),
     Position(Position),
     BackgroundColor(Color),
+    BackgroundImage(String),
+    BackgroundRepeat(Repeat),
+    BackgroundAttachment(Attachment),
     Top(Length),
     Bottom(Length),
     Right(Length),
@@ -38,6 +43,11 @@ impl Style {
     pub fn with_capacity(capacity: usize) -> Self {
         Self(HashSet::with_capacity(capacity))
     }
+
+    pub fn background(self) -> MedBackground {
+        MedBackground { style: self }
+    }
+
     pub fn fontsize(self) -> MedAttribute<Length> {
         self.med_attr(Box::new(CssAttribute::FontSize))
     }
@@ -65,10 +75,6 @@ impl Style {
     pub fn position(self) -> MedAttribute<Position> {
         self.med_attr(Box::new(CssAttribute::Position))
     }
-
-    pub fn background_color(self) -> MedAttribute<Color> {
-        self.med_attr(Box::new(CssAttribute::BackgroundColor))
-    }
 }
 
 impl Display for Style {
@@ -81,6 +87,13 @@ impl Display for Style {
                 CssAttribute::Position(position) => position.to_string(),
                 CssAttribute::BackgroundColor(color) => {
                     format!("background-color:{};", color)
+                }
+                CssAttribute::BackgroundImage(url) => format!("background-image:url({});", url),
+                CssAttribute::BackgroundRepeat(repeat) => {
+                    format!("background-repeat:{repeat};")
+                }
+                CssAttribute::BackgroundAttachment(attachment) => {
+                    format!("background-attachment:{attachment};")
                 }
                 CssAttribute::Top(distance) => format!("top:{};", distance),
                 CssAttribute::Bottom(distance) => format!("bottom:{};", distance),
