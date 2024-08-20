@@ -1,4 +1,6 @@
-use super::{MedAttribute, Style};
+use crate::{PreBase, StyleBaseState};
+
+use super::Style;
 use std::fmt::Display;
 
 #[derive(Hash, Eq, PartialEq)]
@@ -22,55 +24,55 @@ pub enum Length {
     Percent(u8),
 }
 
-impl MedAttribute<Length> {
-    pub fn px(self, num: u8) -> Style {
-        self.inner(Length::Px(num))
+impl Style<PreBase<Length>> {
+    pub fn px(self, num: u8) -> Style<StyleBaseState> {
+        self.base(Length::Px(num))
     }
 
-    pub fn cm(self, num: u8) -> Style {
-        self.inner(Length::Cm(num))
+    pub fn cm(self, num: u8) -> Style<StyleBaseState> {
+        self.base(Length::Cm(num))
     }
 
-    pub fn percent(self, num: u8) -> Style {
+    pub fn percent(self, num: u8) -> Style<StyleBaseState> {
         debug_assert!(num <= 100, "percent number should be from 0 to 100");
-        self.inner(Length::Percent(num))
+        self.base(Length::Percent(num))
     }
 
-    pub fn mm(self, num: u8) -> Style {
-        self.inner(Length::Mm(num))
+    pub fn mm(self, num: u8) -> Style<StyleBaseState> {
+        self.base(Length::Mm(num))
     }
-    pub fn inch(self, num: u8) -> Style {
-        self.inner(Length::In(num))
+    pub fn inch(self, num: u8) -> Style<StyleBaseState> {
+        self.base(Length::In(num))
     }
-    pub fn pt(self, num: u8) -> Style {
-        self.inner(Length::Pt(num))
+    pub fn pt(self, num: u8) -> Style<StyleBaseState> {
+        self.base(Length::Pt(num))
     }
-    pub fn pc(self, num: u8) -> Style {
-        self.inner(Length::Pc(num))
+    pub fn pc(self, num: u8) -> Style<StyleBaseState> {
+        self.base(Length::Pc(num))
     }
-    pub fn em(self, num: u8) -> Style {
-        self.inner(Length::Em(num))
+    pub fn em(self, num: u8) -> Style<StyleBaseState> {
+        self.base(Length::Em(num))
     }
-    pub fn ex(self, num: u8) -> Style {
-        self.inner(Length::Ex(num))
+    pub fn ex(self, num: u8) -> Style<StyleBaseState> {
+        self.base(Length::Ex(num))
     }
-    pub fn ch(self, num: u8) -> Style {
-        self.inner(Length::Ch(num))
+    pub fn ch(self, num: u8) -> Style<StyleBaseState> {
+        self.base(Length::Ch(num))
     }
-    pub fn rem_(self, num: u8) -> Style {
-        self.inner(Length::Rem(num))
+    pub fn rem_(self, num: u8) -> Style<StyleBaseState> {
+        self.base(Length::Rem(num))
     }
-    pub fn vw(self, num: u8) -> Style {
-        self.inner(Length::Vw(num))
+    pub fn vw(self, num: u8) -> Style<StyleBaseState> {
+        self.base(Length::Vw(num))
     }
-    pub fn vh(self, num: u8) -> Style {
-        self.inner(Length::Vh(num))
+    pub fn vh(self, num: u8) -> Style<StyleBaseState> {
+        self.base(Length::Vh(num))
     }
-    pub fn vmin(self, num: u8) -> Style {
-        self.inner(Length::Vmin(num))
+    pub fn vmin(self, num: u8) -> Style<StyleBaseState> {
+        self.base(Length::Vmin(num))
     }
-    pub fn vmax(self, num: u8) -> Style {
-        self.inner(Length::Vmax(num))
+    pub fn vmax(self, num: u8) -> Style<StyleBaseState> {
+        self.base(Length::Vmax(num))
     }
 }
 

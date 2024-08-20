@@ -1,6 +1,8 @@
 use std::fmt::Display;
 
-use super::{MedAttribute, Style};
+use crate::{PreBase, StyleBaseState};
+
+use super::Style;
 
 #[derive(Hash, Eq, PartialEq)]
 pub enum Color {
@@ -152,459 +154,465 @@ pub enum Color {
     YellowGreen,
 }
 
-impl MedAttribute<Color> {
-    pub fn hex(self, hex: u32) -> Style {
-        self.inner(Color::Hex(hex))
+impl Style<PreBase<Color>> {
+    pub fn hex(self, hex: u32) -> Style<StyleBaseState> {
+        self.base(Color::Hex(hex))
     }
 
-    pub fn t_hex(self, hex: u32) -> Style {
-        self.inner(Color::THex(hex))
+    pub fn t_hex(self, hex: u32) -> Style<StyleBaseState> {
+        self.base(Color::THex(hex))
     }
 
-    pub fn rgb(self, red: u8, green: u8, blue: u8) -> Style {
-        self.inner(Color::Rgb(red, green, blue))
+    pub fn rgb(self, red: u8, green: u8, blue: u8) -> Style<StyleBaseState> {
+        self.base(Color::Rgb(red, green, blue))
     }
 
-    pub fn rgba(self, red: u8, green: u8, blue: u8, opacity: u8) -> Style {
+    pub fn rgba(self, red: u8, green: u8, blue: u8, opacity: u8) -> Style<StyleBaseState> {
         debug_assert!(opacity <= 100, "opacity is from 0 to 100 not from 0 to 1");
-        self.inner(Color::Rgba(red, green, blue, opacity))
+        self.base(Color::Rgba(red, green, blue, opacity))
     }
 
-    pub fn hsl(self, hue: u16, saturation: u8, lightness: u8) -> Style {
+    pub fn hsl(self, hue: u16, saturation: u8, lightness: u8) -> Style<StyleBaseState> {
         debug_assert!(hue <= 360, "hue should be from 0 to 360");
         debug_assert!(saturation <= 100, "saturation should be from 0 to 100");
         debug_assert!(lightness <= 100, "lightness should be from 0 to 100");
-        self.inner(Color::Hsl(hue, saturation, lightness))
+        self.base(Color::Hsl(hue, saturation, lightness))
     }
 
-    pub fn hsla(self, hue: u16, saturation: u8, lightness: u8, opacity: u8) -> Style {
+    pub fn hsla(
+        self,
+        hue: u16,
+        saturation: u8,
+        lightness: u8,
+        opacity: u8,
+    ) -> Style<StyleBaseState> {
         debug_assert!(hue <= 360, "hue should be from 0 to 360");
         debug_assert!(saturation <= 100, "saturation should be from 0 to 100");
         debug_assert!(lightness <= 100, "lightness should be from 0 to 100");
         debug_assert!(opacity <= 100, "opacity is from 0 to 100 not from 0 to 1");
-        self.inner(Color::Hsla(hue, saturation, lightness, opacity))
+        self.base(Color::Hsla(hue, saturation, lightness, opacity))
     }
 
-    pub fn alice_blue(self) -> Style {
-        self.inner(Color::AliceBlue)
+    pub fn alice_blue(self) -> Style<StyleBaseState> {
+        self.base(Color::AliceBlue)
     }
-    pub fn antique_white(self) -> Style {
-        self.inner(Color::AntiqueWhite)
+    pub fn antique_white(self) -> Style<StyleBaseState> {
+        self.base(Color::AntiqueWhite)
     }
-    pub fn aqua(self) -> Style {
-        self.inner(Color::Aqua)
+    pub fn aqua(self) -> Style<StyleBaseState> {
+        self.base(Color::Aqua)
     }
-    pub fn aquamarine(self) -> Style {
-        self.inner(Color::Aquamarine)
+    pub fn aquamarine(self) -> Style<StyleBaseState> {
+        self.base(Color::Aquamarine)
     }
-    pub fn azure(self) -> Style {
-        self.inner(Color::Azure)
+    pub fn azure(self) -> Style<StyleBaseState> {
+        self.base(Color::Azure)
     }
-    pub fn beige(self) -> Style {
-        self.inner(Color::Beige)
+    pub fn beige(self) -> Style<StyleBaseState> {
+        self.base(Color::Beige)
     }
-    pub fn bisque(self) -> Style {
-        self.inner(Color::Bisque)
+    pub fn bisque(self) -> Style<StyleBaseState> {
+        self.base(Color::Bisque)
     }
-    pub fn black(self) -> Style {
-        self.inner(Color::Black)
+    pub fn black(self) -> Style<StyleBaseState> {
+        self.base(Color::Black)
     }
-    pub fn blanched_almond(self) -> Style {
-        self.inner(Color::BlanchedAlmond)
+    pub fn blanched_almond(self) -> Style<StyleBaseState> {
+        self.base(Color::BlanchedAlmond)
     }
-    pub fn blue(self) -> Style {
-        self.inner(Color::Blue)
+    pub fn blue(self) -> Style<StyleBaseState> {
+        self.base(Color::Blue)
     }
-    pub fn blue_violet(self) -> Style {
-        self.inner(Color::BlueViolet)
+    pub fn blue_violet(self) -> Style<StyleBaseState> {
+        self.base(Color::BlueViolet)
     }
-    pub fn brown(self) -> Style {
-        self.inner(Color::Brown)
+    pub fn brown(self) -> Style<StyleBaseState> {
+        self.base(Color::Brown)
     }
-    pub fn burly_wood(self) -> Style {
-        self.inner(Color::BurlyWood)
+    pub fn burly_wood(self) -> Style<StyleBaseState> {
+        self.base(Color::BurlyWood)
     }
-    pub fn cadet_blue(self) -> Style {
-        self.inner(Color::CadetBlue)
+    pub fn cadet_blue(self) -> Style<StyleBaseState> {
+        self.base(Color::CadetBlue)
     }
-    pub fn chartreuse(self) -> Style {
-        self.inner(Color::Chartreuse)
+    pub fn chartreuse(self) -> Style<StyleBaseState> {
+        self.base(Color::Chartreuse)
     }
-    pub fn chocolate(self) -> Style {
-        self.inner(Color::Chocolate)
+    pub fn chocolate(self) -> Style<StyleBaseState> {
+        self.base(Color::Chocolate)
     }
-    pub fn coral(self) -> Style {
-        self.inner(Color::Coral)
+    pub fn coral(self) -> Style<StyleBaseState> {
+        self.base(Color::Coral)
     }
-    pub fn cornflower_blue(self) -> Style {
-        self.inner(Color::CornflowerBlue)
+    pub fn cornflower_blue(self) -> Style<StyleBaseState> {
+        self.base(Color::CornflowerBlue)
     }
-    pub fn cornsilk(self) -> Style {
-        self.inner(Color::Cornsilk)
+    pub fn cornsilk(self) -> Style<StyleBaseState> {
+        self.base(Color::Cornsilk)
     }
-    pub fn crimson(self) -> Style {
-        self.inner(Color::Crimson)
+    pub fn crimson(self) -> Style<StyleBaseState> {
+        self.base(Color::Crimson)
     }
-    pub fn cyan(self) -> Style {
-        self.inner(Color::Cyan)
+    pub fn cyan(self) -> Style<StyleBaseState> {
+        self.base(Color::Cyan)
     }
-    pub fn dark_blue(self) -> Style {
-        self.inner(Color::DarkBlue)
+    pub fn dark_blue(self) -> Style<StyleBaseState> {
+        self.base(Color::DarkBlue)
     }
-    pub fn dark_cyan(self) -> Style {
-        self.inner(Color::DarkCyan)
+    pub fn dark_cyan(self) -> Style<StyleBaseState> {
+        self.base(Color::DarkCyan)
     }
-    pub fn dark_golden_rod(self) -> Style {
-        self.inner(Color::DarkGoldenRod)
+    pub fn dark_golden_rod(self) -> Style<StyleBaseState> {
+        self.base(Color::DarkGoldenRod)
     }
-    pub fn dark_grey(self) -> Style {
-        self.inner(Color::DarkGrey)
+    pub fn dark_grey(self) -> Style<StyleBaseState> {
+        self.base(Color::DarkGrey)
     }
-    pub fn dark_green(self) -> Style {
-        self.inner(Color::DarkGreen)
+    pub fn dark_green(self) -> Style<StyleBaseState> {
+        self.base(Color::DarkGreen)
     }
-    pub fn dark_khaki(self) -> Style {
-        self.inner(Color::DarkKhaki)
+    pub fn dark_khaki(self) -> Style<StyleBaseState> {
+        self.base(Color::DarkKhaki)
     }
-    pub fn dark_magenta(self) -> Style {
-        self.inner(Color::DarkMagenta)
+    pub fn dark_magenta(self) -> Style<StyleBaseState> {
+        self.base(Color::DarkMagenta)
     }
-    pub fn dark_olive_green(self) -> Style {
-        self.inner(Color::DarkOliveGreen)
+    pub fn dark_olive_green(self) -> Style<StyleBaseState> {
+        self.base(Color::DarkOliveGreen)
     }
-    pub fn darkorange(self) -> Style {
-        self.inner(Color::Darkorange)
+    pub fn darkorange(self) -> Style<StyleBaseState> {
+        self.base(Color::Darkorange)
     }
-    pub fn dark_orchid(self) -> Style {
-        self.inner(Color::DarkOrchid)
+    pub fn dark_orchid(self) -> Style<StyleBaseState> {
+        self.base(Color::DarkOrchid)
     }
-    pub fn dark_red(self) -> Style {
-        self.inner(Color::DarkRed)
+    pub fn dark_red(self) -> Style<StyleBaseState> {
+        self.base(Color::DarkRed)
     }
-    pub fn dark_salmon(self) -> Style {
-        self.inner(Color::DarkSalmon)
+    pub fn dark_salmon(self) -> Style<StyleBaseState> {
+        self.base(Color::DarkSalmon)
     }
-    pub fn dark_sea_green(self) -> Style {
-        self.inner(Color::DarkSeaGreen)
+    pub fn dark_sea_green(self) -> Style<StyleBaseState> {
+        self.base(Color::DarkSeaGreen)
     }
-    pub fn dark_slate_blue(self) -> Style {
-        self.inner(Color::DarkSlateBlue)
+    pub fn dark_slate_blue(self) -> Style<StyleBaseState> {
+        self.base(Color::DarkSlateBlue)
     }
-    pub fn dark_slate_grey(self) -> Style {
-        self.inner(Color::DarkSlateGrey)
+    pub fn dark_slate_grey(self) -> Style<StyleBaseState> {
+        self.base(Color::DarkSlateGrey)
     }
-    pub fn dark_turquoise(self) -> Style {
-        self.inner(Color::DarkTurquoise)
+    pub fn dark_turquoise(self) -> Style<StyleBaseState> {
+        self.base(Color::DarkTurquoise)
     }
-    pub fn dark_violet(self) -> Style {
-        self.inner(Color::DarkViolet)
+    pub fn dark_violet(self) -> Style<StyleBaseState> {
+        self.base(Color::DarkViolet)
     }
-    pub fn deep_pink(self) -> Style {
-        self.inner(Color::DeepPink)
+    pub fn deep_pink(self) -> Style<StyleBaseState> {
+        self.base(Color::DeepPink)
     }
-    pub fn deep_sky_blue(self) -> Style {
-        self.inner(Color::DeepSkyBlue)
+    pub fn deep_sky_blue(self) -> Style<StyleBaseState> {
+        self.base(Color::DeepSkyBlue)
     }
-    pub fn dim_gray(self) -> Style {
-        self.inner(Color::DimGray)
+    pub fn dim_gray(self) -> Style<StyleBaseState> {
+        self.base(Color::DimGray)
     }
-    pub fn dodger_blue(self) -> Style {
-        self.inner(Color::DodgerBlue)
+    pub fn dodger_blue(self) -> Style<StyleBaseState> {
+        self.base(Color::DodgerBlue)
     }
-    pub fn fire_brick(self) -> Style {
-        self.inner(Color::FireBrick)
+    pub fn fire_brick(self) -> Style<StyleBaseState> {
+        self.base(Color::FireBrick)
     }
-    pub fn floral_white(self) -> Style {
-        self.inner(Color::FloralWhite)
+    pub fn floral_white(self) -> Style<StyleBaseState> {
+        self.base(Color::FloralWhite)
     }
-    pub fn forest_green(self) -> Style {
-        self.inner(Color::ForestGreen)
+    pub fn forest_green(self) -> Style<StyleBaseState> {
+        self.base(Color::ForestGreen)
     }
-    pub fn fuchsia(self) -> Style {
-        self.inner(Color::Fuchsia)
+    pub fn fuchsia(self) -> Style<StyleBaseState> {
+        self.base(Color::Fuchsia)
     }
-    pub fn gainsboro(self) -> Style {
-        self.inner(Color::Gainsboro)
+    pub fn gainsboro(self) -> Style<StyleBaseState> {
+        self.base(Color::Gainsboro)
     }
-    pub fn ghost_white(self) -> Style {
-        self.inner(Color::GhostWhite)
+    pub fn ghost_white(self) -> Style<StyleBaseState> {
+        self.base(Color::GhostWhite)
     }
-    pub fn gold(self) -> Style {
-        self.inner(Color::Gold)
+    pub fn gold(self) -> Style<StyleBaseState> {
+        self.base(Color::Gold)
     }
-    pub fn golden_rod(self) -> Style {
-        self.inner(Color::GoldenRod)
+    pub fn golden_rod(self) -> Style<StyleBaseState> {
+        self.base(Color::GoldenRod)
     }
-    pub fn grey(self) -> Style {
-        self.inner(Color::Grey)
+    pub fn grey(self) -> Style<StyleBaseState> {
+        self.base(Color::Grey)
     }
-    pub fn green(self) -> Style {
-        self.inner(Color::Green)
+    pub fn green(self) -> Style<StyleBaseState> {
+        self.base(Color::Green)
     }
-    pub fn green_yellow(self) -> Style {
-        self.inner(Color::GreenYellow)
+    pub fn green_yellow(self) -> Style<StyleBaseState> {
+        self.base(Color::GreenYellow)
     }
-    pub fn honey_dew(self) -> Style {
-        self.inner(Color::HoneyDew)
+    pub fn honey_dew(self) -> Style<StyleBaseState> {
+        self.base(Color::HoneyDew)
     }
-    pub fn hot_pink(self) -> Style {
-        self.inner(Color::HotPink)
+    pub fn hot_pink(self) -> Style<StyleBaseState> {
+        self.base(Color::HotPink)
     }
-    pub fn indian_red(self) -> Style {
-        self.inner(Color::IndianRed)
+    pub fn indian_red(self) -> Style<StyleBaseState> {
+        self.base(Color::IndianRed)
     }
-    pub fn indigo(self) -> Style {
-        self.inner(Color::Indigo)
+    pub fn indigo(self) -> Style<StyleBaseState> {
+        self.base(Color::Indigo)
     }
-    pub fn ivory(self) -> Style {
-        self.inner(Color::Ivory)
+    pub fn ivory(self) -> Style<StyleBaseState> {
+        self.base(Color::Ivory)
     }
-    pub fn khaki(self) -> Style {
-        self.inner(Color::Khaki)
+    pub fn khaki(self) -> Style<StyleBaseState> {
+        self.base(Color::Khaki)
     }
-    pub fn lavender(self) -> Style {
-        self.inner(Color::Lavender)
+    pub fn lavender(self) -> Style<StyleBaseState> {
+        self.base(Color::Lavender)
     }
-    pub fn lavender_blush(self) -> Style {
-        self.inner(Color::LavenderBlush)
+    pub fn lavender_blush(self) -> Style<StyleBaseState> {
+        self.base(Color::LavenderBlush)
     }
-    pub fn lawn_green(self) -> Style {
-        self.inner(Color::LawnGreen)
+    pub fn lawn_green(self) -> Style<StyleBaseState> {
+        self.base(Color::LawnGreen)
     }
-    pub fn lemon_chiffon(self) -> Style {
-        self.inner(Color::LemonChiffon)
+    pub fn lemon_chiffon(self) -> Style<StyleBaseState> {
+        self.base(Color::LemonChiffon)
     }
-    pub fn light_blue(self) -> Style {
-        self.inner(Color::LightBlue)
+    pub fn light_blue(self) -> Style<StyleBaseState> {
+        self.base(Color::LightBlue)
     }
-    pub fn light_coral(self) -> Style {
-        self.inner(Color::LightCoral)
+    pub fn light_coral(self) -> Style<StyleBaseState> {
+        self.base(Color::LightCoral)
     }
-    pub fn light_cyan(self) -> Style {
-        self.inner(Color::LightCyan)
+    pub fn light_cyan(self) -> Style<StyleBaseState> {
+        self.base(Color::LightCyan)
     }
-    pub fn light_golden_rod_yellow(self) -> Style {
-        self.inner(Color::LightGoldenRodYellow)
+    pub fn light_golden_rod_yellow(self) -> Style<StyleBaseState> {
+        self.base(Color::LightGoldenRodYellow)
     }
-    pub fn light_grey(self) -> Style {
-        self.inner(Color::LightGrey)
+    pub fn light_grey(self) -> Style<StyleBaseState> {
+        self.base(Color::LightGrey)
     }
-    pub fn light_green(self) -> Style {
-        self.inner(Color::LightGreen)
+    pub fn light_green(self) -> Style<StyleBaseState> {
+        self.base(Color::LightGreen)
     }
-    pub fn light_pink(self) -> Style {
-        self.inner(Color::LightPink)
+    pub fn light_pink(self) -> Style<StyleBaseState> {
+        self.base(Color::LightPink)
     }
-    pub fn light_salmon(self) -> Style {
-        self.inner(Color::LightSalmon)
+    pub fn light_salmon(self) -> Style<StyleBaseState> {
+        self.base(Color::LightSalmon)
     }
-    pub fn light_sea_green(self) -> Style {
-        self.inner(Color::LightSeaGreen)
+    pub fn light_sea_green(self) -> Style<StyleBaseState> {
+        self.base(Color::LightSeaGreen)
     }
-    pub fn light_sky_blue(self) -> Style {
-        self.inner(Color::LightSkyBlue)
+    pub fn light_sky_blue(self) -> Style<StyleBaseState> {
+        self.base(Color::LightSkyBlue)
     }
-    pub fn light_slate_grey(self) -> Style {
-        self.inner(Color::LightSlateGrey)
+    pub fn light_slate_grey(self) -> Style<StyleBaseState> {
+        self.base(Color::LightSlateGrey)
     }
-    pub fn light_steel_blue(self) -> Style {
-        self.inner(Color::LightSteelBlue)
+    pub fn light_steel_blue(self) -> Style<StyleBaseState> {
+        self.base(Color::LightSteelBlue)
     }
-    pub fn light_yellow(self) -> Style {
-        self.inner(Color::LightYellow)
+    pub fn light_yellow(self) -> Style<StyleBaseState> {
+        self.base(Color::LightYellow)
     }
-    pub fn lime(self) -> Style {
-        self.inner(Color::Lime)
+    pub fn lime(self) -> Style<StyleBaseState> {
+        self.base(Color::Lime)
     }
-    pub fn lime_green(self) -> Style {
-        self.inner(Color::LimeGreen)
+    pub fn lime_green(self) -> Style<StyleBaseState> {
+        self.base(Color::LimeGreen)
     }
-    pub fn linen(self) -> Style {
-        self.inner(Color::Linen)
+    pub fn linen(self) -> Style<StyleBaseState> {
+        self.base(Color::Linen)
     }
-    pub fn magenta(self) -> Style {
-        self.inner(Color::Magenta)
+    pub fn magenta(self) -> Style<StyleBaseState> {
+        self.base(Color::Magenta)
     }
-    pub fn maroon(self) -> Style {
-        self.inner(Color::Maroon)
+    pub fn maroon(self) -> Style<StyleBaseState> {
+        self.base(Color::Maroon)
     }
-    pub fn medium_aqua_marine(self) -> Style {
-        self.inner(Color::MediumAquaMarine)
+    pub fn medium_aqua_marine(self) -> Style<StyleBaseState> {
+        self.base(Color::MediumAquaMarine)
     }
-    pub fn medium_blue(self) -> Style {
-        self.inner(Color::MediumBlue)
+    pub fn medium_blue(self) -> Style<StyleBaseState> {
+        self.base(Color::MediumBlue)
     }
-    pub fn medium_orchid(self) -> Style {
-        self.inner(Color::MediumOrchid)
+    pub fn medium_orchid(self) -> Style<StyleBaseState> {
+        self.base(Color::MediumOrchid)
     }
-    pub fn medium_purple(self) -> Style {
-        self.inner(Color::MediumPurple)
+    pub fn medium_purple(self) -> Style<StyleBaseState> {
+        self.base(Color::MediumPurple)
     }
-    pub fn medium_sea_green(self) -> Style {
-        self.inner(Color::MediumSeaGreen)
+    pub fn medium_sea_green(self) -> Style<StyleBaseState> {
+        self.base(Color::MediumSeaGreen)
     }
-    pub fn medium_slate_blue(self) -> Style {
-        self.inner(Color::MediumSlateBlue)
+    pub fn medium_slate_blue(self) -> Style<StyleBaseState> {
+        self.base(Color::MediumSlateBlue)
     }
-    pub fn medium_spring_green(self) -> Style {
-        self.inner(Color::MediumSpringGreen)
+    pub fn medium_spring_green(self) -> Style<StyleBaseState> {
+        self.base(Color::MediumSpringGreen)
     }
-    pub fn medium_turquoise(self) -> Style {
-        self.inner(Color::MediumTurquoise)
+    pub fn medium_turquoise(self) -> Style<StyleBaseState> {
+        self.base(Color::MediumTurquoise)
     }
-    pub fn medium_violet_red(self) -> Style {
-        self.inner(Color::MediumVioletRed)
+    pub fn medium_violet_red(self) -> Style<StyleBaseState> {
+        self.base(Color::MediumVioletRed)
     }
-    pub fn midnight_blue(self) -> Style {
-        self.inner(Color::MidnightBlue)
+    pub fn midnight_blue(self) -> Style<StyleBaseState> {
+        self.base(Color::MidnightBlue)
     }
-    pub fn mint_cream(self) -> Style {
-        self.inner(Color::MintCream)
+    pub fn mint_cream(self) -> Style<StyleBaseState> {
+        self.base(Color::MintCream)
     }
-    pub fn misty_rose(self) -> Style {
-        self.inner(Color::MistyRose)
+    pub fn misty_rose(self) -> Style<StyleBaseState> {
+        self.base(Color::MistyRose)
     }
-    pub fn moccasin(self) -> Style {
-        self.inner(Color::Moccasin)
+    pub fn moccasin(self) -> Style<StyleBaseState> {
+        self.base(Color::Moccasin)
     }
-    pub fn navajo_white(self) -> Style {
-        self.inner(Color::NavajoWhite)
+    pub fn navajo_white(self) -> Style<StyleBaseState> {
+        self.base(Color::NavajoWhite)
     }
-    pub fn navy(self) -> Style {
-        self.inner(Color::Navy)
+    pub fn navy(self) -> Style<StyleBaseState> {
+        self.base(Color::Navy)
     }
-    pub fn old_lace(self) -> Style {
-        self.inner(Color::OldLace)
+    pub fn old_lace(self) -> Style<StyleBaseState> {
+        self.base(Color::OldLace)
     }
-    pub fn olive(self) -> Style {
-        self.inner(Color::Olive)
+    pub fn olive(self) -> Style<StyleBaseState> {
+        self.base(Color::Olive)
     }
-    pub fn olive_drab(self) -> Style {
-        self.inner(Color::OliveDrab)
+    pub fn olive_drab(self) -> Style<StyleBaseState> {
+        self.base(Color::OliveDrab)
     }
-    pub fn orange(self) -> Style {
-        self.inner(Color::Orange)
+    pub fn orange(self) -> Style<StyleBaseState> {
+        self.base(Color::Orange)
     }
-    pub fn orange_red(self) -> Style {
-        self.inner(Color::OrangeRed)
+    pub fn orange_red(self) -> Style<StyleBaseState> {
+        self.base(Color::OrangeRed)
     }
-    pub fn orchid(self) -> Style {
-        self.inner(Color::Orchid)
+    pub fn orchid(self) -> Style<StyleBaseState> {
+        self.base(Color::Orchid)
     }
-    pub fn pale_golden_rod(self) -> Style {
-        self.inner(Color::PaleGoldenRod)
+    pub fn pale_golden_rod(self) -> Style<StyleBaseState> {
+        self.base(Color::PaleGoldenRod)
     }
-    pub fn pale_green(self) -> Style {
-        self.inner(Color::PaleGreen)
+    pub fn pale_green(self) -> Style<StyleBaseState> {
+        self.base(Color::PaleGreen)
     }
-    pub fn pale_turquoise(self) -> Style {
-        self.inner(Color::PaleTurquoise)
+    pub fn pale_turquoise(self) -> Style<StyleBaseState> {
+        self.base(Color::PaleTurquoise)
     }
-    pub fn pale_violet_red(self) -> Style {
-        self.inner(Color::PaleVioletRed)
+    pub fn pale_violet_red(self) -> Style<StyleBaseState> {
+        self.base(Color::PaleVioletRed)
     }
-    pub fn papaya_whip(self) -> Style {
-        self.inner(Color::PapayaWhip)
+    pub fn papaya_whip(self) -> Style<StyleBaseState> {
+        self.base(Color::PapayaWhip)
     }
-    pub fn peach_puff(self) -> Style {
-        self.inner(Color::PeachPuff)
+    pub fn peach_puff(self) -> Style<StyleBaseState> {
+        self.base(Color::PeachPuff)
     }
-    pub fn peru(self) -> Style {
-        self.inner(Color::Peru)
+    pub fn peru(self) -> Style<StyleBaseState> {
+        self.base(Color::Peru)
     }
-    pub fn pink(self) -> Style {
-        self.inner(Color::Pink)
+    pub fn pink(self) -> Style<StyleBaseState> {
+        self.base(Color::Pink)
     }
-    pub fn plum(self) -> Style {
-        self.inner(Color::Plum)
+    pub fn plum(self) -> Style<StyleBaseState> {
+        self.base(Color::Plum)
     }
-    pub fn powder_blue(self) -> Style {
-        self.inner(Color::PowderBlue)
+    pub fn powder_blue(self) -> Style<StyleBaseState> {
+        self.base(Color::PowderBlue)
     }
-    pub fn purple(self) -> Style {
-        self.inner(Color::Purple)
+    pub fn purple(self) -> Style<StyleBaseState> {
+        self.base(Color::Purple)
     }
-    pub fn red(self) -> Style {
-        self.inner(Color::Red)
+    pub fn red(self) -> Style<StyleBaseState> {
+        self.base(Color::Red)
     }
-    pub fn rosy_brown(self) -> Style {
-        self.inner(Color::RosyBrown)
+    pub fn rosy_brown(self) -> Style<StyleBaseState> {
+        self.base(Color::RosyBrown)
     }
-    pub fn royal_blue(self) -> Style {
-        self.inner(Color::RoyalBlue)
+    pub fn royal_blue(self) -> Style<StyleBaseState> {
+        self.base(Color::RoyalBlue)
     }
-    pub fn saddle_brown(self) -> Style {
-        self.inner(Color::SaddleBrown)
+    pub fn saddle_brown(self) -> Style<StyleBaseState> {
+        self.base(Color::SaddleBrown)
     }
-    pub fn salmon(self) -> Style {
-        self.inner(Color::Salmon)
+    pub fn salmon(self) -> Style<StyleBaseState> {
+        self.base(Color::Salmon)
     }
-    pub fn sandy_brown(self) -> Style {
-        self.inner(Color::SandyBrown)
+    pub fn sandy_brown(self) -> Style<StyleBaseState> {
+        self.base(Color::SandyBrown)
     }
-    pub fn sea_green(self) -> Style {
-        self.inner(Color::SeaGreen)
+    pub fn sea_green(self) -> Style<StyleBaseState> {
+        self.base(Color::SeaGreen)
     }
-    pub fn sea_shell(self) -> Style {
-        self.inner(Color::SeaShell)
+    pub fn sea_shell(self) -> Style<StyleBaseState> {
+        self.base(Color::SeaShell)
     }
-    pub fn sienna(self) -> Style {
-        self.inner(Color::Sienna)
+    pub fn sienna(self) -> Style<StyleBaseState> {
+        self.base(Color::Sienna)
     }
-    pub fn silver(self) -> Style {
-        self.inner(Color::Silver)
+    pub fn silver(self) -> Style<StyleBaseState> {
+        self.base(Color::Silver)
     }
-    pub fn sky_blue(self) -> Style {
-        self.inner(Color::SkyBlue)
+    pub fn sky_blue(self) -> Style<StyleBaseState> {
+        self.base(Color::SkyBlue)
     }
-    pub fn slate_blue(self) -> Style {
-        self.inner(Color::SlateBlue)
+    pub fn slate_blue(self) -> Style<StyleBaseState> {
+        self.base(Color::SlateBlue)
     }
-    pub fn slate_grey(self) -> Style {
-        self.inner(Color::SlateGrey)
+    pub fn slate_grey(self) -> Style<StyleBaseState> {
+        self.base(Color::SlateGrey)
     }
-    pub fn snow(self) -> Style {
-        self.inner(Color::Snow)
+    pub fn snow(self) -> Style<StyleBaseState> {
+        self.base(Color::Snow)
     }
-    pub fn spring_green(self) -> Style {
-        self.inner(Color::SpringGreen)
+    pub fn spring_green(self) -> Style<StyleBaseState> {
+        self.base(Color::SpringGreen)
     }
-    pub fn steel_blue(self) -> Style {
-        self.inner(Color::SteelBlue)
+    pub fn steel_blue(self) -> Style<StyleBaseState> {
+        self.base(Color::SteelBlue)
     }
-    pub fn tan(self) -> Style {
-        self.inner(Color::Tan)
+    pub fn tan(self) -> Style<StyleBaseState> {
+        self.base(Color::Tan)
     }
-    pub fn teal(self) -> Style {
-        self.inner(Color::Teal)
+    pub fn teal(self) -> Style<StyleBaseState> {
+        self.base(Color::Teal)
     }
-    pub fn thistle(self) -> Style {
-        self.inner(Color::Thistle)
+    pub fn thistle(self) -> Style<StyleBaseState> {
+        self.base(Color::Thistle)
     }
-    pub fn tomato(self) -> Style {
-        self.inner(Color::Tomato)
+    pub fn tomato(self) -> Style<StyleBaseState> {
+        self.base(Color::Tomato)
     }
-    pub fn turquoise(self) -> Style {
-        self.inner(Color::Turquoise)
+    pub fn turquoise(self) -> Style<StyleBaseState> {
+        self.base(Color::Turquoise)
     }
-    pub fn violet(self) -> Style {
-        self.inner(Color::Violet)
+    pub fn violet(self) -> Style<StyleBaseState> {
+        self.base(Color::Violet)
     }
-    pub fn wheat(self) -> Style {
-        self.inner(Color::Wheat)
+    pub fn wheat(self) -> Style<StyleBaseState> {
+        self.base(Color::Wheat)
     }
-    pub fn white(self) -> Style {
-        self.inner(Color::White)
+    pub fn white(self) -> Style<StyleBaseState> {
+        self.base(Color::White)
     }
-    pub fn white_smoke(self) -> Style {
-        self.inner(Color::WhiteSmoke)
+    pub fn white_smoke(self) -> Style<StyleBaseState> {
+        self.base(Color::WhiteSmoke)
     }
-    pub fn yellow(self) -> Style {
-        self.inner(Color::Yellow)
+    pub fn yellow(self) -> Style<StyleBaseState> {
+        self.base(Color::Yellow)
     }
 
-    pub fn yellow_green(self) -> Style {
-        self.inner(Color::YellowGreen)
+    pub fn yellow_green(self) -> Style<StyleBaseState> {
+        self.base(Color::YellowGreen)
     }
 }
 

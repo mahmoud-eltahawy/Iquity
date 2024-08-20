@@ -9,13 +9,22 @@ mod color;
 mod length;
 mod position;
 
-#[derive(Default)]
-pub struct Style(HashSet<Attribute>);
+pub trait StyleState {}
 
-pub struct MedAttribute<T> {
-    core: Style,
-    fun: Box<dyn FnOnce(T) -> Attribute>,
+pub type StyleBaseState = ();
+pub type PreBase<T> = Box<dyn FnOnce(T) -> Attribute>;
+
+impl<T> StyleState for PreBase<T> {}
+
+impl StyleState for StyleBaseState {}
+
+impl Default for Style<StyleBaseState> {
+    fn default() -> Self {
+        Self(HashSet::new(), ())
+    }
 }
+
+pub struct Style<T: StyleState>(HashSet<Attribute>, T);
 
 #[derive(Hash, Eq, PartialEq)]
 pub enum Attribute {
@@ -42,49 +51,50 @@ pub enum Attribute {
     BackgroundSize(background::Size),
 }
 
-impl Style {
-    fn med_attr<T>(self, fun: Box<dyn FnOnce(T) -> Attribute>) -> MedAttribute<T> {
-        MedAttribute { core: self, fun }
+impl Style<StyleBaseState> {
+    fn med_attr<T>(self, fun: Box<dyn FnOnce(T) -> Attribute>) -> Style<PreBase<T>> {
+        let Self(core, _) = self;
+        Style(core, fun)
     }
 
     pub fn with_capacity(capacity: usize) -> Self {
-        Self(HashSet::with_capacity(capacity))
+        Self(HashSet::with_capacity(capacity), ())
     }
 
     pub fn background(self) -> MedBackground<background::BaseState> {
         MedBackground::new(self)
     }
 
-    pub fn fontsize(self) -> MedAttribute<Length> {
+    pub fn fontsize(self) -> Style<PreBase<Length>> {
         self.med_attr(Box::new(Attribute::FontSize))
     }
 
-    pub fn margin(self) -> MedAttribute<Length> {
+    pub fn margin(self) -> Style<PreBase<Length>> {
         self.med_attr(Box::new(Attribute::Margin))
     }
 
-    pub fn padding(self) -> MedAttribute<Length> {
+    pub fn padding(self) -> Style<PreBase<Length>> {
         self.med_attr(Box::new(Attribute::Padding))
     }
 
-    pub fn bottom(self) -> MedAttribute<Length> {
+    pub fn bottom(self) -> Style<PreBase<Length>> {
         self.med_attr(Box::new(Attribute::Bottom))
     }
 
-    pub fn height(self) -> MedAttribute<Length> {
+    pub fn height(self) -> Style<PreBase<Length>> {
         self.med_attr(Box::new(Attribute::Height))
     }
 
-    pub fn width(self) -> MedAttribute<Length> {
+    pub fn width(self) -> Style<PreBase<Length>> {
         self.med_attr(Box::new(Attribute::Width))
     }
 
-    pub fn position(self) -> MedAttribute<CssPosition> {
+    pub fn position(self) -> Style<PreBase<CssPosition>> {
         self.med_attr(Box::new(Attribute::Position))
     }
 }
 
-impl Display for Style {
+impl Display for Style<StyleBaseState> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let result = self
             .0
@@ -125,12 +135,11 @@ impl Display for Style {
     }
 }
 
-impl<T> MedAttribute<T> {
-    fn inner(self, position: T) -> Style {
-        let Self { mut core, fun } = self;
+impl<T> Style<PreBase<T>> {
+    fn base(self, position: T) -> Style<StyleBaseState> {
+        let Self(mut core, fun) = self;
         let attr = fun(position);
-        core.0.insert(attr);
-        //TODO : add warn at compile time when attr is added twice
-        core
+        core.insert(attr);
+        Style(core, ())
     }
 }

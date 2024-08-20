@@ -1,4 +1,6 @@
-use super::{MedAttribute, Style};
+use crate::{PreBase, StyleBaseState};
+
+use super::Style;
 use std::fmt::Display;
 
 #[derive(Hash, Eq, PartialEq)]
@@ -10,25 +12,25 @@ pub enum CssPosition {
     Sticky,
 }
 
-impl MedAttribute<CssPosition> {
-    pub fn fixed(self) -> Style {
-        self.inner(CssPosition::Fixed)
+impl Style<PreBase<CssPosition>> {
+    pub fn fixed(self) -> Style<StyleBaseState> {
+        self.base(CssPosition::Fixed)
     }
 
-    pub fn relative(self) -> Style {
-        self.inner(CssPosition::Relative)
+    pub fn relative(self) -> Style<StyleBaseState> {
+        self.base(CssPosition::Relative)
     }
 
-    pub fn static_(self) -> Style {
-        self.inner(CssPosition::Static)
+    pub fn static_(self) -> Style<StyleBaseState> {
+        self.base(CssPosition::Static)
     }
 
-    pub fn absolute(self) -> Style {
-        self.inner(CssPosition::Absolute)
+    pub fn absolute(self) -> Style<StyleBaseState> {
+        self.base(CssPosition::Absolute)
     }
 
-    pub fn sticky(self) -> Style {
-        self.inner(CssPosition::Sticky)
+    pub fn sticky(self) -> Style<StyleBaseState> {
+        self.base(CssPosition::Sticky)
     }
 }
 
