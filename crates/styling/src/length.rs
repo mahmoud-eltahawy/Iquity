@@ -57,7 +57,7 @@ impl MedAttribute<Length> {
     pub fn ch(self, num: u8) -> Style {
         self.inner(Length::Ch(num))
     }
-    pub fn rem(self, num: u8) -> Style {
+    pub fn rem_(self, num: u8) -> Style {
         self.inner(Length::Rem(num))
     }
     pub fn vw(self, num: u8) -> Style {

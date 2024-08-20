@@ -19,7 +19,7 @@ impl MedAttribute<Position> {
         self.inner(Position::Relative)
     }
 
-    pub fn static_p(self) -> Style {
+    pub fn static_(self) -> Style {
         self.inner(Position::Static)
     }
 

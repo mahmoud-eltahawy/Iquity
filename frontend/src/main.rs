@@ -8,7 +8,7 @@ use leptos::{
     prelude::*,
 };
 use local_config::Config;
-use styling::styling;
+use styling::Style;
 use utils::{config_init, key_bindings, listen_to_config, listen_to_markdown, md_init};
 
 use crate::components::markdown_preview::markdown_preview;
@@ -24,7 +24,7 @@ pub fn app() -> impl IntoView {
     provide_context(markdown);
 
     let style = move || {
-        styling()
+        Style::default()
             .fontsize()
             .px(conf.font_size.get())
             .margin()
@@ -47,7 +47,7 @@ fn progress_bar() -> impl IntoView {
     let markdown = use_context::<Markdown>().unwrap();
     let max = move || markdown.len.get();
     let value = move || markdown.current.get();
-    let style = styling()
+    let style = Style::default()
         .position()
         .fixed()
         .background_color()
