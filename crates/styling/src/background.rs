@@ -1,4 +1,4 @@
-use super::{CssAttribute, MedAttribute, Style};
+use super::{Attribute, MedAttribute, Style};
 use crate::color::Color;
 use std::fmt::Display;
 
@@ -40,33 +40,48 @@ pub enum Repeat {
 }
 
 #[derive(Hash, Eq, PartialEq)]
+pub enum Origin {
+    PaddingBox,
+    BorderBox,
+    ContentBox,
+    Initial,
+    Inherit,
+}
+
+#[derive(Hash, Eq, PartialEq)]
 pub enum Attachment {
     Fixed,
     Scroll,
 }
 
 impl MedBackground {
-    pub fn med_attr<T>(self, fun: Box<dyn FnOnce(T) -> CssAttribute>) -> MedAttribute<T> {
+    pub fn med_attr<T>(self, fun: Box<dyn FnOnce(T) -> Attribute>) -> MedAttribute<T> {
         let Self { style } = self;
         MedAttribute { core: style, fun }
     }
 
     pub fn color(self) -> MedAttribute<Color> {
-        self.med_attr(Box::new(CssAttribute::BackgroundColor))
+        self.med_attr(Box::new(Attribute::BackgroundColor))
     }
 
-    pub fn image(self, source: String) -> Style {
+    pub fn image(self, source: &str) -> Style {
         let Self { mut style } = self;
-        style.0.insert(CssAttribute::BackgroundImage(source));
+        style
+            .0
+            .insert(Attribute::BackgroundImage(source.to_string()));
         style
     }
 
     pub fn repeat(self) -> MedAttribute<Repeat> {
-        self.med_attr(Box::new(CssAttribute::BackgroundRepeat))
+        self.med_attr(Box::new(Attribute::BackgroundRepeat))
+    }
+
+    pub fn origin(self) -> MedAttribute<Origin> {
+        self.med_attr(Box::new(Attribute::BackgroundOrigin))
     }
 
     pub fn attachment(self) -> MedAttribute<Attachment> {
-        self.med_attr(Box::new(CssAttribute::BackgroundAttachment))
+        self.med_attr(Box::new(Attribute::BackgroundAttachment))
     }
 
     pub fn position(self) -> MedPosition {
@@ -78,7 +93,7 @@ impl MedBackground {
         let Self { style } = self;
         MedAttribute {
             core: style,
-            fun: Box::new(CssAttribute::BackgroundPositionX),
+            fun: Box::new(Attribute::BackgroundPositionX),
         }
     }
 
@@ -86,7 +101,7 @@ impl MedBackground {
         let Self { style } = self;
         MedAttribute {
             core: style,
-            fun: Box::new(CssAttribute::BackgroundPositionY),
+            fun: Box::new(Attribute::BackgroundPositionY),
         }
     }
 }
@@ -119,6 +134,28 @@ impl MedAttribute<PositionY> {
     }
 }
 
+impl MedAttribute<Origin> {
+    pub fn padding_box(self) -> Style {
+        self.inner(Origin::PaddingBox)
+    }
+
+    pub fn border_box(self) -> Style {
+        self.inner(Origin::BorderBox)
+    }
+
+    pub fn content_box(self) -> Style {
+        self.inner(Origin::ContentBox)
+    }
+
+    pub fn initial(self) -> Style {
+        self.inner(Origin::Initial)
+    }
+
+    pub fn inherit(self) -> Style {
+        self.inner(Origin::Inherit)
+    }
+}
+
 impl MedPosition {
     fn inner(self, x: PositionX) -> MedPositionX {
         let Self { style } = self;
@@ -143,9 +180,7 @@ impl MedPositionX {
         let Self { mut style, x: left } = self;
         style
             .0
-            .insert(CssAttribute::BackgroundPosition(DuetPosition(
-                left, position,
-            )));
+            .insert(Attribute::BackgroundPosition(DuetPosition(left, position)));
         style
     }
 
@@ -228,6 +263,19 @@ impl Display for Repeat {
             Repeat::X => "repeat-x",
             Repeat::Y => "repeat-y",
             Repeat::None => "no-repeat",
+        };
+        write!(f, "{result}")
+    }
+}
+
+impl Display for Origin {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let result = match self {
+            Origin::PaddingBox => "padding-box",
+            Origin::BorderBox => "border-box",
+            Origin::ContentBox => "content-box",
+            Origin::Initial => "initial",
+            Origin::Inherit => "inherit",
         };
         write!(f, "{result}")
     }

@@ -1,4 +1,4 @@
-use background::{Attachment, DuetPosition, MedBackground, PositionX, PositionY, Repeat};
+use background::MedBackground;
 use color::Color;
 use length::Length;
 use position::CssPosition;
@@ -10,24 +10,17 @@ mod length;
 mod position;
 
 #[derive(Default)]
-pub struct Style(HashSet<CssAttribute>);
+pub struct Style(HashSet<Attribute>);
 
 pub struct MedAttribute<T> {
     core: Style,
-    fun: Box<dyn FnOnce(T) -> CssAttribute>,
+    fun: Box<dyn FnOnce(T) -> Attribute>,
 }
 
 #[derive(Hash, Eq, PartialEq)]
-pub enum CssAttribute {
+pub enum Attribute {
     FontSize(Length),
     Position(CssPosition),
-    BackgroundColor(Color),
-    BackgroundImage(String),
-    BackgroundRepeat(Repeat),
-    BackgroundAttachment(Attachment),
-    BackgroundPosition(DuetPosition),
-    BackgroundPositionX(PositionX),
-    BackgroundPositionY(PositionY),
     Top(Length),
     Bottom(Length),
     Right(Length),
@@ -36,10 +29,18 @@ pub enum CssAttribute {
     Width(Length),
     Margin(Length),
     Padding(Length),
+    BackgroundColor(Color),
+    BackgroundImage(String),
+    BackgroundRepeat(background::Repeat),
+    BackgroundAttachment(background::Attachment),
+    BackgroundPositionX(background::PositionX),
+    BackgroundPositionY(background::PositionY),
+    BackgroundPosition(background::DuetPosition),
+    BackgroundOrigin(background::Origin),
 }
 
 impl Style {
-    fn med_attr<T>(self, fun: Box<dyn FnOnce(T) -> CssAttribute>) -> MedAttribute<T> {
+    fn med_attr<T>(self, fun: Box<dyn FnOnce(T) -> Attribute>) -> MedAttribute<T> {
         MedAttribute { core: self, fun }
     }
 
@@ -52,31 +53,31 @@ impl Style {
     }
 
     pub fn fontsize(self) -> MedAttribute<Length> {
-        self.med_attr(Box::new(CssAttribute::FontSize))
+        self.med_attr(Box::new(Attribute::FontSize))
     }
 
     pub fn margin(self) -> MedAttribute<Length> {
-        self.med_attr(Box::new(CssAttribute::Margin))
+        self.med_attr(Box::new(Attribute::Margin))
     }
 
     pub fn padding(self) -> MedAttribute<Length> {
-        self.med_attr(Box::new(CssAttribute::Padding))
+        self.med_attr(Box::new(Attribute::Padding))
     }
 
     pub fn bottom(self) -> MedAttribute<Length> {
-        self.med_attr(Box::new(CssAttribute::Bottom))
+        self.med_attr(Box::new(Attribute::Bottom))
     }
 
     pub fn height(self) -> MedAttribute<Length> {
-        self.med_attr(Box::new(CssAttribute::Height))
+        self.med_attr(Box::new(Attribute::Height))
     }
 
     pub fn width(self) -> MedAttribute<Length> {
-        self.med_attr(Box::new(CssAttribute::Width))
+        self.med_attr(Box::new(Attribute::Width))
     }
 
     pub fn position(self) -> MedAttribute<CssPosition> {
-        self.med_attr(Box::new(CssAttribute::Position))
+        self.med_attr(Box::new(Attribute::Position))
     }
 }
 
@@ -86,29 +87,30 @@ impl Display for Style {
             .0
             .iter()
             .map(|x| match x {
-                CssAttribute::FontSize(distance) => format!("font-size:{};", distance),
-                CssAttribute::Position(position) => position.to_string(),
-                CssAttribute::BackgroundColor(color) => {
+                Attribute::FontSize(distance) => format!("font-size:{};", distance),
+                Attribute::Position(position) => position.to_string(),
+                Attribute::Top(distance) => format!("top:{};", distance),
+                Attribute::Bottom(distance) => format!("bottom:{};", distance),
+                Attribute::Right(distance) => format!("right:{};", distance),
+                Attribute::Left(distance) => format!("left:{};", distance),
+                Attribute::Height(distance) => format!("height:{};", distance),
+                Attribute::Width(distance) => format!("width:{};", distance),
+                Attribute::Margin(distance) => format!("margin:{};", distance),
+                Attribute::Padding(distance) => format!("padding:{};", distance),
+                Attribute::BackgroundColor(color) => {
                     format!("background-color:{};", color)
                 }
-                CssAttribute::BackgroundImage(url) => format!("background-image:url({});", url),
-                CssAttribute::BackgroundRepeat(repeat) => {
+                Attribute::BackgroundImage(url) => format!("background-image:url({});", url),
+                Attribute::BackgroundRepeat(repeat) => {
                     format!("background-repeat:{repeat};")
                 }
-                CssAttribute::BackgroundAttachment(attachment) => {
+                Attribute::BackgroundAttachment(attachment) => {
                     format!("background-attachment:{attachment};")
                 }
-                CssAttribute::BackgroundPosition(p) => format!("background-position:{p};"),
-                CssAttribute::BackgroundPositionX(p) => format!("background-position-x:{p};"),
-                CssAttribute::BackgroundPositionY(p) => format!("background-position-y:{p};"),
-                CssAttribute::Top(distance) => format!("top:{};", distance),
-                CssAttribute::Bottom(distance) => format!("bottom:{};", distance),
-                CssAttribute::Right(distance) => format!("right:{};", distance),
-                CssAttribute::Left(distance) => format!("left:{};", distance),
-                CssAttribute::Height(distance) => format!("height:{};", distance),
-                CssAttribute::Width(distance) => format!("width:{};", distance),
-                CssAttribute::Margin(distance) => format!("margin:{};", distance),
-                CssAttribute::Padding(distance) => format!("padding:{};", distance),
+                Attribute::BackgroundPosition(p) => format!("background-position:{p};"),
+                Attribute::BackgroundPositionX(p) => format!("background-position-x:{p};"),
+                Attribute::BackgroundPositionY(p) => format!("background-position-y:{p};"),
+                Attribute::BackgroundOrigin(origin) => format!("background-origin:{origin};"),
             })
             .fold(String::new(), move |acc, x| acc + &x);
         write!(f, "{}", result)
