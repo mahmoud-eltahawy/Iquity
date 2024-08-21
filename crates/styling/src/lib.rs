@@ -9,9 +9,19 @@ mod length;
 mod position;
 
 pub trait StyleState {}
+pub trait PreState<T, R: StyleState + Default>: Sized {
+    fn destruct(self) -> (HashSet<Attribute>, Box<dyn FnOnce(T) -> Attribute>);
+    fn base(self, position: T) -> Style<R> {
+        let (mut core, fun) = self.destruct();
+        let attr = fun(position);
+        core.insert(attr);
+        Style(core, R::default())
+    }
+}
 
-pub type StyleBaseState = ();
-pub type PreStyleBase<T> = Box<dyn FnOnce(T) -> Attribute>;
+#[derive(Default)]
+pub struct StyleBaseState;
+pub struct PreStyleBase<T>(Box<dyn FnOnce(T) -> Attribute>);
 
 impl<T> StyleState for PreStyleBase<T> {}
 
@@ -19,11 +29,18 @@ impl StyleState for StyleBaseState {}
 
 impl Default for Style<StyleBaseState> {
     fn default() -> Self {
-        Self(HashSet::new(), ())
+        Self(HashSet::new(), Default::default())
     }
 }
 
 pub struct Style<T: StyleState>(HashSet<Attribute>, T);
+
+impl<T> PreState<T, StyleBaseState> for Style<PreStyleBase<T>> {
+    fn destruct(self) -> (HashSet<Attribute>, Box<dyn FnOnce(T) -> Attribute>) {
+        let Self(attrs, PreStyleBase(fun)) = self;
+        (attrs, fun)
+    }
+}
 
 #[derive(Hash, Eq, PartialEq)]
 pub enum Attribute {
@@ -53,11 +70,11 @@ pub enum Attribute {
 impl Style<StyleBaseState> {
     fn med_attr<T>(self, fun: Box<dyn FnOnce(T) -> Attribute>) -> Style<PreStyleBase<T>> {
         let Self(core, _) = self;
-        Style(core, fun)
+        Style(core, PreStyleBase(fun))
     }
 
     pub fn with_capacity(capacity: usize) -> Self {
-        Self(HashSet::with_capacity(capacity), ())
+        Self(HashSet::with_capacity(capacity), Default::default())
     }
 
     pub fn background(self) -> Style<background::BackgroundBaseState> {
@@ -132,14 +149,5 @@ impl Display for Style<StyleBaseState> {
             })
             .fold(String::new(), move |acc, x| acc + &x);
         write!(f, "{}", result)
-    }
-}
-
-impl<T> Style<PreStyleBase<T>> {
-    fn base(self, position: T) -> Style<StyleBaseState> {
-        let Self(mut core, fun) = self;
-        let attr = fun(position);
-        core.insert(attr);
-        Style(core, ())
     }
 }

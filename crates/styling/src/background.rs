@@ -1,6 +1,6 @@
 use super::{Attribute, Style};
-use crate::{color::Color, length::Length, StyleBaseState, StyleState};
-use std::fmt::Display;
+use crate::{color::Color, length::Length, PreState, StyleBaseState, StyleState};
+use std::{collections::HashSet, fmt::Display};
 
 #[derive(Hash, Eq, PartialEq)]
 pub struct XYPosition(PositionX, PositionY);
@@ -65,6 +65,7 @@ pub enum Attachment {
     Scroll,
 }
 
+#[derive(Default)]
 pub struct BackgroundBaseState;
 pub struct BackgroundSizeState;
 pub struct BackgroundPreXPosition;
@@ -75,12 +76,10 @@ impl StyleState for BackgroundPreXPosition {}
 impl StyleState for PositionX {}
 impl<T> StyleState for PreBackgroundBase<T> {}
 
-impl<T> Style<PreBackgroundBase<T>> {
-    pub(crate) fn base(self, position: T) -> Style<BackgroundBaseState> {
-        let Self(mut core, PreBackgroundBase(fun)) = self;
-        let attr = fun(position);
-        core.insert(attr);
-        Style(core, BackgroundBaseState)
+impl<T> PreState<T, BackgroundBaseState> for Style<PreBackgroundBase<T>> {
+    fn destruct(self) -> (HashSet<Attribute>, Box<dyn FnOnce(T) -> Attribute>) {
+        let Self(attrs, PreBackgroundBase(fun)) = self;
+        (attrs, fun)
     }
 }
 
@@ -92,7 +91,7 @@ impl Style<BackgroundBaseState> {
 
     pub fn base(self) -> Style<StyleBaseState> {
         let Self(style, _) = self;
-        Style(style, ())
+        Style(style, Default::default())
     }
 
     pub fn color(self) -> Style<PreBackgroundBase<Color>> {

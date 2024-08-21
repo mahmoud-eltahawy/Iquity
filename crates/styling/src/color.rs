@@ -2,7 +2,7 @@ use std::fmt::Display;
 
 use crate::{
     background::{BackgroundBaseState, PreBackgroundBase},
-    PreStyleBase, StyleBaseState,
+    PreState, PreStyleBase, StyleBaseState,
 };
 
 use super::Style;
