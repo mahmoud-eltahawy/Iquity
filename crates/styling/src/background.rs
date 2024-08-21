@@ -1,20 +1,6 @@
 use super::{Attribute, Style};
 use crate::{color::Color, length::Length, PreBase, StyleBaseState, StyleState};
-use std::{fmt::Display, marker::PhantomData};
-
-pub struct MedBackground<T> {
-    pub(crate) style: Style<StyleBaseState>,
-    _phantom: PhantomData<T>,
-}
-
-pub struct MedPosition {
-    style: Style<StyleBaseState>,
-}
-
-pub struct MedPositionX {
-    style: Style<StyleBaseState>,
-    x: PositionX,
-}
+use std::fmt::Display;
 
 #[derive(Hash, Eq, PartialEq)]
 pub struct XYPosition(PositionX, PositionY);
@@ -81,23 +67,74 @@ pub enum Attachment {
 
 pub struct BaseState;
 pub struct SizeState;
+pub struct PreXPosition;
+impl StyleState for SizeState {}
+impl StyleState for BaseState {}
+impl StyleState for PreXPosition {}
+impl StyleState for PositionX {}
 
-impl MedBackground<SizeState> {
-    fn from(base: MedBackground<BaseState>) -> Self {
-        let MedBackground { style, _phantom } = base;
-        MedBackground {
-            style,
-            _phantom: PhantomData {},
-        }
+impl Style<BaseState> {
+    fn pre_base<T>(self, fun: Box<dyn FnOnce(T) -> Attribute>) -> Style<PreBase<T>> {
+        let Self(style, _) = self;
+        Style(style, fun)
     }
 
+    pub fn color(self) -> Style<PreBase<Color>> {
+        self.pre_base(Box::new(Attribute::BackgroundColor))
+    }
+
+    pub fn size(self) -> Style<SizeState> {
+        let Style(style, _) = self;
+        Style(style, SizeState)
+    }
+
+    pub fn image(self, source: &str) -> Style<StyleBaseState> {
+        let Self(mut style, _) = self;
+        style.insert(Attribute::BackgroundImage(source.to_string()));
+        Style(style, ())
+    }
+
+    pub fn repeat(self) -> Style<PreBase<Repeat>> {
+        self.pre_base(Box::new(Attribute::BackgroundRepeat))
+    }
+
+    pub fn origin(self) -> Style<PreBase<Origin>> {
+        self.pre_base(Box::new(Attribute::BackgroundOrigin))
+    }
+
+    pub fn clip(self) -> Style<PreBase<Origin>> {
+        self.pre_base(Box::new(Attribute::BackgroundClip))
+    }
+
+    pub fn blend_mode(self) -> Style<PreBase<BlendMode>> {
+        self.pre_base(Box::new(Attribute::BackgroundBlendMode))
+    }
+
+    pub fn attachment(self) -> Style<PreBase<Attachment>> {
+        self.pre_base(Box::new(Attribute::BackgroundAttachment))
+    }
+
+    pub fn position(self) -> Style<PreXPosition> {
+        let Self(style, _) = self;
+        Style(style, PreXPosition)
+    }
+
+    pub fn position_x(self) -> Style<PreBase<PositionX>> {
+        let Self(style, _) = self;
+        Style(style, Box::new(Attribute::BackgroundPositionX))
+    }
+
+    pub fn position_y(self) -> Style<PreBase<PositionY>> {
+        let Self(style, _) = self;
+        Style(style, Box::new(Attribute::BackgroundPositionY))
+    }
+}
+
+impl Style<SizeState> {
     fn inner(self, size: Size) -> Style<StyleBaseState> {
-        let Self {
-            mut style,
-            _phantom,
-        } = self;
-        style.0.insert(Attribute::BackgroundSize(size));
-        style
+        let Self(mut style, _) = self;
+        style.insert(Attribute::BackgroundSize(size));
+        Style(style, ())
     }
 
     pub fn initial(self) -> Style<StyleBaseState> {
@@ -121,85 +158,13 @@ impl MedBackground<SizeState> {
     }
 
     pub fn length(self) -> Style<PreBase<Length>> {
-        let Self { style, .. } = self;
-        let Style(style, _) = style;
+        let Self(style, _) = self;
         Style(
             style,
             Box::new(|x| Attribute::BackgroundSize(Size::Length(x))),
         )
     }
 }
-
-impl MedBackground<BaseState> {
-    pub(crate) fn new(style: Style<StyleBaseState>) -> Self {
-        Self {
-            style,
-            _phantom: PhantomData {},
-        }
-    }
-    pub fn med_attr<T>(self, fun: Box<dyn FnOnce(T) -> Attribute>) -> Style<PreBase<T>> {
-        let Self { style, .. } = self;
-        let Style(style, _) = style;
-        Style(style, fun)
-    }
-
-    pub fn color(self) -> Style<PreBase<Color>> {
-        self.med_attr(Box::new(Attribute::BackgroundColor))
-    }
-
-    pub fn size(self) -> MedBackground<SizeState> {
-        MedBackground::from(self)
-    }
-
-    pub fn image(self, source: &str) -> Style<StyleBaseState> {
-        let Self { mut style, .. } = self;
-        style
-            .0
-            .insert(Attribute::BackgroundImage(source.to_string()));
-        style
-    }
-
-    pub fn repeat(self) -> Style<PreBase<Repeat>> {
-        self.med_attr(Box::new(Attribute::BackgroundRepeat))
-    }
-
-    pub fn origin(self) -> Style<PreBase<Origin>> {
-        self.med_attr(Box::new(Attribute::BackgroundOrigin))
-    }
-
-    pub fn clip(self) -> Style<PreBase<Origin>> {
-        self.med_attr(Box::new(Attribute::BackgroundClip))
-    }
-
-    pub fn blend_mode(self) -> Style<PreBase<BlendMode>> {
-        self.med_attr(Box::new(Attribute::BackgroundBlendMode))
-    }
-
-    pub fn attachment(self) -> Style<PreBase<Attachment>> {
-        self.med_attr(Box::new(Attribute::BackgroundAttachment))
-    }
-
-    pub fn position(self) -> MedPosition {
-        let Self { style, .. } = self;
-        MedPosition { style }
-    }
-
-    pub fn position_x(self) -> Style<PreBase<PositionX>> {
-        let Self { style, .. } = self;
-        let Style(style, _) = style;
-        Style(style, Box::new(Attribute::BackgroundPositionX))
-    }
-
-    pub fn position_y(self) -> Style<PreBase<PositionY>> {
-        let Self { style, .. } = self;
-        let Style(style, _) = style;
-        Style(style, Box::new(Attribute::BackgroundPositionY))
-    }
-}
-
-impl StyleState for PositionX {}
-impl StyleState for PositionY {}
-impl StyleState for Origin {}
 
 impl Style<PreBase<PositionX>> {
     pub fn left(self) -> Style<StyleBaseState> {
@@ -293,32 +258,30 @@ impl Style<PreBase<BlendMode>> {
     }
 }
 
-impl MedPosition {
-    fn inner(self, x: PositionX) -> MedPositionX {
-        let Self { style } = self;
-        MedPositionX { style, x }
+impl Style<PreXPosition> {
+    fn inner(self, x: PositionX) -> Style<PositionX> {
+        let Self(style, _) = self;
+        Style(style, x)
     }
 
-    pub fn left(self) -> MedPositionX {
+    pub fn left(self) -> Style<PositionX> {
         self.inner(PositionX::Left)
     }
 
-    pub fn right(self) -> MedPositionX {
+    pub fn right(self) -> Style<PositionX> {
         self.inner(PositionX::Right)
     }
 
-    pub fn center(self) -> MedPositionX {
+    pub fn center(self) -> Style<PositionX> {
         self.inner(PositionX::Center)
     }
 }
 
-impl MedPositionX {
-    fn inner(self, position: PositionY) -> Style<StyleBaseState> {
-        let Self { mut style, x: left } = self;
-        style
-            .0
-            .insert(Attribute::BackgroundPosition(XYPosition(left, position)));
-        style
+impl Style<PositionX> {
+    fn inner(self, y: PositionY) -> Style<StyleBaseState> {
+        let Self(mut style, x) = self;
+        style.insert(Attribute::BackgroundPosition(XYPosition(x, y)));
+        Style(style, ())
     }
 
     pub fn top(self) -> Style<StyleBaseState> {

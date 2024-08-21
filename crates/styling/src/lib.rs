@@ -1,4 +1,3 @@
-use background::MedBackground;
 use color::Color;
 use length::Length;
 use position::CssPosition;
@@ -61,8 +60,9 @@ impl Style<StyleBaseState> {
         Self(HashSet::with_capacity(capacity), ())
     }
 
-    pub fn background(self) -> MedBackground<background::BaseState> {
-        MedBackground::new(self)
+    pub fn background(self) -> Style<background::BaseState> {
+        let Self(style, _) = self;
+        Style(style, background::BaseState)
     }
 
     pub fn fontsize(self) -> Style<PreBase<Length>> {
