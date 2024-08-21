@@ -53,6 +53,7 @@ fn progress_bar() -> impl IntoView {
         .background()
         .color()
         .hex(0x4CAF50)
+        .base()
         .bottom()
         .px(0)
         .height()

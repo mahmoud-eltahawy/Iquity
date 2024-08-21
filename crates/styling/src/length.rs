@@ -1,4 +1,7 @@
-use crate::{PreBase, StyleBaseState};
+use crate::{
+    background::{BackgroundBaseState, PreBackgroundBase},
+    PreStyleBase, StyleBaseState,
+};
 
 use super::Style;
 use std::fmt::Display;
@@ -24,7 +27,7 @@ pub enum Length {
     Percent(u8),
 }
 
-impl Style<PreBase<Length>> {
+impl Style<PreStyleBase<Length>> {
     pub fn px(self, num: u8) -> Style<StyleBaseState> {
         self.base(Length::Px(num))
     }
@@ -72,6 +75,58 @@ impl Style<PreBase<Length>> {
         self.base(Length::Vmin(num))
     }
     pub fn vmax(self, num: u8) -> Style<StyleBaseState> {
+        self.base(Length::Vmax(num))
+    }
+}
+
+impl Style<PreBackgroundBase<Length>> {
+    pub fn px(self, num: u8) -> Style<BackgroundBaseState> {
+        self.base(Length::Px(num))
+    }
+
+    pub fn cm(self, num: u8) -> Style<BackgroundBaseState> {
+        self.base(Length::Cm(num))
+    }
+
+    pub fn percent(self, num: u8) -> Style<BackgroundBaseState> {
+        debug_assert!(num <= 100, "percent number should be from 0 to 100");
+        self.base(Length::Percent(num))
+    }
+
+    pub fn mm(self, num: u8) -> Style<BackgroundBaseState> {
+        self.base(Length::Mm(num))
+    }
+    pub fn inch(self, num: u8) -> Style<BackgroundBaseState> {
+        self.base(Length::In(num))
+    }
+    pub fn pt(self, num: u8) -> Style<BackgroundBaseState> {
+        self.base(Length::Pt(num))
+    }
+    pub fn pc(self, num: u8) -> Style<BackgroundBaseState> {
+        self.base(Length::Pc(num))
+    }
+    pub fn em(self, num: u8) -> Style<BackgroundBaseState> {
+        self.base(Length::Em(num))
+    }
+    pub fn ex(self, num: u8) -> Style<BackgroundBaseState> {
+        self.base(Length::Ex(num))
+    }
+    pub fn ch(self, num: u8) -> Style<BackgroundBaseState> {
+        self.base(Length::Ch(num))
+    }
+    pub fn rem_(self, num: u8) -> Style<BackgroundBaseState> {
+        self.base(Length::Rem(num))
+    }
+    pub fn vw(self, num: u8) -> Style<BackgroundBaseState> {
+        self.base(Length::Vw(num))
+    }
+    pub fn vh(self, num: u8) -> Style<BackgroundBaseState> {
+        self.base(Length::Vh(num))
+    }
+    pub fn vmin(self, num: u8) -> Style<BackgroundBaseState> {
+        self.base(Length::Vmin(num))
+    }
+    pub fn vmax(self, num: u8) -> Style<BackgroundBaseState> {
         self.base(Length::Vmax(num))
     }
 }

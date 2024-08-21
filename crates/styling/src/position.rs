@@ -1,4 +1,4 @@
-use crate::{PreBase, StyleBaseState};
+use crate::{PreStyleBase, StyleBaseState};
 
 use super::Style;
 use std::fmt::Display;
@@ -12,7 +12,7 @@ pub enum CssPosition {
     Sticky,
 }
 
-impl Style<PreBase<CssPosition>> {
+impl Style<PreStyleBase<CssPosition>> {
     pub fn fixed(self) -> Style<StyleBaseState> {
         self.base(CssPosition::Fixed)
     }

@@ -11,9 +11,9 @@ mod position;
 pub trait StyleState {}
 
 pub type StyleBaseState = ();
-pub type PreBase<T> = Box<dyn FnOnce(T) -> Attribute>;
+pub type PreStyleBase<T> = Box<dyn FnOnce(T) -> Attribute>;
 
-impl<T> StyleState for PreBase<T> {}
+impl<T> StyleState for PreStyleBase<T> {}
 
 impl StyleState for StyleBaseState {}
 
@@ -51,7 +51,7 @@ pub enum Attribute {
 }
 
 impl Style<StyleBaseState> {
-    fn med_attr<T>(self, fun: Box<dyn FnOnce(T) -> Attribute>) -> Style<PreBase<T>> {
+    fn med_attr<T>(self, fun: Box<dyn FnOnce(T) -> Attribute>) -> Style<PreStyleBase<T>> {
         let Self(core, _) = self;
         Style(core, fun)
     }
@@ -60,36 +60,36 @@ impl Style<StyleBaseState> {
         Self(HashSet::with_capacity(capacity), ())
     }
 
-    pub fn background(self) -> Style<background::BaseState> {
+    pub fn background(self) -> Style<background::BackgroundBaseState> {
         let Self(style, _) = self;
-        Style(style, background::BaseState)
+        Style(style, background::BackgroundBaseState)
     }
 
-    pub fn fontsize(self) -> Style<PreBase<Length>> {
+    pub fn fontsize(self) -> Style<PreStyleBase<Length>> {
         self.med_attr(Box::new(Attribute::FontSize))
     }
 
-    pub fn margin(self) -> Style<PreBase<Length>> {
+    pub fn margin(self) -> Style<PreStyleBase<Length>> {
         self.med_attr(Box::new(Attribute::Margin))
     }
 
-    pub fn padding(self) -> Style<PreBase<Length>> {
+    pub fn padding(self) -> Style<PreStyleBase<Length>> {
         self.med_attr(Box::new(Attribute::Padding))
     }
 
-    pub fn bottom(self) -> Style<PreBase<Length>> {
+    pub fn bottom(self) -> Style<PreStyleBase<Length>> {
         self.med_attr(Box::new(Attribute::Bottom))
     }
 
-    pub fn height(self) -> Style<PreBase<Length>> {
+    pub fn height(self) -> Style<PreStyleBase<Length>> {
         self.med_attr(Box::new(Attribute::Height))
     }
 
-    pub fn width(self) -> Style<PreBase<Length>> {
+    pub fn width(self) -> Style<PreStyleBase<Length>> {
         self.med_attr(Box::new(Attribute::Width))
     }
 
-    pub fn position(self) -> Style<PreBase<CssPosition>> {
+    pub fn position(self) -> Style<PreStyleBase<CssPosition>> {
         self.med_attr(Box::new(Attribute::Position))
     }
 }
@@ -135,7 +135,7 @@ impl Display for Style<StyleBaseState> {
     }
 }
 
-impl<T> Style<PreBase<T>> {
+impl<T> Style<PreStyleBase<T>> {
     fn base(self, position: T) -> Style<StyleBaseState> {
         let Self(mut core, fun) = self;
         let attr = fun(position);

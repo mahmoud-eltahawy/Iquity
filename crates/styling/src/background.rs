@@ -1,5 +1,5 @@
 use super::{Attribute, Style};
-use crate::{color::Color, length::Length, PreBase, StyleBaseState, StyleState};
+use crate::{color::Color, length::Length, StyleBaseState, StyleState};
 use std::fmt::Display;
 
 #[derive(Hash, Eq, PartialEq)]
@@ -65,200 +65,222 @@ pub enum Attachment {
     Scroll,
 }
 
-pub struct BaseState;
-pub struct SizeState;
-pub struct PreXPosition;
-impl StyleState for SizeState {}
-impl StyleState for BaseState {}
-impl StyleState for PreXPosition {}
+pub struct BackgroundBaseState;
+pub struct BackgroundSizeState;
+pub struct BackgroundPreXPosition;
+pub struct PreBackgroundBase<T>(Box<dyn FnOnce(T) -> Attribute>);
+impl StyleState for BackgroundSizeState {}
+impl StyleState for BackgroundBaseState {}
+impl StyleState for BackgroundPreXPosition {}
 impl StyleState for PositionX {}
+impl<T> StyleState for PreBackgroundBase<T> {}
 
-impl Style<BaseState> {
-    fn pre_base<T>(self, fun: Box<dyn FnOnce(T) -> Attribute>) -> Style<PreBase<T>> {
-        let Self(style, _) = self;
-        Style(style, fun)
-    }
-
-    pub fn color(self) -> Style<PreBase<Color>> {
-        self.pre_base(Box::new(Attribute::BackgroundColor))
-    }
-
-    pub fn size(self) -> Style<SizeState> {
-        let Style(style, _) = self;
-        Style(style, SizeState)
-    }
-
-    pub fn image(self, source: &str) -> Style<StyleBaseState> {
-        let Self(mut style, _) = self;
-        style.insert(Attribute::BackgroundImage(source.to_string()));
-        Style(style, ())
-    }
-
-    pub fn repeat(self) -> Style<PreBase<Repeat>> {
-        self.pre_base(Box::new(Attribute::BackgroundRepeat))
-    }
-
-    pub fn origin(self) -> Style<PreBase<Origin>> {
-        self.pre_base(Box::new(Attribute::BackgroundOrigin))
-    }
-
-    pub fn clip(self) -> Style<PreBase<Origin>> {
-        self.pre_base(Box::new(Attribute::BackgroundClip))
-    }
-
-    pub fn blend_mode(self) -> Style<PreBase<BlendMode>> {
-        self.pre_base(Box::new(Attribute::BackgroundBlendMode))
-    }
-
-    pub fn attachment(self) -> Style<PreBase<Attachment>> {
-        self.pre_base(Box::new(Attribute::BackgroundAttachment))
-    }
-
-    pub fn position(self) -> Style<PreXPosition> {
-        let Self(style, _) = self;
-        Style(style, PreXPosition)
-    }
-
-    pub fn position_x(self) -> Style<PreBase<PositionX>> {
-        let Self(style, _) = self;
-        Style(style, Box::new(Attribute::BackgroundPositionX))
-    }
-
-    pub fn position_y(self) -> Style<PreBase<PositionY>> {
-        let Self(style, _) = self;
-        Style(style, Box::new(Attribute::BackgroundPositionY))
+impl<T> Style<PreBackgroundBase<T>> {
+    pub(crate) fn base(self, position: T) -> Style<BackgroundBaseState> {
+        let Self(mut core, PreBackgroundBase(fun)) = self;
+        let attr = fun(position);
+        core.insert(attr);
+        Style(core, BackgroundBaseState)
     }
 }
 
-impl Style<SizeState> {
-    fn inner(self, size: Size) -> Style<StyleBaseState> {
-        let Self(mut style, _) = self;
-        style.insert(Attribute::BackgroundSize(size));
+impl Style<BackgroundBaseState> {
+    fn pre_base<T>(self, fun: Box<dyn FnOnce(T) -> Attribute>) -> Style<PreBackgroundBase<T>> {
+        let Self(style, _) = self;
+        Style(style, PreBackgroundBase(fun))
+    }
+
+    pub fn base(self) -> Style<StyleBaseState> {
+        let Self(style, _) = self;
         Style(style, ())
     }
 
-    pub fn initial(self) -> Style<StyleBaseState> {
-        self.inner(Size::Initial)
+    pub fn color(self) -> Style<PreBackgroundBase<Color>> {
+        self.pre_base(Box::new(Attribute::BackgroundColor))
     }
 
-    pub fn auto(self) -> Style<StyleBaseState> {
-        self.inner(Size::Auto)
+    pub fn size(self) -> Style<BackgroundSizeState> {
+        let Style(style, _) = self;
+        Style(style, BackgroundSizeState)
     }
 
-    pub fn inherit(self) -> Style<StyleBaseState> {
-        self.inner(Size::Inherit)
+    pub fn image(self, source: &str) -> Style<BackgroundBaseState> {
+        let Self(mut style, _) = self;
+        style.insert(Attribute::BackgroundImage(source.to_string()));
+        Style(style, BackgroundBaseState)
     }
 
-    pub fn contain(self) -> Style<StyleBaseState> {
-        self.inner(Size::Contain)
+    pub fn repeat(self) -> Style<PreBackgroundBase<Repeat>> {
+        self.pre_base(Box::new(Attribute::BackgroundRepeat))
     }
 
-    pub fn cover(self) -> Style<StyleBaseState> {
-        self.inner(Size::Cover)
+    pub fn origin(self) -> Style<PreBackgroundBase<Origin>> {
+        self.pre_base(Box::new(Attribute::BackgroundOrigin))
     }
 
-    pub fn length(self) -> Style<PreBase<Length>> {
+    pub fn clip(self) -> Style<PreBackgroundBase<Origin>> {
+        self.pre_base(Box::new(Attribute::BackgroundClip))
+    }
+
+    pub fn blend_mode(self) -> Style<PreBackgroundBase<BlendMode>> {
+        self.pre_base(Box::new(Attribute::BackgroundBlendMode))
+    }
+
+    pub fn attachment(self) -> Style<PreBackgroundBase<Attachment>> {
+        self.pre_base(Box::new(Attribute::BackgroundAttachment))
+    }
+
+    pub fn position(self) -> Style<BackgroundPreXPosition> {
+        let Self(style, _) = self;
+        Style(style, BackgroundPreXPosition)
+    }
+
+    pub fn position_x(self) -> Style<PreBackgroundBase<PositionX>> {
         let Self(style, _) = self;
         Style(
             style,
-            Box::new(|x| Attribute::BackgroundSize(Size::Length(x))),
+            PreBackgroundBase(Box::new(Attribute::BackgroundPositionX)),
+        )
+    }
+
+    pub fn position_y(self) -> Style<PreBackgroundBase<PositionY>> {
+        let Self(style, _) = self;
+        Style(
+            style,
+            PreBackgroundBase(Box::new(Attribute::BackgroundPositionY)),
         )
     }
 }
 
-impl Style<PreBase<PositionX>> {
-    pub fn left(self) -> Style<StyleBaseState> {
+impl Style<BackgroundSizeState> {
+    fn inner(self, size: Size) -> Style<BackgroundBaseState> {
+        let Self(mut style, _) = self;
+        style.insert(Attribute::BackgroundSize(size));
+        Style(style, BackgroundBaseState)
+    }
+
+    pub fn initial(self) -> Style<BackgroundBaseState> {
+        self.inner(Size::Initial)
+    }
+
+    pub fn auto(self) -> Style<BackgroundBaseState> {
+        self.inner(Size::Auto)
+    }
+
+    pub fn inherit(self) -> Style<BackgroundBaseState> {
+        self.inner(Size::Inherit)
+    }
+
+    pub fn contain(self) -> Style<BackgroundBaseState> {
+        self.inner(Size::Contain)
+    }
+
+    pub fn cover(self) -> Style<BackgroundBaseState> {
+        self.inner(Size::Cover)
+    }
+
+    pub fn length(self) -> Style<PreBackgroundBase<Length>> {
+        let Self(style, _) = self;
+        Style(
+            style,
+            PreBackgroundBase(Box::new(|x| Attribute::BackgroundSize(Size::Length(x)))),
+        )
+    }
+}
+
+impl Style<PreBackgroundBase<PositionX>> {
+    pub fn left(self) -> Style<BackgroundBaseState> {
         self.base(PositionX::Left)
     }
 
-    pub fn right(self) -> Style<StyleBaseState> {
+    pub fn right(self) -> Style<BackgroundBaseState> {
         self.base(PositionX::Right)
     }
 
-    pub fn center(self) -> Style<StyleBaseState> {
+    pub fn center(self) -> Style<BackgroundBaseState> {
         self.base(PositionX::Center)
     }
 }
 
-impl Style<PreBase<PositionY>> {
-    pub fn top(self) -> Style<StyleBaseState> {
+impl Style<PreBackgroundBase<PositionY>> {
+    pub fn top(self) -> Style<BackgroundBaseState> {
         self.base(PositionY::Top)
     }
 
-    pub fn bottom(self) -> Style<StyleBaseState> {
+    pub fn bottom(self) -> Style<BackgroundBaseState> {
         self.base(PositionY::Bottom)
     }
 
-    pub fn center(self) -> Style<StyleBaseState> {
+    pub fn center(self) -> Style<BackgroundBaseState> {
         self.base(PositionY::Center)
     }
 }
 
-impl Style<PreBase<Origin>> {
-    pub fn padding_box(self) -> Style<StyleBaseState> {
+impl Style<PreBackgroundBase<Origin>> {
+    pub fn padding_box(self) -> Style<BackgroundBaseState> {
         self.base(Origin::PaddingBox)
     }
 
-    pub fn border_box(self) -> Style<StyleBaseState> {
+    pub fn border_box(self) -> Style<BackgroundBaseState> {
         self.base(Origin::BorderBox)
     }
 
-    pub fn content_box(self) -> Style<StyleBaseState> {
+    pub fn content_box(self) -> Style<BackgroundBaseState> {
         self.base(Origin::ContentBox)
     }
 
-    pub fn initial(self) -> Style<StyleBaseState> {
+    pub fn initial(self) -> Style<BackgroundBaseState> {
         self.base(Origin::Initial)
     }
 
-    pub fn inherit(self) -> Style<StyleBaseState> {
+    pub fn inherit(self) -> Style<BackgroundBaseState> {
         self.base(Origin::Inherit)
     }
 }
 
-impl Style<PreBase<BlendMode>> {
-    pub fn normal(self) -> Style<StyleBaseState> {
+impl Style<PreBackgroundBase<BlendMode>> {
+    pub fn normal(self) -> Style<BackgroundBaseState> {
         self.base(BlendMode::Normal)
     }
 
-    pub fn multiply(self) -> Style<StyleBaseState> {
+    pub fn multiply(self) -> Style<BackgroundBaseState> {
         self.base(BlendMode::Multiply)
     }
 
-    pub fn screen(self) -> Style<StyleBaseState> {
+    pub fn screen(self) -> Style<BackgroundBaseState> {
         self.base(BlendMode::Screen)
     }
 
-    pub fn overlay(self) -> Style<StyleBaseState> {
+    pub fn overlay(self) -> Style<BackgroundBaseState> {
         self.base(BlendMode::Overlay)
     }
 
-    pub fn darken(self) -> Style<StyleBaseState> {
+    pub fn darken(self) -> Style<BackgroundBaseState> {
         self.base(BlendMode::Darken)
     }
 
-    pub fn lighten(self) -> Style<StyleBaseState> {
+    pub fn lighten(self) -> Style<BackgroundBaseState> {
         self.base(BlendMode::Lighten)
     }
 
-    pub fn color_dodge(self) -> Style<StyleBaseState> {
+    pub fn color_dodge(self) -> Style<BackgroundBaseState> {
         self.base(BlendMode::ColorDodge)
     }
 
-    pub fn saturation(self) -> Style<StyleBaseState> {
+    pub fn saturation(self) -> Style<BackgroundBaseState> {
         self.base(BlendMode::Saturation)
     }
 
-    pub fn color(self) -> Style<StyleBaseState> {
+    pub fn color(self) -> Style<BackgroundBaseState> {
         self.base(BlendMode::Color)
     }
 
-    pub fn luminosity(self) -> Style<StyleBaseState> {
+    pub fn luminosity(self) -> Style<BackgroundBaseState> {
         self.base(BlendMode::Luminosity)
     }
 }
 
-impl Style<PreXPosition> {
+impl Style<BackgroundPreXPosition> {
     fn inner(self, x: PositionX) -> Style<PositionX> {
         let Self(style, _) = self;
         Style(style, x)
@@ -278,21 +300,21 @@ impl Style<PreXPosition> {
 }
 
 impl Style<PositionX> {
-    fn inner(self, y: PositionY) -> Style<StyleBaseState> {
+    fn inner(self, y: PositionY) -> Style<BackgroundBaseState> {
         let Self(mut style, x) = self;
         style.insert(Attribute::BackgroundPosition(XYPosition(x, y)));
-        Style(style, ())
+        Style(style, BackgroundBaseState)
     }
 
-    pub fn top(self) -> Style<StyleBaseState> {
+    pub fn top(self) -> Style<BackgroundBaseState> {
         self.inner(PositionY::Top)
     }
 
-    pub fn bottom(self) -> Style<StyleBaseState> {
+    pub fn bottom(self) -> Style<BackgroundBaseState> {
         self.inner(PositionY::Bottom)
     }
 
-    pub fn center(self) -> Style<StyleBaseState> {
+    pub fn center(self) -> Style<BackgroundBaseState> {
         self.inner(PositionY::Center)
     }
 }
@@ -325,13 +347,25 @@ impl Display for XYPosition {
     }
 }
 
-impl Style<PreBase<Attachment>> {
-    pub fn scroll(self) -> Style<StyleBaseState> {
+impl Style<PreBackgroundBase<Attachment>> {
+    pub fn scroll(self) -> Style<BackgroundBaseState> {
         self.base(Attachment::Scroll)
     }
 
-    pub fn fixed(self) -> Style<StyleBaseState> {
+    pub fn fixed(self) -> Style<BackgroundBaseState> {
         self.base(Attachment::Fixed)
+    }
+}
+
+impl Style<PreBackgroundBase<Repeat>> {
+    pub fn x(self) -> Style<BackgroundBaseState> {
+        self.base(Repeat::X)
+    }
+    pub fn y(self) -> Style<BackgroundBaseState> {
+        self.base(Repeat::Y)
+    }
+    pub fn none(self) -> Style<BackgroundBaseState> {
+        self.base(Repeat::None)
     }
 }
 
@@ -342,18 +376,6 @@ impl Display for Attachment {
             Attachment::Scroll => "scroll",
         };
         write!(f, "{result}")
-    }
-}
-
-impl Style<PreBase<Repeat>> {
-    pub fn x(self) -> Style<StyleBaseState> {
-        self.base(Repeat::X)
-    }
-    pub fn y(self) -> Style<StyleBaseState> {
-        self.base(Repeat::Y)
-    }
-    pub fn none(self) -> Style<StyleBaseState> {
-        self.base(Repeat::None)
     }
 }
 
