@@ -8,6 +8,7 @@ use crate::{
 use super::Style;
 
 #[derive(Hash, Eq, PartialEq)]
+#[allow(non_camel_case_types)]
 pub enum Color {
     Hex(u32),
     THex(u32),
@@ -15,146 +16,160 @@ pub enum Color {
     Rgba(u8, u8, u8, u8),
     Hsl(u16, u8, u8),
     Hsla(u16, u8, u8, u8),
-    AliceBlue,
-    AntiqueWhite,
-    Aqua,
-    Aquamarine,
-    Azure,
-    Beige,
-    Bisque,
-    Black,
-    BlanchedAlmond,
-    Blue,
-    BlueViolet,
-    Brown,
-    BurlyWood,
-    CadetBlue,
-    Chartreuse,
-    Chocolate,
-    Coral,
-    CornflowerBlue,
-    Cornsilk,
-    Crimson,
-    Cyan,
-    DarkBlue,
-    DarkCyan,
-    DarkGoldenRod,
-    DarkGrey,
-    DarkGreen,
-    DarkKhaki,
-    DarkMagenta,
-    DarkOliveGreen,
-    Darkorange,
-    DarkOrchid,
-    DarkRed,
-    DarkSalmon,
-    DarkSeaGreen,
-    DarkSlateBlue,
-    DarkSlateGrey,
-    DarkTurquoise,
-    DarkViolet,
-    DeepPink,
-    DeepSkyBlue,
-    DimGray,
-    DodgerBlue,
-    FireBrick,
-    FloralWhite,
-    ForestGreen,
-    Fuchsia,
-    Gainsboro,
-    GhostWhite,
-    Gold,
-    GoldenRod,
-    Grey,
-    Green,
-    GreenYellow,
-    HoneyDew,
-    HotPink,
-    IndianRed,
-    Indigo,
-    Ivory,
-    Khaki,
-    Lavender,
-    LavenderBlush,
-    LawnGreen,
-    LemonChiffon,
-    LightBlue,
-    LightCoral,
-    LightCyan,
-    LightGoldenRodYellow,
-    LightGrey,
-    LightGreen,
-    LightPink,
-    LightSalmon,
-    LightSeaGreen,
-    LightSkyBlue,
-    LightSlateGrey,
-    LightSteelBlue,
-    LightYellow,
-    Lime,
-    LimeGreen,
-    Linen,
-    Magenta,
-    Maroon,
-    MediumAquaMarine,
-    MediumBlue,
-    MediumOrchid,
-    MediumPurple,
-    MediumSeaGreen,
-    MediumSlateBlue,
-    MediumSpringGreen,
-    MediumTurquoise,
-    MediumVioletRed,
-    MidnightBlue,
-    MintCream,
-    MistyRose,
-    Moccasin,
-    NavajoWhite,
-    Navy,
-    OldLace,
-    Olive,
-    OliveDrab,
-    Orange,
-    OrangeRed,
-    Orchid,
-    PaleGoldenRod,
-    PaleGreen,
-    PaleTurquoise,
-    PaleVioletRed,
-    PapayaWhip,
-    PeachPuff,
-    Peru,
-    Pink,
-    Plum,
-    PowderBlue,
-    Purple,
-    Red,
-    RosyBrown,
-    RoyalBlue,
-    SaddleBrown,
-    Salmon,
-    SandyBrown,
-    SeaGreen,
-    SeaShell,
-    Sienna,
-    Silver,
-    SkyBlue,
-    SlateBlue,
-    SlateGrey,
-    Snow,
-    SpringGreen,
-    SteelBlue,
-    Tan,
-    Teal,
-    Thistle,
-    Tomato,
-    Turquoise,
-    Violet,
-    Wheat,
-    White,
-    WhiteSmoke,
-    Yellow,
-    YellowGreen,
+    ALICEBLUE,
+    ANTIQUEWHITE,
+    AQUA,
+    AQUAMARINE,
+    AZURE,
+    BEIGE,
+    BISQUE,
+    BLACK,
+    BLANCHEDALMOND,
+    BLUE,
+    BLUEVIOLET,
+    BROWN,
+    BURLYWOOD,
+    CADETBLUE,
+    CHARTREUSE,
+    CHOCOLATE,
+    CORAL,
+    CORNFLOWERBLUE,
+    CORNSILK,
+    CRIMSON,
+    CYAN,
+    DARKBLUE,
+    DARKCYAN,
+    DARKGOLDENROD,
+    DARKGREY,
+    DARKGREEN,
+    DARKKHAKI,
+    DARKMAGENTA,
+    DARKOLIVEGREEN,
+    DARKORANGE,
+    DARKORCHID,
+    DARKRED,
+    DARKSALMON,
+    DARKSEAGREEN,
+    DARKSLATEBLUE,
+    DARKSLATEGREY,
+    DARKTURQUOISE,
+    DARKVIOLET,
+    DEEPPINK,
+    DEEPSKYBLUE,
+    DIMGRAY,
+    DODGERBLUE,
+    FIREBRICK,
+    FLORALWHITE,
+    FORESTGREEN,
+    FUCHSIA,
+    GAINSBORO,
+    GHOSTWHITE,
+    GOLD,
+    GOLDENROD,
+    GREY,
+    GREEN,
+    GREENYELLOW,
+    HONEYDEW,
+    HOTPINK,
+    INDIANRED,
+    INDIGO,
+    IVORY,
+    KHAKI,
+    LAVENDER,
+    LAVENDERBLUSH,
+    LAWNGREEN,
+    LEMONCHIFFON,
+    LIGHTBLUE,
+    LIGHTCORAL,
+    LIGHTCYAN,
+    LIGHTGOLDENRODYELLOW,
+    LIGHTGREY,
+    LIGHTGREEN,
+    LIGHTPINK,
+    LIGHTSALMON,
+    LIGHTSEAGREEN,
+    LIGHTSKYBLUE,
+    LIGHTSLATEGREY,
+    LIGHTSTEELBLUE,
+    LIGHTYELLOW,
+    LIME,
+    LIMEGREEN,
+    LINEN,
+    MAGENTA,
+    MAROON,
+    MEDIUMAQUAMARINE,
+    MEDIUMBLUE,
+    MEDIUMORCHID,
+    MEDIUMPURPLE,
+    MEDIUMSEAGREEN,
+    MEDIUMSLATEBLUE,
+    MEDIUMSPRINGGREEN,
+    MEDIUMTURQUOISE,
+    MEDIUMVIOLETRED,
+    MIDNIGHTBLUE,
+    MINTCREAM,
+    MISTYROSE,
+    MOCCASIN,
+    NAVAJOWHITE,
+    NAVY,
+    OLDLACE,
+    OLIVE,
+    OLIVEDRAB,
+    ORANGE,
+    ORANGERED,
+    ORCHID,
+    PALEGOLDENROD,
+    PALEGREEN,
+    PALETURQUOISE,
+    PALEVIOLETRED,
+    PAPAYAWHIP,
+    PEACHPUFF,
+    PERU,
+    PINK,
+    PLUM,
+    POWDERBLUE,
+    PURPLE,
+    RED,
+    ROSYBROWN,
+    ROYALBLUE,
+    SADDLEBROWN,
+    SALMON,
+    SANDYBROWN,
+    SEAGREEN,
+    SEASHELL,
+    SIENNA,
+    SILVER,
+    SKYBLUE,
+    SLATEBLUE,
+    SLATEGREY,
+    SNOW,
+    SPRINGGREEN,
+    STEELBLUE,
+    TAN,
+    TEAL,
+    THISTLE,
+    TOMATO,
+    TURQUOISE,
+    VIOLET,
+    WHEAT,
+    WHITE,
+    WHITESMOKE,
+    YELLOW,
+    YELLOWGREEN,
+}
+
+use paste::paste;
+
+macro_rules! one_color {
+    ($output:ident,$($name:ident),+) => {
+        $(
+            paste! {
+                pub fn $name(self) -> Style<$output> {
+                    self.base(Color::[<$name:upper>])
+                }
+            }
+        )*
+    };
 }
 
 macro_rules! color_impl {
@@ -198,427 +213,149 @@ macro_rules! color_impl {
                 self.base(Color::Hsla(hue, saturation, lightness, opacity))
             }
 
-            pub fn alice_blue(self) -> Style<$output> {
-                self.base(Color::AliceBlue)
-            }
-            pub fn antique_white(self) -> Style<$output> {
-                self.base(Color::AntiqueWhite)
-            }
-            pub fn aqua(self) -> Style<$output> {
-                self.base(Color::Aqua)
-            }
-            pub fn aquamarine(self) -> Style<$output> {
-                self.base(Color::Aquamarine)
-            }
-            pub fn azure(self) -> Style<$output> {
-                self.base(Color::Azure)
-            }
-            pub fn beige(self) -> Style<$output> {
-                self.base(Color::Beige)
-            }
-            pub fn bisque(self) -> Style<$output> {
-                self.base(Color::Bisque)
-            }
-            pub fn black(self) -> Style<$output> {
-                self.base(Color::Black)
-            }
-            pub fn blanched_almond(self) -> Style<$output> {
-                self.base(Color::BlanchedAlmond)
-            }
-            pub fn blue(self) -> Style<$output> {
-                self.base(Color::Blue)
-            }
-            pub fn blue_violet(self) -> Style<$output> {
-                self.base(Color::BlueViolet)
-            }
-            pub fn brown(self) -> Style<$output> {
-                self.base(Color::Brown)
-            }
-            pub fn burly_wood(self) -> Style<$output> {
-                self.base(Color::BurlyWood)
-            }
-            pub fn cadet_blue(self) -> Style<$output> {
-                self.base(Color::CadetBlue)
-            }
-            pub fn chartreuse(self) -> Style<$output> {
-                self.base(Color::Chartreuse)
-            }
-            pub fn chocolate(self) -> Style<$output> {
-                self.base(Color::Chocolate)
-            }
-            pub fn coral(self) -> Style<$output> {
-                self.base(Color::Coral)
-            }
-            pub fn cornflower_blue(self) -> Style<$output> {
-                self.base(Color::CornflowerBlue)
-            }
-            pub fn cornsilk(self) -> Style<$output> {
-                self.base(Color::Cornsilk)
-            }
-            pub fn crimson(self) -> Style<$output> {
-                self.base(Color::Crimson)
-            }
-            pub fn cyan(self) -> Style<$output> {
-                self.base(Color::Cyan)
-            }
-            pub fn dark_blue(self) -> Style<$output> {
-                self.base(Color::DarkBlue)
-            }
-            pub fn dark_cyan(self) -> Style<$output> {
-                self.base(Color::DarkCyan)
-            }
-            pub fn dark_golden_rod(self) -> Style<$output> {
-                self.base(Color::DarkGoldenRod)
-            }
-            pub fn dark_grey(self) -> Style<$output> {
-                self.base(Color::DarkGrey)
-            }
-            pub fn dark_green(self) -> Style<$output> {
-                self.base(Color::DarkGreen)
-            }
-            pub fn dark_khaki(self) -> Style<$output> {
-                self.base(Color::DarkKhaki)
-            }
-            pub fn dark_magenta(self) -> Style<$output> {
-                self.base(Color::DarkMagenta)
-            }
-            pub fn dark_olive_green(self) -> Style<$output> {
-                self.base(Color::DarkOliveGreen)
-            }
-            pub fn darkorange(self) -> Style<$output> {
-                self.base(Color::Darkorange)
-            }
-            pub fn dark_orchid(self) -> Style<$output> {
-                self.base(Color::DarkOrchid)
-            }
-            pub fn dark_red(self) -> Style<$output> {
-                self.base(Color::DarkRed)
-            }
-            pub fn dark_salmon(self) -> Style<$output> {
-                self.base(Color::DarkSalmon)
-            }
-            pub fn dark_sea_green(self) -> Style<$output> {
-                self.base(Color::DarkSeaGreen)
-            }
-            pub fn dark_slate_blue(self) -> Style<$output> {
-                self.base(Color::DarkSlateBlue)
-            }
-            pub fn dark_slate_grey(self) -> Style<$output> {
-                self.base(Color::DarkSlateGrey)
-            }
-            pub fn dark_turquoise(self) -> Style<$output> {
-                self.base(Color::DarkTurquoise)
-            }
-            pub fn dark_violet(self) -> Style<$output> {
-                self.base(Color::DarkViolet)
-            }
-            pub fn deep_pink(self) -> Style<$output> {
-                self.base(Color::DeepPink)
-            }
-            pub fn deep_sky_blue(self) -> Style<$output> {
-                self.base(Color::DeepSkyBlue)
-            }
-            pub fn dim_gray(self) -> Style<$output> {
-                self.base(Color::DimGray)
-            }
-            pub fn dodger_blue(self) -> Style<$output> {
-                self.base(Color::DodgerBlue)
-            }
-            pub fn fire_brick(self) -> Style<$output> {
-                self.base(Color::FireBrick)
-            }
-            pub fn floral_white(self) -> Style<$output> {
-                self.base(Color::FloralWhite)
-            }
-            pub fn forest_green(self) -> Style<$output> {
-                self.base(Color::ForestGreen)
-            }
-            pub fn fuchsia(self) -> Style<$output> {
-                self.base(Color::Fuchsia)
-            }
-            pub fn gainsboro(self) -> Style<$output> {
-                self.base(Color::Gainsboro)
-            }
-            pub fn ghost_white(self) -> Style<$output> {
-                self.base(Color::GhostWhite)
-            }
-            pub fn gold(self) -> Style<$output> {
-                self.base(Color::Gold)
-            }
-            pub fn golden_rod(self) -> Style<$output> {
-                self.base(Color::GoldenRod)
-            }
-            pub fn grey(self) -> Style<$output> {
-                self.base(Color::Grey)
-            }
-            pub fn green(self) -> Style<$output> {
-                self.base(Color::Green)
-            }
-            pub fn green_yellow(self) -> Style<$output> {
-                self.base(Color::GreenYellow)
-            }
-            pub fn honey_dew(self) -> Style<$output> {
-                self.base(Color::HoneyDew)
-            }
-            pub fn hot_pink(self) -> Style<$output> {
-                self.base(Color::HotPink)
-            }
-            pub fn indian_red(self) -> Style<$output> {
-                self.base(Color::IndianRed)
-            }
-            pub fn indigo(self) -> Style<$output> {
-                self.base(Color::Indigo)
-            }
-            pub fn ivory(self) -> Style<$output> {
-                self.base(Color::Ivory)
-            }
-            pub fn khaki(self) -> Style<$output> {
-                self.base(Color::Khaki)
-            }
-            pub fn lavender(self) -> Style<$output> {
-                self.base(Color::Lavender)
-            }
-            pub fn lavender_blush(self) -> Style<$output> {
-                self.base(Color::LavenderBlush)
-            }
-            pub fn lawn_green(self) -> Style<$output> {
-                self.base(Color::LawnGreen)
-            }
-            pub fn lemon_chiffon(self) -> Style<$output> {
-                self.base(Color::LemonChiffon)
-            }
-            pub fn light_blue(self) -> Style<$output> {
-                self.base(Color::LightBlue)
-            }
-            pub fn light_coral(self) -> Style<$output> {
-                self.base(Color::LightCoral)
-            }
-            pub fn light_cyan(self) -> Style<$output> {
-                self.base(Color::LightCyan)
-            }
-            pub fn light_golden_rod_yellow(self) -> Style<$output> {
-                self.base(Color::LightGoldenRodYellow)
-            }
-            pub fn light_grey(self) -> Style<$output> {
-                self.base(Color::LightGrey)
-            }
-            pub fn light_green(self) -> Style<$output> {
-                self.base(Color::LightGreen)
-            }
-            pub fn light_pink(self) -> Style<$output> {
-                self.base(Color::LightPink)
-            }
-            pub fn light_salmon(self) -> Style<$output> {
-                self.base(Color::LightSalmon)
-            }
-            pub fn light_sea_green(self) -> Style<$output> {
-                self.base(Color::LightSeaGreen)
-            }
-            pub fn light_sky_blue(self) -> Style<$output> {
-                self.base(Color::LightSkyBlue)
-            }
-            pub fn light_slate_grey(self) -> Style<$output> {
-                self.base(Color::LightSlateGrey)
-            }
-            pub fn light_steel_blue(self) -> Style<$output> {
-                self.base(Color::LightSteelBlue)
-            }
-            pub fn light_yellow(self) -> Style<$output> {
-                self.base(Color::LightYellow)
-            }
-            pub fn lime(self) -> Style<$output> {
-                self.base(Color::Lime)
-            }
-            pub fn lime_green(self) -> Style<$output> {
-                self.base(Color::LimeGreen)
-            }
-            pub fn linen(self) -> Style<$output> {
-                self.base(Color::Linen)
-            }
-            pub fn magenta(self) -> Style<$output> {
-                self.base(Color::Magenta)
-            }
-            pub fn maroon(self) -> Style<$output> {
-                self.base(Color::Maroon)
-            }
-            pub fn medium_aqua_marine(self) -> Style<$output> {
-                self.base(Color::MediumAquaMarine)
-            }
-            pub fn medium_blue(self) -> Style<$output> {
-                self.base(Color::MediumBlue)
-            }
-            pub fn medium_orchid(self) -> Style<$output> {
-                self.base(Color::MediumOrchid)
-            }
-            pub fn medium_purple(self) -> Style<$output> {
-                self.base(Color::MediumPurple)
-            }
-            pub fn medium_sea_green(self) -> Style<$output> {
-                self.base(Color::MediumSeaGreen)
-            }
-            pub fn medium_slate_blue(self) -> Style<$output> {
-                self.base(Color::MediumSlateBlue)
-            }
-            pub fn medium_spring_green(self) -> Style<$output> {
-                self.base(Color::MediumSpringGreen)
-            }
-            pub fn medium_turquoise(self) -> Style<$output> {
-                self.base(Color::MediumTurquoise)
-            }
-            pub fn medium_violet_red(self) -> Style<$output> {
-                self.base(Color::MediumVioletRed)
-            }
-            pub fn midnight_blue(self) -> Style<$output> {
-                self.base(Color::MidnightBlue)
-            }
-            pub fn mint_cream(self) -> Style<$output> {
-                self.base(Color::MintCream)
-            }
-            pub fn misty_rose(self) -> Style<$output> {
-                self.base(Color::MistyRose)
-            }
-            pub fn moccasin(self) -> Style<$output> {
-                self.base(Color::Moccasin)
-            }
-            pub fn navajo_white(self) -> Style<$output> {
-                self.base(Color::NavajoWhite)
-            }
-            pub fn navy(self) -> Style<$output> {
-                self.base(Color::Navy)
-            }
-            pub fn old_lace(self) -> Style<$output> {
-                self.base(Color::OldLace)
-            }
-            pub fn olive(self) -> Style<$output> {
-                self.base(Color::Olive)
-            }
-            pub fn olive_drab(self) -> Style<$output> {
-                self.base(Color::OliveDrab)
-            }
-            pub fn orange(self) -> Style<$output> {
-                self.base(Color::Orange)
-            }
-            pub fn orange_red(self) -> Style<$output> {
-                self.base(Color::OrangeRed)
-            }
-            pub fn orchid(self) -> Style<$output> {
-                self.base(Color::Orchid)
-            }
-            pub fn pale_golden_rod(self) -> Style<$output> {
-                self.base(Color::PaleGoldenRod)
-            }
-            pub fn pale_green(self) -> Style<$output> {
-                self.base(Color::PaleGreen)
-            }
-            pub fn pale_turquoise(self) -> Style<$output> {
-                self.base(Color::PaleTurquoise)
-            }
-            pub fn pale_violet_red(self) -> Style<$output> {
-                self.base(Color::PaleVioletRed)
-            }
-            pub fn papaya_whip(self) -> Style<$output> {
-                self.base(Color::PapayaWhip)
-            }
-            pub fn peach_puff(self) -> Style<$output> {
-                self.base(Color::PeachPuff)
-            }
-            pub fn peru(self) -> Style<$output> {
-                self.base(Color::Peru)
-            }
-            pub fn pink(self) -> Style<$output> {
-                self.base(Color::Pink)
-            }
-            pub fn plum(self) -> Style<$output> {
-                self.base(Color::Plum)
-            }
-            pub fn powder_blue(self) -> Style<$output> {
-                self.base(Color::PowderBlue)
-            }
-            pub fn purple(self) -> Style<$output> {
-                self.base(Color::Purple)
-            }
-            pub fn red(self) -> Style<$output> {
-                self.base(Color::Red)
-            }
-            pub fn rosy_brown(self) -> Style<$output> {
-                self.base(Color::RosyBrown)
-            }
-            pub fn royal_blue(self) -> Style<$output> {
-                self.base(Color::RoyalBlue)
-            }
-            pub fn saddle_brown(self) -> Style<$output> {
-                self.base(Color::SaddleBrown)
-            }
-            pub fn salmon(self) -> Style<$output> {
-                self.base(Color::Salmon)
-            }
-            pub fn sandy_brown(self) -> Style<$output> {
-                self.base(Color::SandyBrown)
-            }
-            pub fn sea_green(self) -> Style<$output> {
-                self.base(Color::SeaGreen)
-            }
-            pub fn sea_shell(self) -> Style<$output> {
-                self.base(Color::SeaShell)
-            }
-            pub fn sienna(self) -> Style<$output> {
-                self.base(Color::Sienna)
-            }
-            pub fn silver(self) -> Style<$output> {
-                self.base(Color::Silver)
-            }
-            pub fn sky_blue(self) -> Style<$output> {
-                self.base(Color::SkyBlue)
-            }
-            pub fn slate_blue(self) -> Style<$output> {
-                self.base(Color::SlateBlue)
-            }
-            pub fn slate_grey(self) -> Style<$output> {
-                self.base(Color::SlateGrey)
-            }
-            pub fn snow(self) -> Style<$output> {
-                self.base(Color::Snow)
-            }
-            pub fn spring_green(self) -> Style<$output> {
-                self.base(Color::SpringGreen)
-            }
-            pub fn steel_blue(self) -> Style<$output> {
-                self.base(Color::SteelBlue)
-            }
-            pub fn tan(self) -> Style<$output> {
-                self.base(Color::Tan)
-            }
-            pub fn teal(self) -> Style<$output> {
-                self.base(Color::Teal)
-            }
-            pub fn thistle(self) -> Style<$output> {
-                self.base(Color::Thistle)
-            }
-            pub fn tomato(self) -> Style<$output> {
-                self.base(Color::Tomato)
-            }
-            pub fn turquoise(self) -> Style<$output> {
-                self.base(Color::Turquoise)
-            }
-            pub fn violet(self) -> Style<$output> {
-                self.base(Color::Violet)
-            }
-            pub fn wheat(self) -> Style<$output> {
-                self.base(Color::Wheat)
-            }
-            pub fn white(self) -> Style<$output> {
-                self.base(Color::White)
-            }
-            pub fn white_smoke(self) -> Style<$output> {
-                self.base(Color::WhiteSmoke)
-            }
-            pub fn yellow(self) -> Style<$output> {
-                self.base(Color::Yellow)
-            }
-
-            pub fn yellow_green(self) -> Style<$output> {
-                self.base(Color::YellowGreen)
-            }
+            one_color!(
+                $output,
+                aliceblue,
+                antiquewhite,
+                aqua,
+                aquamarine,
+                azure,
+                beige,
+                bisque,
+                black,
+                blanchedalmond,
+                blue,
+                blueviolet,
+                brown,
+                burlywood,
+                cadetblue,
+                chartreuse,
+                chocolate,
+                coral,
+                cornflowerblue,
+                cornsilk,
+                crimson,
+                cyan,
+                darkblue,
+                darkcyan,
+                darkgoldenrod,
+                darkgrey,
+                darkgreen,
+                darkkhaki,
+                darkmagenta,
+                darkolivegreen,
+                darkorange,
+                darkorchid,
+                darkred,
+                darksalmon,
+                darkseagreen,
+                darkslateblue,
+                darkslategrey,
+                darkturquoise,
+                darkviolet,
+                deeppink,
+                deepskyblue,
+                dimgray,
+                dodgerblue,
+                firebrick,
+                floralwhite,
+                forestgreen,
+                fuchsia,
+                gainsboro,
+                ghostwhite,
+                gold,
+                goldenrod,
+                grey,
+                green,
+                greenyellow,
+                honeydew,
+                hotpink,
+                indianred,
+                indigo,
+                ivory,
+                khaki,
+                lavender,
+                lavenderblush,
+                lawngreen,
+                lemonchiffon,
+                lightblue,
+                lightcoral,
+                lightcyan,
+                lightgoldenrodyellow,
+                lightgrey,
+                lightgreen,
+                lightpink,
+                lightsalmon,
+                lightseagreen,
+                lightskyblue,
+                lightslategrey,
+                lightsteelblue,
+                lightyellow,
+                lime,
+                limegreen,
+                linen,
+                magenta,
+                maroon,
+                mediumaquamarine,
+                mediumblue,
+                mediumorchid,
+                mediumpurple,
+                mediumseagreen,
+                mediumslateblue,
+                mediumspringgreen,
+                mediumturquoise,
+                mediumvioletred,
+                midnightblue,
+                mintcream,
+                mistyrose,
+                moccasin,
+                navajowhite,
+                navy,
+                oldlace,
+                olive,
+                olivedrab,
+                orange,
+                orangered,
+                orchid,
+                palegoldenrod,
+                palegreen,
+                paleturquoise,
+                palevioletred,
+                papayawhip,
+                peachpuff,
+                peru,
+                pink,
+                plum,
+                powderblue,
+                purple,
+                red,
+                rosybrown,
+                royalblue,
+                saddlebrown,
+                salmon,
+                sandybrown,
+                seagreen,
+                seashell,
+                sienna,
+                silver,
+                skyblue,
+                slateblue,
+                slategrey,
+                snow,
+                springgreen,
+                steelblue,
+                tan,
+                teal,
+                thistle,
+                tomato,
+                turquoise,
+                violet,
+                wheat,
+                white,
+                whitesmoke,
+                yellow,
+                yellowgreen
+            );
         }
     };
 }
@@ -650,146 +387,146 @@ impl Display for Color {
                     *opacity as f32 / 100.
                 )
             }
-            Color::AliceBlue => "AliceBlue".to_string(),
-            Color::AntiqueWhite => "AntiqueWhite".to_string(),
-            Color::Aqua => "Aqua".to_string(),
-            Color::Aquamarine => "Aquamarine".to_string(),
-            Color::Azure => "Azure".to_string(),
-            Color::Beige => "Beige".to_string(),
-            Color::Bisque => "Bisque".to_string(),
-            Color::Black => "Black".to_string(),
-            Color::BlanchedAlmond => "BlanchedAlmond".to_string(),
-            Color::Blue => "Blue".to_string(),
-            Color::BlueViolet => "BlueViolet".to_string(),
-            Color::Brown => "Brown".to_string(),
-            Color::BurlyWood => "BurlyWood".to_string(),
-            Color::CadetBlue => "CadetBlue".to_string(),
-            Color::Chartreuse => "Chartreuse".to_string(),
-            Color::Chocolate => "Chocolate".to_string(),
-            Color::Coral => "Coral".to_string(),
-            Color::CornflowerBlue => "CornflowerBlue".to_string(),
-            Color::Cornsilk => "Cornsilk".to_string(),
-            Color::Crimson => "Crimson".to_string(),
-            Color::Cyan => "Cyan".to_string(),
-            Color::DarkBlue => "DarkBlue".to_string(),
-            Color::DarkCyan => "DarkCyan".to_string(),
-            Color::DarkGoldenRod => "DarkGoldenRod".to_string(),
-            Color::DarkGrey => "DarkGrey".to_string(),
-            Color::DarkGreen => "DarkGreen".to_string(),
-            Color::DarkKhaki => "DarkKhaki".to_string(),
-            Color::DarkMagenta => "DarkMagenta".to_string(),
-            Color::DarkOliveGreen => "DarkOliveGreen".to_string(),
-            Color::Darkorange => "Darkorange".to_string(),
-            Color::DarkOrchid => "DarkOrchid".to_string(),
-            Color::DarkRed => "DarkRed".to_string(),
-            Color::DarkSalmon => "DarkSalmon".to_string(),
-            Color::DarkSeaGreen => "DarkSeaGreen".to_string(),
-            Color::DarkSlateBlue => "DarkSlateBlue".to_string(),
-            Color::DarkSlateGrey => "DarkSlateGrey".to_string(),
-            Color::DarkTurquoise => "DarkTurquoise".to_string(),
-            Color::DarkViolet => "DarkViolet".to_string(),
-            Color::DeepPink => "DeepPink".to_string(),
-            Color::DeepSkyBlue => "DeepSkyBlue".to_string(),
-            Color::DimGray => "DimGray".to_string(),
-            Color::DodgerBlue => "DodgerBlue".to_string(),
-            Color::FireBrick => "FireBrick".to_string(),
-            Color::FloralWhite => "FloralWhite".to_string(),
-            Color::ForestGreen => "ForestGreen".to_string(),
-            Color::Fuchsia => "Fuchsia".to_string(),
-            Color::Gainsboro => "Gainsboro".to_string(),
-            Color::GhostWhite => "GhostWhite".to_string(),
-            Color::Gold => "Gold".to_string(),
-            Color::GoldenRod => "GoldenRod".to_string(),
-            Color::Grey => "Grey".to_string(),
-            Color::Green => "Green".to_string(),
-            Color::GreenYellow => "GreenYellow".to_string(),
-            Color::HoneyDew => "HoneyDew".to_string(),
-            Color::HotPink => "HotPink".to_string(),
-            Color::IndianRed => "IndianRed".to_string(),
-            Color::Indigo => "Indigo".to_string(),
-            Color::Ivory => "Ivory".to_string(),
-            Color::Khaki => "Khaki".to_string(),
-            Color::Lavender => "Lavender".to_string(),
-            Color::LavenderBlush => "LavenderBlush".to_string(),
-            Color::LawnGreen => "LawnGreen".to_string(),
-            Color::LemonChiffon => "LemonChiffon".to_string(),
-            Color::LightBlue => "LightBlue".to_string(),
-            Color::LightCoral => "LightCoral".to_string(),
-            Color::LightCyan => "LightCyan".to_string(),
-            Color::LightGoldenRodYellow => "LightGoldenRodYellow".to_string(),
-            Color::LightGrey => "LightGrey".to_string(),
-            Color::LightGreen => "LightGreen".to_string(),
-            Color::LightPink => "LightPink".to_string(),
-            Color::LightSalmon => "LightSalmon".to_string(),
-            Color::LightSeaGreen => "LightSeaGreen".to_string(),
-            Color::LightSkyBlue => "LightSkyBlue".to_string(),
-            Color::LightSlateGrey => "LightSlateGrey".to_string(),
-            Color::LightSteelBlue => "LightSteelBlue".to_string(),
-            Color::LightYellow => "LightYellow".to_string(),
-            Color::Lime => "Lime".to_string(),
-            Color::LimeGreen => "LimeGreen".to_string(),
-            Color::Linen => "Linen".to_string(),
-            Color::Magenta => "Magenta".to_string(),
-            Color::Maroon => "Maroon".to_string(),
-            Color::MediumAquaMarine => "MediumAquaMarine".to_string(),
-            Color::MediumBlue => "MediumBlue".to_string(),
-            Color::MediumOrchid => "MediumOrchid".to_string(),
-            Color::MediumPurple => "MediumPurple".to_string(),
-            Color::MediumSeaGreen => "MediumSeaGreen".to_string(),
-            Color::MediumSlateBlue => "MediumSlateBlue".to_string(),
-            Color::MediumSpringGreen => "MediumSpringGreen".to_string(),
-            Color::MediumTurquoise => "MediumTurquoise".to_string(),
-            Color::MediumVioletRed => "MediumVioletRed".to_string(),
-            Color::MidnightBlue => "MidnightBlue".to_string(),
-            Color::MintCream => "MintCream".to_string(),
-            Color::MistyRose => "MistyRose".to_string(),
-            Color::Moccasin => "Moccasin".to_string(),
-            Color::NavajoWhite => "NavajoWhite".to_string(),
-            Color::Navy => "Navy".to_string(),
-            Color::OldLace => "OldLace".to_string(),
-            Color::Olive => "Olive".to_string(),
-            Color::OliveDrab => "OliveDrab".to_string(),
-            Color::Orange => "Orange".to_string(),
-            Color::OrangeRed => "OrangeRed".to_string(),
-            Color::Orchid => "Orchid".to_string(),
-            Color::PaleGoldenRod => "PaleGoldenRod".to_string(),
-            Color::PaleGreen => "PaleGreen".to_string(),
-            Color::PaleTurquoise => "PaleTurquoise".to_string(),
-            Color::PaleVioletRed => "PaleVioletRed".to_string(),
-            Color::PapayaWhip => "PapayaWhip".to_string(),
-            Color::PeachPuff => "PeachPuff".to_string(),
-            Color::Peru => "Peru".to_string(),
-            Color::Pink => "Pink".to_string(),
-            Color::Plum => "Plum".to_string(),
-            Color::PowderBlue => "PowderBlue".to_string(),
-            Color::Purple => "Purple".to_string(),
-            Color::Red => "Red".to_string(),
-            Color::RosyBrown => "RosyBrown".to_string(),
-            Color::RoyalBlue => "RoyalBlue".to_string(),
-            Color::SaddleBrown => "SaddleBrown".to_string(),
-            Color::Salmon => "Salmon".to_string(),
-            Color::SandyBrown => "SandyBrown".to_string(),
-            Color::SeaGreen => "SeaGreen".to_string(),
-            Color::SeaShell => "SeaShell".to_string(),
-            Color::Sienna => "Sienna".to_string(),
-            Color::Silver => "Silver".to_string(),
-            Color::SkyBlue => "SkyBlue".to_string(),
-            Color::SlateBlue => "SlateBlue".to_string(),
-            Color::SlateGrey => "SlateGrey".to_string(),
-            Color::Snow => "Snow".to_string(),
-            Color::SpringGreen => "SpringGreen".to_string(),
-            Color::SteelBlue => "SteelBlue".to_string(),
-            Color::Tan => "Tan".to_string(),
-            Color::Teal => "Teal".to_string(),
-            Color::Thistle => "Thistle".to_string(),
-            Color::Tomato => "Tomato".to_string(),
-            Color::Turquoise => "Turquoise".to_string(),
-            Color::Violet => "Violet".to_string(),
-            Color::Wheat => "Wheat".to_string(),
-            Color::White => "White".to_string(),
-            Color::WhiteSmoke => "WhiteSmoke".to_string(),
-            Color::Yellow => "Yellow".to_string(),
-            Color::YellowGreen => "YellowGreen".to_string(),
+            Color::ALICEBLUE => "aliceblue".to_string(),
+            Color::ANTIQUEWHITE => "antiquewhite".to_string(),
+            Color::AQUA => "aqua".to_string(),
+            Color::AQUAMARINE => "aquamarine".to_string(),
+            Color::AZURE => "azure".to_string(),
+            Color::BEIGE => "beige".to_string(),
+            Color::BISQUE => "bisque".to_string(),
+            Color::BLACK => "black".to_string(),
+            Color::BLANCHEDALMOND => "blanchedalmond".to_string(),
+            Color::BLUE => "blue".to_string(),
+            Color::BLUEVIOLET => "blueviolet".to_string(),
+            Color::BROWN => "brown".to_string(),
+            Color::BURLYWOOD => "burlywood".to_string(),
+            Color::CADETBLUE => "cadetblue".to_string(),
+            Color::CHARTREUSE => "chartreuse".to_string(),
+            Color::CHOCOLATE => "chocolate".to_string(),
+            Color::CORAL => "coral".to_string(),
+            Color::CORNFLOWERBLUE => "cornflowerblue".to_string(),
+            Color::CORNSILK => "cornsilk".to_string(),
+            Color::CRIMSON => "crimson".to_string(),
+            Color::CYAN => "cyan".to_string(),
+            Color::DARKBLUE => "darkblue".to_string(),
+            Color::DARKCYAN => "darkcyan".to_string(),
+            Color::DARKGOLDENROD => "darkgoldenrod".to_string(),
+            Color::DARKGREY => "darkgrey".to_string(),
+            Color::DARKGREEN => "darkgreen".to_string(),
+            Color::DARKKHAKI => "darkkhaki".to_string(),
+            Color::DARKMAGENTA => "darkmagenta".to_string(),
+            Color::DARKOLIVEGREEN => "darkolivegreen".to_string(),
+            Color::DARKORANGE => "darkorange".to_string(),
+            Color::DARKORCHID => "darkorchid".to_string(),
+            Color::DARKRED => "darkred".to_string(),
+            Color::DARKSALMON => "darksalmon".to_string(),
+            Color::DARKSEAGREEN => "darkseagreen".to_string(),
+            Color::DARKSLATEBLUE => "darkslateblue".to_string(),
+            Color::DARKSLATEGREY => "darkslategrey".to_string(),
+            Color::DARKTURQUOISE => "darkturquoise".to_string(),
+            Color::DARKVIOLET => "darkviolet".to_string(),
+            Color::DEEPPINK => "deeppink".to_string(),
+            Color::DEEPSKYBLUE => "deepskyblue".to_string(),
+            Color::DIMGRAY => "dimgray".to_string(),
+            Color::DODGERBLUE => "dodgerblue".to_string(),
+            Color::FIREBRICK => "firebrick".to_string(),
+            Color::FLORALWHITE => "floralwhite".to_string(),
+            Color::FORESTGREEN => "forestgreen".to_string(),
+            Color::FUCHSIA => "fuchsia".to_string(),
+            Color::GAINSBORO => "gainsboro".to_string(),
+            Color::GHOSTWHITE => "ghostwhite".to_string(),
+            Color::GOLD => "gold".to_string(),
+            Color::GOLDENROD => "goldenrod".to_string(),
+            Color::GREY => "grey".to_string(),
+            Color::GREEN => "green".to_string(),
+            Color::GREENYELLOW => "greenyellow".to_string(),
+            Color::HONEYDEW => "honeydew".to_string(),
+            Color::HOTPINK => "hotpink".to_string(),
+            Color::INDIANRED => "indianred".to_string(),
+            Color::INDIGO => "indigo".to_string(),
+            Color::IVORY => "ivory".to_string(),
+            Color::KHAKI => "khaki".to_string(),
+            Color::LAVENDER => "lavender".to_string(),
+            Color::LAVENDERBLUSH => "lavenderblush".to_string(),
+            Color::LAWNGREEN => "lawngreen".to_string(),
+            Color::LEMONCHIFFON => "lemonchiffon".to_string(),
+            Color::LIGHTBLUE => "lightblue".to_string(),
+            Color::LIGHTCORAL => "lightcoral".to_string(),
+            Color::LIGHTCYAN => "lightcyan".to_string(),
+            Color::LIGHTGOLDENRODYELLOW => "lightgoldenrodyellow".to_string(),
+            Color::LIGHTGREY => "lightgrey".to_string(),
+            Color::LIGHTGREEN => "lightgreen".to_string(),
+            Color::LIGHTPINK => "lightpink".to_string(),
+            Color::LIGHTSALMON => "lightsalmon".to_string(),
+            Color::LIGHTSEAGREEN => "lightseagreen".to_string(),
+            Color::LIGHTSKYBLUE => "lightskyblue".to_string(),
+            Color::LIGHTSLATEGREY => "lightslategrey".to_string(),
+            Color::LIGHTSTEELBLUE => "lightsteelblue".to_string(),
+            Color::LIGHTYELLOW => "lightyellow".to_string(),
+            Color::LIME => "lime".to_string(),
+            Color::LIMEGREEN => "limegreen".to_string(),
+            Color::LINEN => "linen".to_string(),
+            Color::MAGENTA => "magenta".to_string(),
+            Color::MAROON => "maroon".to_string(),
+            Color::MEDIUMAQUAMARINE => "mediumaquamarine".to_string(),
+            Color::MEDIUMBLUE => "mediumblue".to_string(),
+            Color::MEDIUMORCHID => "mediumorchid".to_string(),
+            Color::MEDIUMPURPLE => "mediumpurple".to_string(),
+            Color::MEDIUMSEAGREEN => "mediumseagreen".to_string(),
+            Color::MEDIUMSLATEBLUE => "mediumslateblue".to_string(),
+            Color::MEDIUMSPRINGGREEN => "mediumspringgreen".to_string(),
+            Color::MEDIUMTURQUOISE => "mediumturquoise".to_string(),
+            Color::MEDIUMVIOLETRED => "mediumvioletred".to_string(),
+            Color::MIDNIGHTBLUE => "midnightblue".to_string(),
+            Color::MINTCREAM => "mintcream".to_string(),
+            Color::MISTYROSE => "mistyrose".to_string(),
+            Color::MOCCASIN => "moccasin".to_string(),
+            Color::NAVAJOWHITE => "navajowhite".to_string(),
+            Color::NAVY => "navy".to_string(),
+            Color::OLDLACE => "oldlace".to_string(),
+            Color::OLIVE => "olive".to_string(),
+            Color::OLIVEDRAB => "olivedrab".to_string(),
+            Color::ORANGE => "orange".to_string(),
+            Color::ORANGERED => "orangered".to_string(),
+            Color::ORCHID => "orchid".to_string(),
+            Color::PALEGOLDENROD => "palegoldenrod".to_string(),
+            Color::PALEGREEN => "palegreen".to_string(),
+            Color::PALETURQUOISE => "paleturquoise".to_string(),
+            Color::PALEVIOLETRED => "palevioletred".to_string(),
+            Color::PAPAYAWHIP => "papayawhip".to_string(),
+            Color::PEACHPUFF => "peachpuff".to_string(),
+            Color::PERU => "peru".to_string(),
+            Color::PINK => "pink".to_string(),
+            Color::PLUM => "plum".to_string(),
+            Color::POWDERBLUE => "powderblue".to_string(),
+            Color::PURPLE => "purple".to_string(),
+            Color::RED => "red".to_string(),
+            Color::ROSYBROWN => "rosybrown".to_string(),
+            Color::ROYALBLUE => "royalblue".to_string(),
+            Color::SADDLEBROWN => "saddlebrown".to_string(),
+            Color::SALMON => "salmon".to_string(),
+            Color::SANDYBROWN => "sandybrown".to_string(),
+            Color::SEAGREEN => "seagreen".to_string(),
+            Color::SEASHELL => "seashell".to_string(),
+            Color::SIENNA => "sienna".to_string(),
+            Color::SILVER => "silver".to_string(),
+            Color::SKYBLUE => "skyblue".to_string(),
+            Color::SLATEBLUE => "slateblue".to_string(),
+            Color::SLATEGREY => "slategrey".to_string(),
+            Color::SNOW => "snow".to_string(),
+            Color::SPRINGGREEN => "springgreen".to_string(),
+            Color::STEELBLUE => "steelblue".to_string(),
+            Color::TAN => "tan".to_string(),
+            Color::TEAL => "teal".to_string(),
+            Color::THISTLE => "thistle".to_string(),
+            Color::TOMATO => "tomato".to_string(),
+            Color::TURQUOISE => "turquoise".to_string(),
+            Color::VIOLET => "violet".to_string(),
+            Color::WHEAT => "wheat".to_string(),
+            Color::WHITE => "white".to_string(),
+            Color::WHITESMOKE => "whitesmoke".to_string(),
+            Color::YELLOW => "yellow".to_string(),
+            Color::YELLOWGREEN => "yellowgreen".to_string(),
         };
         write!(f, "{}", result)
     }

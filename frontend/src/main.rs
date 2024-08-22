@@ -25,6 +25,18 @@ pub fn app() -> impl IntoView {
 
     let style = move || {
         Style::default()
+            .background()
+            .position()
+            .right()
+            .top()
+            .origin()
+            .padding_box()
+            .size()
+            .length()
+            .px(255)
+            .color()
+            .red()
+            .base()
             .fontsize()
             .px(conf.font_size.get())
             .margin()
@@ -49,7 +61,7 @@ fn progress_bar() -> impl IntoView {
     let value = move || markdown.current.get();
     let style = Style::default()
         .accent_color()
-        .dark_green()
+        .cornflowerblue()
         .position()
         .fixed()
         .bottom()
