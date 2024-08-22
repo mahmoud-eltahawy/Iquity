@@ -27,109 +27,64 @@ pub enum Length {
     Percent(u8),
 }
 
-impl Style<PreStyleBase<Length>> {
-    pub fn px(self, num: u8) -> Style<StyleBaseState> {
-        self.base(Length::Px(num))
-    }
+macro_rules! style_impl {
+    ($target:ident,$output:ident) => {
+        impl Style<$target<Length>> {
+            pub fn px(self, num: u8) -> Style<$output> {
+                self.base(Length::Px(num))
+            }
 
-    pub fn cm(self, num: u8) -> Style<StyleBaseState> {
-        self.base(Length::Cm(num))
-    }
+            pub fn cm(self, num: u8) -> Style<$output> {
+                self.base(Length::Cm(num))
+            }
 
-    pub fn percent(self, num: u8) -> Style<StyleBaseState> {
-        debug_assert!(num <= 100, "percent number should be from 0 to 100");
-        self.base(Length::Percent(num))
-    }
+            pub fn percent(self, num: u8) -> Style<$output> {
+                debug_assert!(num <= 100, "percent number should be from 0 to 100");
+                self.base(Length::Percent(num))
+            }
 
-    pub fn mm(self, num: u8) -> Style<StyleBaseState> {
-        self.base(Length::Mm(num))
-    }
-    pub fn inch(self, num: u8) -> Style<StyleBaseState> {
-        self.base(Length::In(num))
-    }
-    pub fn pt(self, num: u8) -> Style<StyleBaseState> {
-        self.base(Length::Pt(num))
-    }
-    pub fn pc(self, num: u8) -> Style<StyleBaseState> {
-        self.base(Length::Pc(num))
-    }
-    pub fn em(self, num: u8) -> Style<StyleBaseState> {
-        self.base(Length::Em(num))
-    }
-    pub fn ex(self, num: u8) -> Style<StyleBaseState> {
-        self.base(Length::Ex(num))
-    }
-    pub fn ch(self, num: u8) -> Style<StyleBaseState> {
-        self.base(Length::Ch(num))
-    }
-    pub fn rem_(self, num: u8) -> Style<StyleBaseState> {
-        self.base(Length::Rem(num))
-    }
-    pub fn vw(self, num: u8) -> Style<StyleBaseState> {
-        self.base(Length::Vw(num))
-    }
-    pub fn vh(self, num: u8) -> Style<StyleBaseState> {
-        self.base(Length::Vh(num))
-    }
-    pub fn vmin(self, num: u8) -> Style<StyleBaseState> {
-        self.base(Length::Vmin(num))
-    }
-    pub fn vmax(self, num: u8) -> Style<StyleBaseState> {
-        self.base(Length::Vmax(num))
-    }
+            pub fn mm(self, num: u8) -> Style<$output> {
+                self.base(Length::Mm(num))
+            }
+            pub fn inch(self, num: u8) -> Style<$output> {
+                self.base(Length::In(num))
+            }
+            pub fn pt(self, num: u8) -> Style<$output> {
+                self.base(Length::Pt(num))
+            }
+            pub fn pc(self, num: u8) -> Style<$output> {
+                self.base(Length::Pc(num))
+            }
+            pub fn em(self, num: u8) -> Style<$output> {
+                self.base(Length::Em(num))
+            }
+            pub fn ex(self, num: u8) -> Style<$output> {
+                self.base(Length::Ex(num))
+            }
+            pub fn ch(self, num: u8) -> Style<$output> {
+                self.base(Length::Ch(num))
+            }
+            pub fn rem_(self, num: u8) -> Style<$output> {
+                self.base(Length::Rem(num))
+            }
+            pub fn vw(self, num: u8) -> Style<$output> {
+                self.base(Length::Vw(num))
+            }
+            pub fn vh(self, num: u8) -> Style<$output> {
+                self.base(Length::Vh(num))
+            }
+            pub fn vmin(self, num: u8) -> Style<$output> {
+                self.base(Length::Vmin(num))
+            }
+            pub fn vmax(self, num: u8) -> Style<$output> {
+                self.base(Length::Vmax(num))
+            }
+        }
+    };
 }
 
-impl Style<PreBackgroundBase<Length>> {
-    pub fn px(self, num: u8) -> Style<BackgroundBaseState> {
-        self.base(Length::Px(num))
-    }
-
-    pub fn cm(self, num: u8) -> Style<BackgroundBaseState> {
-        self.base(Length::Cm(num))
-    }
-
-    pub fn percent(self, num: u8) -> Style<BackgroundBaseState> {
-        debug_assert!(num <= 100, "percent number should be from 0 to 100");
-        self.base(Length::Percent(num))
-    }
-
-    pub fn mm(self, num: u8) -> Style<BackgroundBaseState> {
-        self.base(Length::Mm(num))
-    }
-    pub fn inch(self, num: u8) -> Style<BackgroundBaseState> {
-        self.base(Length::In(num))
-    }
-    pub fn pt(self, num: u8) -> Style<BackgroundBaseState> {
-        self.base(Length::Pt(num))
-    }
-    pub fn pc(self, num: u8) -> Style<BackgroundBaseState> {
-        self.base(Length::Pc(num))
-    }
-    pub fn em(self, num: u8) -> Style<BackgroundBaseState> {
-        self.base(Length::Em(num))
-    }
-    pub fn ex(self, num: u8) -> Style<BackgroundBaseState> {
-        self.base(Length::Ex(num))
-    }
-    pub fn ch(self, num: u8) -> Style<BackgroundBaseState> {
-        self.base(Length::Ch(num))
-    }
-    pub fn rem_(self, num: u8) -> Style<BackgroundBaseState> {
-        self.base(Length::Rem(num))
-    }
-    pub fn vw(self, num: u8) -> Style<BackgroundBaseState> {
-        self.base(Length::Vw(num))
-    }
-    pub fn vh(self, num: u8) -> Style<BackgroundBaseState> {
-        self.base(Length::Vh(num))
-    }
-    pub fn vmin(self, num: u8) -> Style<BackgroundBaseState> {
-        self.base(Length::Vmin(num))
-    }
-    pub fn vmax(self, num: u8) -> Style<BackgroundBaseState> {
-        self.base(Length::Vmax(num))
-    }
-}
+style_impl!(PreStyleBase, StyleBaseState);
+style_impl!(PreBackgroundBase, BackgroundBaseState);
 
 impl Display for Length {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
