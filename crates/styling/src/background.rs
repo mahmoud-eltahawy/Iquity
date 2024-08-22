@@ -1,7 +1,7 @@
 use super::{attribute::Attribute, Style};
 use crate::{
-    attribute, color::Color, length::Length, AttributeGetter, Attributs, PreState, StyleBaseState,
-    StyleState,
+    attribute, color::Color, length::Length, AttributeGetter, Attributs, PreBaseState,
+    StyleBaseState, StyleState,
 };
 use std::fmt::Display;
 
@@ -79,7 +79,7 @@ impl StyleState for BackgroundPreXPosition {}
 impl StyleState for PositionX {}
 impl<T> StyleState for PreBackgroundBase<T> {}
 
-impl<T> PreState<T, BackgroundBaseState> for Style<PreBackgroundBase<T>> {
+impl<T> PreBaseState<T, BackgroundBaseState> for Style<PreBackgroundBase<T>> {
     fn destruct(self) -> (Attributs, AttributeGetter<T>) {
         let Self(attrs, PreBackgroundBase(fun)) = self;
         (attrs, fun)

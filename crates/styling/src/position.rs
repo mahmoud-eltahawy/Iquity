@@ -1,4 +1,4 @@
-use crate::{PreState, PreStyleBase, StyleBaseState};
+use crate::{PreBaseState, PreStyleBase, StyleBaseState};
 
 use super::Style;
 use std::fmt::Display;

@@ -1,6 +1,6 @@
 use crate::{
     background::{BackgroundBaseState, PreBackgroundBase},
-    PreState, PreStyleBase, StyleBaseState,
+    PreBaseState, PreStyleBase, StyleBaseState,
 };
 
 use super::Style;
