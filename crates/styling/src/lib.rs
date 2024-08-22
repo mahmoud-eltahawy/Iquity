@@ -10,7 +10,7 @@ mod position;
 
 pub trait StyleState {}
 pub trait PreState<T, R: StyleState + Default>: Sized {
-    fn destruct(self) -> (HashSet<Attribute>, Box<dyn FnOnce(T) -> Attribute>);
+    fn destruct(self) -> (Attributs, AttributeGetter<T>);
     fn base(self, position: T) -> Style<R> {
         let (mut core, fun) = self.destruct();
         let attr = fun(position);
@@ -19,9 +19,12 @@ pub trait PreState<T, R: StyleState + Default>: Sized {
     }
 }
 
+pub type AttributeGetter<T> = Box<dyn FnOnce(T) -> Attribute>;
+pub type Attributs = HashSet<Attribute>;
+
 #[derive(Default)]
 pub struct StyleBaseState;
-pub struct PreStyleBase<T>(Box<dyn FnOnce(T) -> Attribute>);
+pub struct PreStyleBase<T>(AttributeGetter<T>);
 
 impl<T> StyleState for PreStyleBase<T> {}
 
@@ -33,10 +36,10 @@ impl Default for Style<StyleBaseState> {
     }
 }
 
-pub struct Style<T: StyleState>(HashSet<Attribute>, T);
+pub struct Style<T: StyleState>(Attributs, T);
 
 impl<T> PreState<T, StyleBaseState> for Style<PreStyleBase<T>> {
-    fn destruct(self) -> (HashSet<Attribute>, Box<dyn FnOnce(T) -> Attribute>) {
+    fn destruct(self) -> (Attributs, AttributeGetter<T>) {
         let Self(attrs, PreStyleBase(fun)) = self;
         (attrs, fun)
     }
@@ -68,7 +71,7 @@ pub enum Attribute {
 }
 
 impl Style<StyleBaseState> {
-    fn med_attr<T>(self, fun: Box<dyn FnOnce(T) -> Attribute>) -> Style<PreStyleBase<T>> {
+    fn med_attr<T>(self, fun: AttributeGetter<T>) -> Style<PreStyleBase<T>> {
         let Self(core, _) = self;
         Style(core, PreStyleBase(fun))
     }

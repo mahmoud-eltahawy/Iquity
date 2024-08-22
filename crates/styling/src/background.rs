@@ -1,6 +1,8 @@
 use super::{Attribute, Style};
-use crate::{color::Color, length::Length, PreState, StyleBaseState, StyleState};
-use std::{collections::HashSet, fmt::Display};
+use crate::{
+    color::Color, length::Length, AttributeGetter, Attributs, PreState, StyleBaseState, StyleState,
+};
+use std::fmt::Display;
 
 #[derive(Hash, Eq, PartialEq)]
 pub struct XYPosition(PositionX, PositionY);
@@ -69,7 +71,7 @@ pub enum Attachment {
 pub struct BackgroundBaseState;
 pub struct BackgroundSizeState;
 pub struct BackgroundPreXPosition;
-pub struct PreBackgroundBase<T>(Box<dyn FnOnce(T) -> Attribute>);
+pub struct PreBackgroundBase<T>(AttributeGetter<T>);
 impl StyleState for BackgroundSizeState {}
 impl StyleState for BackgroundBaseState {}
 impl StyleState for BackgroundPreXPosition {}
@@ -77,14 +79,14 @@ impl StyleState for PositionX {}
 impl<T> StyleState for PreBackgroundBase<T> {}
 
 impl<T> PreState<T, BackgroundBaseState> for Style<PreBackgroundBase<T>> {
-    fn destruct(self) -> (HashSet<Attribute>, Box<dyn FnOnce(T) -> Attribute>) {
+    fn destruct(self) -> (Attributs, AttributeGetter<T>) {
         let Self(attrs, PreBackgroundBase(fun)) = self;
         (attrs, fun)
     }
 }
 
 impl Style<BackgroundBaseState> {
-    fn pre_base<T>(self, fun: Box<dyn FnOnce(T) -> Attribute>) -> Style<PreBackgroundBase<T>> {
+    fn pre_base<T>(self, fun: AttributeGetter<T>) -> Style<PreBackgroundBase<T>> {
         let Self(style, _) = self;
         Style(style, PreBackgroundBase(fun))
     }
