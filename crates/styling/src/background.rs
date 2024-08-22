@@ -1,6 +1,7 @@
-use super::{Attribute, Style};
+use super::{attribute::Attribute, Style};
 use crate::{
-    color::Color, length::Length, AttributeGetter, Attributs, PreState, StyleBaseState, StyleState,
+    attribute, color::Color, length::Length, AttributeGetter, Attributs, PreState, StyleBaseState,
+    StyleState,
 };
 use std::fmt::Display;
 
@@ -303,7 +304,7 @@ impl Style<BackgroundPreXPosition> {
 impl Style<PositionX> {
     fn inner(self, y: PositionY) -> Style<BackgroundBaseState> {
         let Self(mut style, x) = self;
-        style.insert(Attribute::BackgroundPosition(XYPosition(x, y)));
+        style.insert(attribute::Attribute::BackgroundPosition(XYPosition(x, y)));
         Style(style, BackgroundBaseState)
     }
 
