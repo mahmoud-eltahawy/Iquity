@@ -48,12 +48,10 @@ fn progress_bar() -> impl IntoView {
     let max = move || markdown.len.get();
     let value = move || markdown.current.get();
     let style = Style::default()
+        .accent_color()
+        .dark_green()
         .position()
         .fixed()
-        .background()
-        .color()
-        .hex(0x4CAF50)
-        .base()
         .bottom()
         .px(0)
         .height()

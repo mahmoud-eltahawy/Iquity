@@ -47,6 +47,7 @@ impl<T> PreState<T, StyleBaseState> for Style<PreStyleBase<T>> {
 
 #[derive(Hash, Eq, PartialEq)]
 pub enum Attribute {
+    AccentColor(Color),
     FontSize(Length),
     Position(CssPosition),
     Top(Length),
@@ -78,6 +79,10 @@ impl Style<StyleBaseState> {
 
     pub fn with_capacity(capacity: usize) -> Self {
         Self(HashSet::with_capacity(capacity), Default::default())
+    }
+
+    pub fn accent_color(self) -> Style<PreStyleBase<Color>> {
+        self.med_attr(Box::new(Attribute::AccentColor))
     }
 
     pub fn background(self) -> Style<background::BackgroundBaseState> {
@@ -149,6 +154,7 @@ impl Display for Style<StyleBaseState> {
                     format!("background-blend-mode:{blend};")
                 }
                 Attribute::BackgroundSize(size) => format!("background-size:{size};"),
+                Attribute::AccentColor(color) => format!("accent-color:{color};"),
             })
             .fold(String::new(), move |acc, x| acc + &x);
         write!(f, "{}", result)
