@@ -9,6 +9,7 @@ pub enum Attribute {
     AccentColor(Color),
     FontSize(Length),
     Position(simple_props::Position),
+    AlignContent(simple_props::AlignContent),
     Top(Length),
     Bottom(Length),
     Right(Length),
@@ -48,6 +49,10 @@ impl Style<StyleBaseState> {
         self.help(Box::new(Attribute::AccentColor))
     }
 
+    pub fn align_content(self) -> Style<PreStyleBase<simple_props::AlignContent>> {
+        self.help(Box::new(Attribute::AlignContent))
+    }
+
     pub fn fontsize(self) -> Style<PreStyleBase<Length>> {
         self.help(Box::new(Attribute::FontSize))
     }
@@ -84,7 +89,7 @@ impl Display for Style<StyleBaseState> {
             .iter()
             .map(|x| match x {
                 Attribute::FontSize(distance) => format!("font-size:{};", distance),
-                Attribute::Position(position) => position.to_string(),
+                Attribute::Position(position) => format!("position:{};", position),
                 Attribute::Top(distance) => format!("top:{};", distance),
                 Attribute::Bottom(distance) => format!("bottom:{};", distance),
                 Attribute::Right(distance) => format!("right:{};", distance),
@@ -113,6 +118,7 @@ impl Display for Style<StyleBaseState> {
                 }
                 Attribute::BackgroundSize(size) => format!("background-size:{size};"),
                 Attribute::AccentColor(color) => format!("accent-color:{color};"),
+                Attribute::AlignContent(align) => format!("align-content:{align};"),
             })
             .fold(String::new(), move |acc, x| acc + &x);
         write!(f, "{}", result)

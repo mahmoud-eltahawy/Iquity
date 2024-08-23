@@ -5,6 +5,8 @@ use std::fmt::Display;
 
 use paste::paste;
 
+use ident_case::RenameRule::KebabCase;
+
 macro_rules! simple_property {
     ($name:ident,$($varient:ident),+) => {
         paste! {
@@ -17,10 +19,10 @@ macro_rules! simple_property {
                 fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
                     let result = match self {
                         $(
-                            [<$name:camel>]::[<$varient:camel>] => stringify!([<$varient:camel:lower>]),
+                            [<$name:camel>]::[<$varient:camel>] => KebabCase.apply_to_variant(stringify!([<$varient>])),
                         )*
                     };
-                    write!(f, stringify!($name:{};),result)
+                    write!(f, "{}",result)
                 }
             }
 
@@ -37,4 +39,16 @@ macro_rules! simple_property {
     };
 }
 
-simple_property!(position, static_, relative, fixed, absolute, sticky);
+simple_property!(position, static_, relative, fixed, absolute, sticky, initial, inherit);
+simple_property!(
+    align_content,
+    stretch,
+    center,
+    flex_start,
+    flex_end,
+    space_between,
+    space_around,
+    space_evenly,
+    initial,
+    inherit
+);
