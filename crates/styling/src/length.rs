@@ -28,7 +28,8 @@ pub enum Length {
 }
 
 macro_rules! style_impl {
-    ($target:ident,$output:ident) => {
+    ($($target:ident,$output:ident),*) => {
+        $(
         impl Style<$target<Length>> {
             pub fn px(self, num: u8) -> Style<$output> {
                 self.base(Length::Px(num))
@@ -79,12 +80,16 @@ macro_rules! style_impl {
             pub fn vmax(self, num: u8) -> Style<$output> {
                 self.base(Length::Vmax(num))
             }
-        }
+        })*
     };
 }
 
-style_impl!(PreStyleBase, StyleBaseState);
-style_impl!(PreBackgroundBase, BackgroundBaseState);
+style_impl!(
+    PreStyleBase,
+    StyleBaseState,
+    PreBackgroundBase,
+    BackgroundBaseState
+);
 
 impl Display for Length {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

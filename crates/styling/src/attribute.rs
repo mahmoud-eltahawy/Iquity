@@ -1,6 +1,6 @@
 use std::{collections::HashSet, fmt::Display};
 
-use crate::{background, color::Color, length::Length, position::CssPosition};
+use crate::{background, color::Color, length::Length, simple_props};
 
 use super::{AttributeGetter, PreStyleBase, Style, StyleBaseState};
 
@@ -8,7 +8,7 @@ use super::{AttributeGetter, PreStyleBase, Style, StyleBaseState};
 pub enum Attribute {
     AccentColor(Color),
     FontSize(Length),
-    Position(CssPosition),
+    Position(simple_props::Position),
     Top(Length),
     Bottom(Length),
     Right(Length),
@@ -72,7 +72,7 @@ impl Style<StyleBaseState> {
         self.help(Box::new(Attribute::Width))
     }
 
-    pub fn position(self) -> Style<PreStyleBase<CssPosition>> {
+    pub fn position(self) -> Style<PreStyleBase<simple_props::Position>> {
         self.help(Box::new(Attribute::Position))
     }
 }
