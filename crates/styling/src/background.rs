@@ -1,13 +1,14 @@
 use super::{attribute::Attribute, Style};
 use crate::{
-    attribute, color::Color, length::Length, AttributeGetter, Attributs, PreBaseState,
-    StyleBaseState, StyleState,
+    attribute, color::Color, length::Length, simple_props, AttributeGetter, Attributs,
+    PreBaseState, StyleBaseState, StyleState,
 };
 use std::fmt::Display;
 
 #[derive(Hash, Eq, PartialEq)]
 pub struct XYPosition(PositionX, PositionY);
 
+//TODO: missing some fields
 #[derive(Hash, Eq, PartialEq)]
 pub enum PositionY {
     Top,
@@ -15,41 +16,12 @@ pub enum PositionY {
     Center,
 }
 
+//TODO: missing some fields
 #[derive(Hash, Eq, PartialEq)]
 pub enum PositionX {
     Left,
     Right,
     Center,
-}
-
-#[derive(Hash, Eq, PartialEq)]
-pub enum Repeat {
-    X,
-    Y,
-    None,
-}
-
-#[derive(Hash, Eq, PartialEq)]
-pub enum Origin {
-    PaddingBox,
-    BorderBox,
-    ContentBox,
-    Initial,
-    Inherit,
-}
-
-#[derive(Hash, Eq, PartialEq)]
-pub enum BlendMode {
-    Normal,
-    Multiply,
-    Screen,
-    Overlay,
-    Darken,
-    Lighten,
-    ColorDodge,
-    Saturation,
-    Color,
-    Luminosity,
 }
 
 #[derive(Hash, Eq, PartialEq)]
@@ -60,12 +32,6 @@ pub enum Size {
     Contain,
     Cover,
     Length(Length),
-}
-
-#[derive(Hash, Eq, PartialEq)]
-pub enum Attachment {
-    Fixed,
-    Scroll,
 }
 
 #[derive(Default)]
@@ -112,23 +78,23 @@ impl Style<BackgroundBaseState> {
         Style(style, BackgroundBaseState)
     }
 
-    pub fn repeat(self) -> Style<PreBackgroundBase<Repeat>> {
+    pub fn repeat(self) -> Style<PreBackgroundBase<simple_props::Repeat>> {
         self.pre_base(Box::new(Attribute::BackgroundRepeat))
     }
 
-    pub fn origin(self) -> Style<PreBackgroundBase<Origin>> {
+    pub fn origin(self) -> Style<PreBackgroundBase<simple_props::Origin>> {
         self.pre_base(Box::new(Attribute::BackgroundOrigin))
     }
 
-    pub fn clip(self) -> Style<PreBackgroundBase<Origin>> {
+    pub fn clip(self) -> Style<PreBackgroundBase<simple_props::Origin>> {
         self.pre_base(Box::new(Attribute::BackgroundClip))
     }
 
-    pub fn blend_mode(self) -> Style<PreBackgroundBase<BlendMode>> {
+    pub fn blend_mode(self) -> Style<PreBackgroundBase<simple_props::BlendMode>> {
         self.pre_base(Box::new(Attribute::BackgroundBlendMode))
     }
 
-    pub fn attachment(self) -> Style<PreBackgroundBase<Attachment>> {
+    pub fn attachment(self) -> Style<PreBackgroundBase<simple_props::Attachment>> {
         self.pre_base(Box::new(Attribute::BackgroundAttachment))
     }
 
@@ -218,67 +184,67 @@ impl Style<PreBackgroundBase<PositionY>> {
     }
 }
 
-impl Style<PreBackgroundBase<Origin>> {
+impl Style<PreBackgroundBase<simple_props::Origin>> {
     pub fn padding_box(self) -> Style<BackgroundBaseState> {
-        self.base(Origin::PaddingBox)
+        self.base(simple_props::Origin::PaddingBox)
     }
 
     pub fn border_box(self) -> Style<BackgroundBaseState> {
-        self.base(Origin::BorderBox)
+        self.base(simple_props::Origin::BorderBox)
     }
 
     pub fn content_box(self) -> Style<BackgroundBaseState> {
-        self.base(Origin::ContentBox)
+        self.base(simple_props::Origin::ContentBox)
     }
 
     pub fn initial(self) -> Style<BackgroundBaseState> {
-        self.base(Origin::Initial)
+        self.base(simple_props::Origin::Initial)
     }
 
     pub fn inherit(self) -> Style<BackgroundBaseState> {
-        self.base(Origin::Inherit)
+        self.base(simple_props::Origin::Inherit)
     }
 }
 
-impl Style<PreBackgroundBase<BlendMode>> {
+impl Style<PreBackgroundBase<simple_props::BlendMode>> {
     pub fn normal(self) -> Style<BackgroundBaseState> {
-        self.base(BlendMode::Normal)
+        self.base(simple_props::BlendMode::Normal)
     }
 
     pub fn multiply(self) -> Style<BackgroundBaseState> {
-        self.base(BlendMode::Multiply)
+        self.base(simple_props::BlendMode::Multiply)
     }
 
     pub fn screen(self) -> Style<BackgroundBaseState> {
-        self.base(BlendMode::Screen)
+        self.base(simple_props::BlendMode::Screen)
     }
 
     pub fn overlay(self) -> Style<BackgroundBaseState> {
-        self.base(BlendMode::Overlay)
+        self.base(simple_props::BlendMode::Overlay)
     }
 
     pub fn darken(self) -> Style<BackgroundBaseState> {
-        self.base(BlendMode::Darken)
+        self.base(simple_props::BlendMode::Darken)
     }
 
     pub fn lighten(self) -> Style<BackgroundBaseState> {
-        self.base(BlendMode::Lighten)
+        self.base(simple_props::BlendMode::Lighten)
     }
 
     pub fn color_dodge(self) -> Style<BackgroundBaseState> {
-        self.base(BlendMode::ColorDodge)
+        self.base(simple_props::BlendMode::ColorDodge)
     }
 
     pub fn saturation(self) -> Style<BackgroundBaseState> {
-        self.base(BlendMode::Saturation)
+        self.base(simple_props::BlendMode::Saturation)
     }
 
     pub fn color(self) -> Style<BackgroundBaseState> {
-        self.base(BlendMode::Color)
+        self.base(simple_props::BlendMode::Color)
     }
 
     pub fn luminosity(self) -> Style<BackgroundBaseState> {
-        self.base(BlendMode::Luminosity)
+        self.base(simple_props::BlendMode::Luminosity)
     }
 }
 
@@ -349,77 +315,49 @@ impl Display for XYPosition {
     }
 }
 
-impl Style<PreBackgroundBase<Attachment>> {
+impl Style<PreBackgroundBase<simple_props::Attachment>> {
     pub fn scroll(self) -> Style<BackgroundBaseState> {
-        self.base(Attachment::Scroll)
+        self.base(simple_props::Attachment::Scroll)
     }
 
     pub fn fixed(self) -> Style<BackgroundBaseState> {
-        self.base(Attachment::Fixed)
+        self.base(simple_props::Attachment::Fixed)
+    }
+
+    pub fn local(self) -> Style<BackgroundBaseState> {
+        self.base(simple_props::Attachment::Local)
+    }
+
+    pub fn initial(self) -> Style<BackgroundBaseState> {
+        self.base(simple_props::Attachment::Initial)
+    }
+
+    pub fn inherit(self) -> Style<BackgroundBaseState> {
+        self.base(simple_props::Attachment::Inherit)
     }
 }
 
-impl Style<PreBackgroundBase<Repeat>> {
+impl Style<PreBackgroundBase<simple_props::Repeat>> {
     pub fn x(self) -> Style<BackgroundBaseState> {
-        self.base(Repeat::X)
+        self.base(simple_props::Repeat::RepeatX)
     }
     pub fn y(self) -> Style<BackgroundBaseState> {
-        self.base(Repeat::Y)
+        self.base(simple_props::Repeat::RepeatY)
     }
     pub fn none(self) -> Style<BackgroundBaseState> {
-        self.base(Repeat::None)
+        self.base(simple_props::Repeat::NoRepeat)
     }
-}
-
-impl Display for Attachment {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let result = match self {
-            Attachment::Fixed => "fixed",
-            Attachment::Scroll => "scroll",
-        };
-        write!(f, "{result}")
+    pub fn space(self) -> Style<BackgroundBaseState> {
+        self.base(simple_props::Repeat::Space)
     }
-}
-
-impl Display for Repeat {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let result = match self {
-            Repeat::X => "repeat-x",
-            Repeat::Y => "repeat-y",
-            Repeat::None => "no-repeat",
-        };
-        write!(f, "{result}")
+    pub fn round(self) -> Style<BackgroundBaseState> {
+        self.base(simple_props::Repeat::Round)
     }
-}
-
-impl Display for Origin {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let result = match self {
-            Origin::PaddingBox => "padding-box",
-            Origin::BorderBox => "border-box",
-            Origin::ContentBox => "content-box",
-            Origin::Initial => "initial",
-            Origin::Inherit => "inherit",
-        };
-        write!(f, "{result}")
+    pub fn initial(self) -> Style<BackgroundBaseState> {
+        self.base(simple_props::Repeat::Initial)
     }
-}
-
-impl Display for BlendMode {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let result = match self {
-            BlendMode::Normal => "normal",
-            BlendMode::Multiply => "multiply",
-            BlendMode::Screen => "screen",
-            BlendMode::Overlay => "overlay",
-            BlendMode::Darken => "darken",
-            BlendMode::Lighten => "lighten",
-            BlendMode::ColorDodge => "colorDodge",
-            BlendMode::Saturation => "saturation",
-            BlendMode::Color => "color",
-            BlendMode::Luminosity => "luminosity",
-        };
-        write!(f, "{result}")
+    pub fn inherit(self) -> Style<BackgroundBaseState> {
+        self.base(simple_props::Repeat::Inherit)
     }
 }
 

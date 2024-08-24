@@ -67,3 +67,26 @@ simple_property!(
 );
 simple_property!(all, initial, inherit, unset);
 simple_property!(position, static_, relative, fixed, absolute, sticky, initial, inherit);
+simple_property!(repeat, repeat_x, repeat_y, no_repeat, space, round, initial, inherit);
+simple_property!(attachment, scroll, fixed, local, initial, inherit);
+simple_property!(
+    origin,
+    padding_box,
+    border_box,
+    content_box,
+    initial,
+    inherit
+);
+simple_property!(
+    blend_mode,
+    normal,
+    multiply,
+    screen,
+    overlay,
+    darken,
+    lighten,
+    color_dodge,
+    saturation,
+    color,
+    luminosity
+);
