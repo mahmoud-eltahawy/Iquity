@@ -61,7 +61,7 @@ fn progress_bar() -> impl IntoView {
     let value = move || markdown.current.get();
     let style = Style::default()
         .accent_color()
-        .cornflowerblue()
+        .cornflower_blue()
         .position()
         .fixed()
         .bottom()

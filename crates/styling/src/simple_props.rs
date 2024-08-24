@@ -10,6 +10,7 @@ use ident_case::RenameRule::KebabCase;
 macro_rules! simple_property {
     ($name:ident,$($varient:ident),+) => {
         paste! {
+            #[allow(clippy::enum_variant_names)]
             #[derive(Hash, Eq, PartialEq)]
             pub enum [<$name:camel>] {
                 $([<$varient:camel>],)*
