@@ -8,8 +8,6 @@ use super::{AttributeGetter, PreStyleBase, Style, StyleBaseState};
 pub enum Attribute {
     AccentColor(Color),
     FontSize(Length),
-    Position(simple_props::Position),
-    AlignContent(simple_props::AlignContent),
     Top(Length),
     Bottom(Length),
     Right(Length),
@@ -29,6 +27,11 @@ pub enum Attribute {
     BackgroundClip(background::Origin),
     BackgroundBlendMode(background::BlendMode),
     BackgroundSize(background::Size),
+    AlignContent(simple_props::AlignContent),
+    AlignItems(simple_props::AlignItems),
+    AlignSelf(simple_props::AlignSelf),
+    All(simple_props::All),
+    Position(simple_props::Position),
 }
 
 impl Style<StyleBaseState> {
@@ -47,10 +50,6 @@ impl Style<StyleBaseState> {
 
     pub fn accent_color(self) -> Style<PreStyleBase<Color>> {
         self.help(Box::new(Attribute::AccentColor))
-    }
-
-    pub fn align_content(self) -> Style<PreStyleBase<simple_props::AlignContent>> {
-        self.help(Box::new(Attribute::AlignContent))
     }
 
     pub fn fontsize(self) -> Style<PreStyleBase<Length>> {
@@ -77,6 +76,22 @@ impl Style<StyleBaseState> {
         self.help(Box::new(Attribute::Width))
     }
 
+    pub fn align_content(self) -> Style<PreStyleBase<simple_props::AlignContent>> {
+        self.help(Box::new(Attribute::AlignContent))
+    }
+
+    pub fn align_items(self) -> Style<PreStyleBase<simple_props::AlignItems>> {
+        self.help(Box::new(Attribute::AlignItems))
+    }
+
+    pub fn align_self(self) -> Style<PreStyleBase<simple_props::AlignSelf>> {
+        self.help(Box::new(Attribute::AlignSelf))
+    }
+
+    pub fn all(self) -> Style<PreStyleBase<simple_props::All>> {
+        self.help(Box::new(Attribute::All))
+    }
+
     pub fn position(self) -> Style<PreStyleBase<simple_props::Position>> {
         self.help(Box::new(Attribute::Position))
     }
@@ -88,37 +103,40 @@ impl Display for Style<StyleBaseState> {
             .0
             .iter()
             .map(|x| match x {
-                Attribute::FontSize(distance) => format!("font-size:{};", distance),
-                Attribute::Position(position) => format!("position:{};", position),
-                Attribute::Top(distance) => format!("top:{};", distance),
-                Attribute::Bottom(distance) => format!("bottom:{};", distance),
-                Attribute::Right(distance) => format!("right:{};", distance),
-                Attribute::Left(distance) => format!("left:{};", distance),
-                Attribute::Height(distance) => format!("height:{};", distance),
-                Attribute::Width(distance) => format!("width:{};", distance),
-                Attribute::Margin(distance) => format!("margin:{};", distance),
-                Attribute::Padding(distance) => format!("padding:{};", distance),
-                Attribute::BackgroundColor(color) => {
-                    format!("background-color:{};", color)
+                Attribute::FontSize(x) => format!("font-size:{x};"),
+                Attribute::Top(x) => format!("top:{x};"),
+                Attribute::Bottom(x) => format!("bottom:{x};"),
+                Attribute::Right(x) => format!("right:{x};"),
+                Attribute::Left(x) => format!("left:{x};"),
+                Attribute::Height(x) => format!("height:{x};"),
+                Attribute::Width(x) => format!("width:{x};"),
+                Attribute::Margin(x) => format!("margin:{x};"),
+                Attribute::Padding(x) => format!("padding:{x};"),
+                Attribute::BackgroundColor(x) => {
+                    format!("background-color:{x};")
                 }
-                Attribute::BackgroundImage(url) => format!("background-image:url({});", url),
-                Attribute::BackgroundRepeat(repeat) => {
-                    format!("background-repeat:{repeat};")
+                Attribute::BackgroundImage(x) => format!("background-image:url({x});"),
+                Attribute::BackgroundRepeat(x) => {
+                    format!("background-repeat:{x};")
                 }
-                Attribute::BackgroundAttachment(attachment) => {
-                    format!("background-attachment:{attachment};")
+                Attribute::BackgroundAttachment(x) => {
+                    format!("background-attachment:{x};")
                 }
-                Attribute::BackgroundPosition(p) => format!("background-position:{p};"),
-                Attribute::BackgroundPositionX(p) => format!("background-position-x:{p};"),
-                Attribute::BackgroundPositionY(p) => format!("background-position-y:{p};"),
-                Attribute::BackgroundOrigin(origin) => format!("background-origin:{origin};"),
-                Attribute::BackgroundClip(origin) => format!("background-clip:{origin};"),
-                Attribute::BackgroundBlendMode(blend) => {
-                    format!("background-blend-mode:{blend};")
+                Attribute::BackgroundPosition(x) => format!("background-position:{x};"),
+                Attribute::BackgroundPositionX(x) => format!("background-position-x:{x};"),
+                Attribute::BackgroundPositionY(x) => format!("background-position-y:{x};"),
+                Attribute::BackgroundOrigin(x) => format!("background-origin:{x};"),
+                Attribute::BackgroundClip(x) => format!("background-clip:{x};"),
+                Attribute::BackgroundBlendMode(x) => {
+                    format!("background-blend-mode:{x};")
                 }
-                Attribute::BackgroundSize(size) => format!("background-size:{size};"),
-                Attribute::AccentColor(color) => format!("accent-color:{color};"),
-                Attribute::AlignContent(align) => format!("align-content:{align};"),
+                Attribute::BackgroundSize(x) => format!("background-size:{x};"),
+                Attribute::AccentColor(x) => format!("accent-color:{x};"),
+                Attribute::AlignContent(x) => format!("align-content:{x};"),
+                Attribute::AlignItems(x) => format!("align-items:{x};"),
+                Attribute::AlignSelf(x) => format!("align-self:{x};"),
+                Attribute::All(x) => format!("all:{x};"),
+                Attribute::Position(x) => format!("position:{x};"),
             })
             .fold(String::new(), move |acc, x| acc + &x);
         write!(f, "{}", result)

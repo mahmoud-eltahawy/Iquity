@@ -38,8 +38,6 @@ macro_rules! simple_property {
         }
     };
 }
-
-simple_property!(position, static_, relative, fixed, absolute, sticky, initial, inherit);
 simple_property!(
     align_content,
     stretch,
@@ -52,3 +50,20 @@ simple_property!(
     initial,
     inherit
 );
+simple_property!(
+    align_items,
+    stretch,
+    center,
+    flex_start,
+    flex_end,
+    start,
+    end,
+    baseline,
+    initial,
+    inherit
+);
+simple_property!(
+    align_self, auto, stretch, center, flex_start, flex_end, baseline, initial, inherit
+);
+simple_property!(all, initial, inherit, unset);
+simple_property!(position, static_, relative, fixed, absolute, sticky, initial, inherit);
