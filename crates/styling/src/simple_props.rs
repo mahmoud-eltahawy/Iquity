@@ -19,7 +19,7 @@ macro_rules! simple_property {
                 fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
                     let result = match self {
                         $(
-                            [<$name:camel>]::[<$varient:camel>] => KebabCase.apply_to_variant(stringify!([<$varient>])),
+                            [<$name:camel>]::[<$varient:camel>] => KebabCase.apply_to_variant(stringify!([<$varient:camel:snake>])),
                         )*
                     };
                     write!(f, "{}",result)
