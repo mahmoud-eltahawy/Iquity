@@ -9,11 +9,11 @@ use ident_case::RenameRule::KebabCase;
 
 #[derive(Hash, Eq, PartialEq)]
 pub enum SimpleAttribute {
-    BackgroundBlendMode(BlendMode),
-    BackgroundRepeat(Repeat),
-    BackgroundAttachment(Attachment),
-    BackgroundOrigin(Origin),
-    BackgroundClip(Origin),
+    BackgroundBlendMode(BackgroundBlendMode),
+    BackgroundRepeat(BackgroundRepeat),
+    BackgroundAttachment(BackgroundAttachment),
+    BackgroundOrigin(BackgroundOrigin),
+    BackgroundClip(BackgroundClip),
     AlignContent(AlignContent),
     AlignItems(AlignItems),
     AlignSelf(AlignSelf),
@@ -29,6 +29,7 @@ impl Display for SimpleAttribute {
             Self::BackgroundBlendMode(x) => {
                 format!("background-blend-mode:{x};")
             }
+            Self::BackgroundRepeat(x) => format!("background-repeat:{x};"),
             Self::AlignContent(x) => format!("align-content:{x};"),
             Self::AlignItems(x) => format!("align-items:{x};"),
             Self::AlignSelf(x) => format!("align-self:{x};"),
@@ -36,7 +37,6 @@ impl Display for SimpleAttribute {
             Self::BoxDecorationBreak(x) => format!("box-decoration-break:{x};"),
             Self::Position(x) => format!("position:{x};"),
             Self::BoxSizing(x) => format!("box-sizing:{x};"),
-            Self::BackgroundRepeat(x) => format!("background-repeat:{x};"),
             Self::BackgroundAttachment(x) => format!("background-attachment:{x};"),
             Self::BackgroundOrigin(x) => format!("background-origin:{x};"),
             Self::BackgroundClip(x) => format!("background-clip:{x};"),
@@ -52,6 +52,12 @@ macro_rules! simple_property {
             #[derive(Hash, Eq, PartialEq)]
             pub enum [<$name:camel>] {
                 $([<$varient:camel>],)*
+            }
+
+            impl [<$name:camel>] {
+                pub fn simple_attribute(self) -> SimpleAttribute {
+                    SimpleAttribute::[<$name:camel>](self)
+                }
             }
 
             impl Display for [<$name:camel>]{
@@ -103,16 +109,20 @@ simple_property!(
     static_ | relative | fixed | absolute | sticky | initial | inherit
 );
 simple_property!(
-    repeat:
+    background_repeat:
     repeat_x | repeat_y | no_repeat | space | round | initial | inherit
 );
-simple_property!(attachment: scroll | fixed | local | initial | inherit);
+simple_property!(background_attachment: scroll | fixed | local | initial | inherit);
 simple_property!(
-    origin:
+    background_origin:
     padding_box | border_box | content_box | initial | inherit
 );
 simple_property!(
-    blend_mode:
+    background_clip:
+    padding_box | border_box | content_box | initial | inherit
+);
+simple_property!(
+    background_blend_mode:
     normal
         | multiply
         | screen

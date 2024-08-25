@@ -69,43 +69,43 @@ impl Style<StyleBaseState> {
 
     pub fn align_content(self) -> Style<PreStyleBase<simple_props::AlignContent>> {
         self.help(Box::new(|x| {
-            Attribute::SimpleAttribute(simple_props::SimpleAttribute::AlignContent(x))
+            Attribute::SimpleAttribute(x.simple_attribute())
         }))
     }
 
     pub fn align_items(self) -> Style<PreStyleBase<simple_props::AlignItems>> {
         self.help(Box::new(|x| {
-            Attribute::SimpleAttribute(simple_props::SimpleAttribute::AlignItems(x))
+            Attribute::SimpleAttribute(x.simple_attribute())
         }))
     }
 
     pub fn align_self(self) -> Style<PreStyleBase<simple_props::AlignSelf>> {
         self.help(Box::new(|x| {
-            Attribute::SimpleAttribute(simple_props::SimpleAttribute::AlignSelf(x))
+            Attribute::SimpleAttribute(x.simple_attribute())
         }))
     }
 
     pub fn all(self) -> Style<PreStyleBase<simple_props::All>> {
         self.help(Box::new(|x| {
-            Attribute::SimpleAttribute(simple_props::SimpleAttribute::All(x))
+            Attribute::SimpleAttribute(x.simple_attribute())
         }))
     }
 
     pub fn position(self) -> Style<PreStyleBase<simple_props::Position>> {
         self.help(Box::new(|x| {
-            Attribute::SimpleAttribute(simple_props::SimpleAttribute::Position(x))
+            Attribute::SimpleAttribute(x.simple_attribute())
         }))
     }
 
     pub fn box_decoration_break(self) -> Style<PreStyleBase<simple_props::BoxDecorationBreak>> {
         self.help(Box::new(|x| {
-            Attribute::SimpleAttribute(simple_props::SimpleAttribute::BoxDecorationBreak(x))
+            Attribute::SimpleAttribute(x.simple_attribute())
         }))
     }
 
     pub fn box_sizing(self) -> Style<PreStyleBase<simple_props::BoxSizing>> {
         self.help(Box::new(|x| {
-            Attribute::SimpleAttribute(simple_props::SimpleAttribute::BoxSizing(x))
+            Attribute::SimpleAttribute(x.simple_attribute())
         }))
     }
 }
