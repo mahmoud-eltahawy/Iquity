@@ -7,42 +7,29 @@ use paste::paste;
 
 use ident_case::RenameRule::KebabCase;
 
-#[derive(Hash, Eq, PartialEq)]
-pub enum SimpleAttribute {
-    BackgroundBlendMode(BackgroundBlendMode),
-    BackgroundRepeat(BackgroundRepeat),
-    BackgroundAttachment(BackgroundAttachment),
-    BackgroundOrigin(BackgroundOrigin),
-    BackgroundClip(BackgroundClip),
-    AlignContent(AlignContent),
-    AlignItems(AlignItems),
-    AlignSelf(AlignSelf),
-    All(All),
-    Position(Position),
-    BoxDecorationBreak(BoxDecorationBreak),
-    BoxSizing(BoxSizing),
-}
-
-impl Display for SimpleAttribute {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let result = match self {
-            Self::BackgroundBlendMode(x) => {
-                format!("background-blend-mode:{x};")
+macro_rules! define_properties {
+    ($($name:ident):+) => {
+        paste!{
+            #[derive(Hash, Eq, PartialEq)]
+            pub enum SimpleAttribute {
+                $(
+                    [<$name:camel>]([<$name:camel>]),
+                )*
             }
-            Self::BackgroundRepeat(x) => format!("background-repeat:{x};"),
-            Self::AlignContent(x) => format!("align-content:{x};"),
-            Self::AlignItems(x) => format!("align-items:{x};"),
-            Self::AlignSelf(x) => format!("align-self:{x};"),
-            Self::All(x) => format!("all:{x};"),
-            Self::BoxDecorationBreak(x) => format!("box-decoration-break:{x};"),
-            Self::Position(x) => format!("position:{x};"),
-            Self::BoxSizing(x) => format!("box-sizing:{x};"),
-            Self::BackgroundAttachment(x) => format!("background-attachment:{x};"),
-            Self::BackgroundOrigin(x) => format!("background-origin:{x};"),
-            Self::BackgroundClip(x) => format!("background-clip:{x};"),
-        };
-        write!(f, "{}", result)
-    }
+
+            impl Display for SimpleAttribute {
+                fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                    let result = match self {
+                        $(
+                            Self::[<$name:camel>](x) => format!("{}:{};",KebabCase.apply_to_variant(stringify!($name)),x),
+                        )*
+                    };
+                    write!(f, "{}", result)
+                }
+
+            }
+        }
+    };
 }
 
 macro_rules! simple_property {
@@ -83,6 +70,22 @@ macro_rules! simple_property {
         }
     };
 }
+
+define_properties!(
+    box_decoration_break:
+    box_sizing:
+    align_content:
+    align_items:
+    align_self:
+    all:
+    background_attachment:
+    background_repeat:
+    background_origin:
+    background_clip:
+    background_blend_mode:
+    position
+);
+
 simple_property!(
     align_content:
     stretch
