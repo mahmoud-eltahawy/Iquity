@@ -10,6 +10,10 @@ use ident_case::RenameRule::KebabCase;
 macro_rules! define_properties {
     ($($name:ident):+) => {
         paste!{
+            pub(crate) trait ToSimpleAttribute {
+                fn attribute(self) -> SimpleAttribute;
+            }
+
             #[derive(Hash, Eq, PartialEq)]
             pub enum SimpleAttribute {
                 $(
@@ -41,8 +45,8 @@ macro_rules! simple_property {
                 $([<$varient:camel>],)*
             }
 
-            impl [<$name:camel>] {
-                pub fn simple_attribute(self) -> SimpleAttribute {
+            impl ToSimpleAttribute for [<$name:camel>] {
+                fn attribute(self) -> SimpleAttribute {
                     SimpleAttribute::[<$name:camel>](self)
                 }
             }
