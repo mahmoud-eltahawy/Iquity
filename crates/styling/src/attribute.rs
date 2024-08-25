@@ -32,6 +32,7 @@ pub enum Attribute {
     AlignSelf(simple_props::AlignSelf),
     All(simple_props::All),
     Position(simple_props::Position),
+    BoxDecorationBreak(simple_props::BoxDecorationBreak),
 }
 
 impl Style<StyleBaseState> {
@@ -95,6 +96,10 @@ impl Style<StyleBaseState> {
     pub fn position(self) -> Style<PreStyleBase<simple_props::Position>> {
         self.help(Box::new(Attribute::Position))
     }
+
+    pub fn box_decoration_break(self) -> Style<PreStyleBase<simple_props::BoxDecorationBreak>> {
+        self.help(Box::new(Attribute::BoxDecorationBreak))
+    }
 }
 
 impl Display for Style<StyleBaseState> {
@@ -136,6 +141,7 @@ impl Display for Style<StyleBaseState> {
                 Attribute::AlignItems(x) => format!("align-items:{x};"),
                 Attribute::AlignSelf(x) => format!("align-self:{x};"),
                 Attribute::All(x) => format!("all:{x};"),
+                Attribute::BoxDecorationBreak(x) => format!("box-decoration-break:{x};"),
                 Attribute::Position(x) => format!("position:{x};"),
             })
             .fold(String::new(), move |acc, x| acc + &x);
