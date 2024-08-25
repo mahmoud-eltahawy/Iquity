@@ -1,4 +1,4 @@
-use crate::{PreBaseState, PreStyleBase, StyleBaseState};
+use crate::{attribute::Attribute, PreBaseState, PreStyleBase, StyleBaseState};
 
 use super::Style;
 use std::fmt::Display;
@@ -10,8 +10,8 @@ use ident_case::RenameRule::KebabCase;
 macro_rules! define_properties {
     ($($name:ident):+) => {
         paste!{
-            pub(crate) trait ToSimpleAttribute {
-                fn attribute(self) -> SimpleAttribute;
+            pub(crate) trait ToAttribute {
+                fn attribute(self) -> Attribute;
             }
 
             #[derive(Hash, Eq, PartialEq)]
@@ -45,9 +45,9 @@ macro_rules! simple_property {
                 $([<$varient:camel>],)*
             }
 
-            impl ToSimpleAttribute for [<$name:camel>] {
-                fn attribute(self) -> SimpleAttribute {
-                    SimpleAttribute::[<$name:camel>](self)
+            impl ToAttribute for [<$name:camel>] {
+                fn attribute(self) -> Attribute {
+                    Attribute::SimpleAttribute(SimpleAttribute::[<$name:camel>](self))
                 }
             }
 

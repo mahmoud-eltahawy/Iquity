@@ -3,7 +3,7 @@ use crate::{
     attribute,
     color::Color,
     length::Length,
-    simple_props::{self, ToSimpleAttribute},
+    simple_props::{self, ToAttribute},
     AttributeGetter, Attributs, PreBaseState, StyleBaseState, StyleState,
 };
 use std::fmt::Display;
@@ -103,23 +103,23 @@ impl Style<BackgroundBaseState> {
     }
 
     pub fn repeat(self) -> Style<PreBackgroundBase<simple_props::BackgroundRepeat>> {
-        self.pre_base(Box::new(|x| Attribute::SimpleAttribute(x.attribute())))
+        self.pre_base(Box::new(ToAttribute::attribute))
     }
 
     pub fn origin(self) -> Style<PreBackgroundBase<simple_props::BackgroundOrigin>> {
-        self.pre_base(Box::new(|x| Attribute::SimpleAttribute(x.attribute())))
+        self.pre_base(Box::new(ToAttribute::attribute))
     }
 
     pub fn clip(self) -> Style<PreBackgroundBase<simple_props::BackgroundClip>> {
-        self.pre_base(Box::new(|x| Attribute::SimpleAttribute(x.attribute())))
+        self.pre_base(Box::new(ToAttribute::attribute))
     }
 
     pub fn blend_mode(self) -> Style<PreBackgroundBase<simple_props::BackgroundBlendMode>> {
-        self.pre_base(Box::new(|x| Attribute::SimpleAttribute(x.attribute())))
+        self.pre_base(Box::new(ToAttribute::attribute))
     }
 
     pub fn attachment(self) -> Style<PreBackgroundBase<simple_props::BackgroundAttachment>> {
-        self.pre_base(Box::new(|x| Attribute::SimpleAttribute(x.attribute())))
+        self.pre_base(Box::new(ToAttribute::attribute))
     }
 }
 
