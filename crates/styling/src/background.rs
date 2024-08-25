@@ -78,26 +78,6 @@ impl Style<BackgroundBaseState> {
         Style(style, BackgroundBaseState)
     }
 
-    pub fn repeat(self) -> Style<PreBackgroundBase<simple_props::Repeat>> {
-        self.pre_base(Box::new(Attribute::BackgroundRepeat))
-    }
-
-    pub fn origin(self) -> Style<PreBackgroundBase<simple_props::Origin>> {
-        self.pre_base(Box::new(Attribute::BackgroundOrigin))
-    }
-
-    pub fn clip(self) -> Style<PreBackgroundBase<simple_props::Origin>> {
-        self.pre_base(Box::new(Attribute::BackgroundClip))
-    }
-
-    pub fn blend_mode(self) -> Style<PreBackgroundBase<simple_props::BlendMode>> {
-        self.pre_base(Box::new(Attribute::BackgroundBlendMode))
-    }
-
-    pub fn attachment(self) -> Style<PreBackgroundBase<simple_props::Attachment>> {
-        self.pre_base(Box::new(Attribute::BackgroundAttachment))
-    }
-
     pub fn position(self) -> Style<BackgroundPreXPosition> {
         let Self(style, _) = self;
         Style(style, BackgroundPreXPosition)
@@ -117,6 +97,36 @@ impl Style<BackgroundBaseState> {
             style,
             PreBackgroundBase(Box::new(Attribute::BackgroundPositionY)),
         )
+    }
+
+    pub fn repeat(self) -> Style<PreBackgroundBase<simple_props::Repeat>> {
+        self.pre_base(Box::new(|x| {
+            Attribute::SimpleAttribute(simple_props::SimpleAttribute::BackgroundRepeat(x))
+        }))
+    }
+
+    pub fn origin(self) -> Style<PreBackgroundBase<simple_props::Origin>> {
+        self.pre_base(Box::new(|x| {
+            Attribute::SimpleAttribute(simple_props::SimpleAttribute::BackgroundOrigin(x))
+        }))
+    }
+
+    pub fn clip(self) -> Style<PreBackgroundBase<simple_props::Origin>> {
+        self.pre_base(Box::new(|x| {
+            Attribute::SimpleAttribute(simple_props::SimpleAttribute::BackgroundClip(x))
+        }))
+    }
+
+    pub fn blend_mode(self) -> Style<PreBackgroundBase<simple_props::BlendMode>> {
+        self.pre_base(Box::new(|x| {
+            Attribute::SimpleAttribute(simple_props::SimpleAttribute::BackgroundBlendMode(x))
+        }))
+    }
+
+    pub fn attachment(self) -> Style<PreBackgroundBase<simple_props::Attachment>> {
+        self.pre_base(Box::new(|x| {
+            Attribute::SimpleAttribute(simple_props::SimpleAttribute::BackgroundAttachment(x))
+        }))
     }
 }
 

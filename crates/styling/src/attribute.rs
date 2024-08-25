@@ -22,18 +22,7 @@ pub enum Attribute {
     BackgroundPositionY(background::PositionY),
     BackgroundPosition(background::XYPosition),
     BackgroundSize(background::Size),
-    BackgroundBlendMode(simple_props::BlendMode),
-    BackgroundRepeat(simple_props::Repeat),
-    BackgroundAttachment(simple_props::Attachment),
-    BackgroundOrigin(simple_props::Origin),
-    BackgroundClip(simple_props::Origin),
-    AlignContent(simple_props::AlignContent),
-    AlignItems(simple_props::AlignItems),
-    AlignSelf(simple_props::AlignSelf),
-    All(simple_props::All),
-    Position(simple_props::Position),
-    BoxDecorationBreak(simple_props::BoxDecorationBreak),
-    BoxSizing(simple_props::BoxSizing),
+    SimpleAttribute(simple_props::SimpleAttribute),
 }
 
 impl Style<StyleBaseState> {
@@ -79,31 +68,45 @@ impl Style<StyleBaseState> {
     }
 
     pub fn align_content(self) -> Style<PreStyleBase<simple_props::AlignContent>> {
-        self.help(Box::new(Attribute::AlignContent))
+        self.help(Box::new(|x| {
+            Attribute::SimpleAttribute(simple_props::SimpleAttribute::AlignContent(x))
+        }))
     }
 
     pub fn align_items(self) -> Style<PreStyleBase<simple_props::AlignItems>> {
-        self.help(Box::new(Attribute::AlignItems))
+        self.help(Box::new(|x| {
+            Attribute::SimpleAttribute(simple_props::SimpleAttribute::AlignItems(x))
+        }))
     }
 
     pub fn align_self(self) -> Style<PreStyleBase<simple_props::AlignSelf>> {
-        self.help(Box::new(Attribute::AlignSelf))
+        self.help(Box::new(|x| {
+            Attribute::SimpleAttribute(simple_props::SimpleAttribute::AlignSelf(x))
+        }))
     }
 
     pub fn all(self) -> Style<PreStyleBase<simple_props::All>> {
-        self.help(Box::new(Attribute::All))
+        self.help(Box::new(|x| {
+            Attribute::SimpleAttribute(simple_props::SimpleAttribute::All(x))
+        }))
     }
 
     pub fn position(self) -> Style<PreStyleBase<simple_props::Position>> {
-        self.help(Box::new(Attribute::Position))
+        self.help(Box::new(|x| {
+            Attribute::SimpleAttribute(simple_props::SimpleAttribute::Position(x))
+        }))
     }
 
     pub fn box_decoration_break(self) -> Style<PreStyleBase<simple_props::BoxDecorationBreak>> {
-        self.help(Box::new(Attribute::BoxDecorationBreak))
+        self.help(Box::new(|x| {
+            Attribute::SimpleAttribute(simple_props::SimpleAttribute::BoxDecorationBreak(x))
+        }))
     }
 
     pub fn box_sizing(self) -> Style<PreStyleBase<simple_props::BoxSizing>> {
-        self.help(Box::new(Attribute::BoxSizing))
+        self.help(Box::new(|x| {
+            Attribute::SimpleAttribute(simple_props::SimpleAttribute::BoxSizing(x))
+        }))
     }
 }
 
@@ -113,6 +116,7 @@ impl Display for Style<StyleBaseState> {
             .0
             .iter()
             .map(|x| match x {
+                Attribute::AccentColor(x) => format!("accent-color:{x};"),
                 Attribute::FontSize(x) => format!("font-size:{x};"),
                 Attribute::Top(x) => format!("top:{x};"),
                 Attribute::Bottom(x) => format!("bottom:{x};"),
@@ -126,29 +130,11 @@ impl Display for Style<StyleBaseState> {
                     format!("background-color:{x};")
                 }
                 Attribute::BackgroundImage(x) => format!("background-image:url({x});"),
-                Attribute::BackgroundRepeat(x) => {
-                    format!("background-repeat:{x};")
-                }
-                Attribute::BackgroundAttachment(x) => {
-                    format!("background-attachment:{x};")
-                }
                 Attribute::BackgroundPosition(x) => format!("background-position:{x};"),
                 Attribute::BackgroundPositionX(x) => format!("background-position-x:{x};"),
                 Attribute::BackgroundPositionY(x) => format!("background-position-y:{x};"),
-                Attribute::BackgroundOrigin(x) => format!("background-origin:{x};"),
-                Attribute::BackgroundClip(x) => format!("background-clip:{x};"),
-                Attribute::BackgroundBlendMode(x) => {
-                    format!("background-blend-mode:{x};")
-                }
                 Attribute::BackgroundSize(x) => format!("background-size:{x};"),
-                Attribute::AccentColor(x) => format!("accent-color:{x};"),
-                Attribute::AlignContent(x) => format!("align-content:{x};"),
-                Attribute::AlignItems(x) => format!("align-items:{x};"),
-                Attribute::AlignSelf(x) => format!("align-self:{x};"),
-                Attribute::All(x) => format!("all:{x};"),
-                Attribute::BoxDecorationBreak(x) => format!("box-decoration-break:{x};"),
-                Attribute::Position(x) => format!("position:{x};"),
-                Attribute::BoxSizing(x) => format!("box-sizing:{x};"),
+                Attribute::SimpleAttribute(x) => x.to_string(),
             })
             .fold(String::new(), move |acc, x| acc + &x);
         write!(f, "{}", result)
