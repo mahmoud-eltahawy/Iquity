@@ -20,7 +20,7 @@ macro_rules! simple_property {
                 fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
                     let result = match self {
                         $(
-                            [<$name:camel>]::[<$varient:camel>] => KebabCase.apply_to_variant(stringify!([<$varient:camel:snake>])),
+                            [<$name:camel>]::[<$varient:camel>] => KebabCase.apply_to_variant(stringify!([<$varient:camel>])),
                         )*
                     };
                     write!(f, "{}",result)
@@ -90,3 +90,4 @@ simple_property!(
     box_decoration_break:
     slice | clone | initial | inherit | unset
 );
+simple_property!(box_sizing:content_box|border_box|initial|inherit);
