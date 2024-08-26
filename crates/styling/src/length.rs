@@ -1,6 +1,4 @@
-use crate::{
-    background::BackgroundBaseState, AttributeGetter, PreBaseState, Style, StyleBaseState,
-};
+use crate::{AttributeGetter, PreBaseState, Style, StyleBaseState};
 use std::fmt::Display;
 
 #[derive(Hash, Eq, PartialEq)]
@@ -47,8 +45,7 @@ impl Display for Length {
 }
 
 macro_rules! style_impl {
-    ($($output:ident),*) => {
-        $(
+    ($output:ident) => {
         impl Style<$output<AttributeGetter<Length>>> {
             pub fn px(self, num: u8) -> Style<$output<()>> {
                 self.base(Length::Px(num))
@@ -99,8 +96,8 @@ macro_rules! style_impl {
             pub fn vmax(self, num: u8) -> Style<$output<()>> {
                 self.base(Length::Vmax(num))
             }
-        })*
+        }
     };
 }
 
-style_impl!(StyleBaseState, BackgroundBaseState);
+style_impl!(StyleBaseState);

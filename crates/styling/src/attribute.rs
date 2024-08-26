@@ -41,11 +41,6 @@ impl Style<StyleBaseState<()>> {
         Style(self.get_attributes(), StyleBaseState(fun))
     }
 
-    pub fn background(self) -> Style<background::BackgroundBaseState<()>> {
-        let Self(style, _) = self;
-        Style(style, background::BackgroundBaseState(()))
-    }
-
     pub fn accent_color(self) -> Style<StyleBaseState<AttributeGetter<Color>>> {
         self.into_prebase(Box::new(Attribute::AccentColor))
     }

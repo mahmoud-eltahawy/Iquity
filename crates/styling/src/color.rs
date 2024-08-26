@@ -1,6 +1,6 @@
 use std::fmt::Display;
 
-use crate::{background::BackgroundBaseState, AttributeGetter, PreBaseState, StyleBaseState};
+use crate::{AttributeGetter, PreBaseState, StyleBaseState};
 use std::stringify;
 
 use super::Style;
@@ -8,27 +8,27 @@ use super::Style;
 use paste::paste;
 
 macro_rules! color_impl {
-    ($output:ident,$($color:ident),+) => {
+    ($($color:ident),+) => {
         paste! {
-        impl Style<$output<AttributeGetter<Color>>> {
-            pub fn hex(self, hex: u32) -> Style<$output<()>> {
+        impl Style<StyleBaseState<AttributeGetter<Color>>> {
+            pub fn hex(self, hex: u32) -> Style<StyleBaseState<()>> {
                 self.base(Color::Hex(hex))
             }
 
-            pub fn t_hex(self, hex: u32) -> Style<$output<()>> {
+            pub fn t_hex(self, hex: u32) -> Style<StyleBaseState<()>> {
                 self.base(Color::THex(hex))
             }
 
-            pub fn rgb(self, red: u8, green: u8, blue: u8) -> Style<$output<()>> {
+            pub fn rgb(self, red: u8, green: u8, blue: u8) -> Style<StyleBaseState<()>> {
                 self.base(Color::Rgb(red, green, blue))
             }
 
-            pub fn rgba(self, red: u8, green: u8, blue: u8, opacity: u8) -> Style<$output<()>> {
+            pub fn rgba(self, red: u8, green: u8, blue: u8, opacity: u8) -> Style<StyleBaseState<()>> {
                 debug_assert!(opacity <= 100, "opacity is from 0 to 100 not from 0 to 1");
                 self.base(Color::Rgba(red, green, blue, opacity))
             }
 
-            pub fn hsl(self, hue: u16, saturation: u8, lightness: u8) -> Style<$output<()>> {
+            pub fn hsl(self, hue: u16, saturation: u8, lightness: u8) -> Style<StyleBaseState<()>> {
                 debug_assert!(hue <= 360, "hue should be from 0 to 360");
                 debug_assert!(saturation <= 100, "saturation should be from 0 to 100");
                 debug_assert!(lightness <= 100, "lightness should be from 0 to 100");
@@ -41,7 +41,7 @@ macro_rules! color_impl {
                 saturation: u8,
                 lightness: u8,
                 opacity: u8,
-            ) -> Style<$output<()>> {
+            ) -> Style<StyleBaseState<()>> {
                 debug_assert!(hue <= 360, "hue should be from 0 to 360");
                 debug_assert!(saturation <= 100, "saturation should be from 0 to 100");
                 debug_assert!(lightness <= 100, "lightness should be from 0 to 100");
@@ -50,25 +50,12 @@ macro_rules! color_impl {
             }
 
             $(
-                pub fn [<$color:snake>](self) -> Style<$output<()>> {
+                pub fn [<$color:snake>](self) -> Style<StyleBaseState<()>> {
                     self.base(Color::[<$color>])
                 }
             )*
         }
         }
-    };
-}
-
-macro_rules! colors_impls {
-    ($($color:ident),+) => {
-        color_impl!(
-            BackgroundBaseState
-            $(,$color)*
-        );
-        color_impl!(
-            StyleBaseState
-            $(,$color)*
-        );
     };
 }
 
@@ -115,7 +102,7 @@ macro_rules! color_define {
                 write!(f, "{}", result)
             }
         }
-        colors_impls!($($color),*);
+        color_impl!($($color),*);
     };
 }
 

@@ -1,7 +1,7 @@
 use super::{attribute::Attribute, Style};
 use crate::{
-    attribute, color::Color, length::Length, AttributeGetter, Attributs, PreBaseState,
-    StyleBaseState, StyleState,
+    attribute, color::Color, length::Length, AttributeGetter, PreBaseState, StyleBaseState,
+    StyleState,
 };
 use std::fmt::Display;
 
@@ -35,135 +35,110 @@ pub enum Size {
 }
 
 #[derive(Default)]
-pub struct BackgroundBaseState<T>(pub T);
 pub struct BackgroundSizeState;
 pub struct BackgroundPreXPosition;
 impl StyleState for BackgroundSizeState {}
-impl StyleState for BackgroundBaseState<()> {}
 impl StyleState for BackgroundPreXPosition {}
 impl StyleState for PositionX {}
-impl<T> StyleState for BackgroundBaseState<AttributeGetter<T>> {}
 
-impl<T> PreBaseState<T, BackgroundBaseState<()>>
-    for Style<BackgroundBaseState<AttributeGetter<T>>>
-{
-    fn destruct(self) -> (Attributs, AttributeGetter<T>) {
-        let Self(attrs, BackgroundBaseState(fun)) = self;
-        (attrs, fun)
-    }
-}
-
-impl Style<BackgroundBaseState<()>> {
-    pub(crate) fn into_prebase<T>(
-        self,
-        fun: AttributeGetter<T>,
-    ) -> Style<BackgroundBaseState<AttributeGetter<T>>> {
-        let Self(style, _) = self;
-        Style(style, BackgroundBaseState(fun))
-    }
-
-    pub fn base(self) -> Style<StyleBaseState<()>> {
-        let Self(style, _) = self;
-        Style(style, Default::default())
-    }
-
-    pub fn color(self) -> Style<BackgroundBaseState<AttributeGetter<Color>>> {
+impl Style<StyleBaseState<()>> {
+    pub fn background_color(self) -> Style<StyleBaseState<AttributeGetter<Color>>> {
         self.into_prebase(Box::new(Attribute::BackgroundColor))
     }
 
-    pub fn size(self) -> Style<BackgroundSizeState> {
+    pub fn background_size(self) -> Style<BackgroundSizeState> {
         let Style(style, _) = self;
         Style(style, BackgroundSizeState)
     }
 
-    pub fn image(self, source: &str) -> Style<BackgroundBaseState<()>> {
+    pub fn background_image(self, source: &str) -> Style<StyleBaseState<()>> {
         let Self(mut style, _) = self;
         style.insert(Attribute::BackgroundImage(source.to_string()));
-        Style(style, BackgroundBaseState(()))
+        Style(style, StyleBaseState(()))
     }
 
-    pub fn position(self) -> Style<BackgroundPreXPosition> {
+    pub fn background_position(self) -> Style<BackgroundPreXPosition> {
         let Self(style, _) = self;
         Style(style, BackgroundPreXPosition)
     }
 
-    pub fn position_x(self) -> Style<BackgroundBaseState<AttributeGetter<PositionX>>> {
+    pub fn background_position_x(self) -> Style<StyleBaseState<AttributeGetter<PositionX>>> {
         let Self(style, _) = self;
         Style(
             style,
-            BackgroundBaseState(Box::new(Attribute::BackgroundPositionX)),
+            StyleBaseState(Box::new(Attribute::BackgroundPositionX)),
         )
     }
 
-    pub fn position_y(self) -> Style<BackgroundBaseState<AttributeGetter<PositionY>>> {
+    pub fn background_position_y(self) -> Style<StyleBaseState<AttributeGetter<PositionY>>> {
         let Self(style, _) = self;
         Style(
             style,
-            BackgroundBaseState(Box::new(Attribute::BackgroundPositionY)),
+            StyleBaseState(Box::new(Attribute::BackgroundPositionY)),
         )
     }
 }
 
 impl Style<BackgroundSizeState> {
-    fn inner(self, size: Size) -> Style<BackgroundBaseState<()>> {
+    fn inner(self, size: Size) -> Style<StyleBaseState<()>> {
         let Self(mut style, _) = self;
         style.insert(Attribute::BackgroundSize(size));
-        Style(style, BackgroundBaseState(()))
+        Style(style, StyleBaseState(()))
     }
 
-    pub fn initial(self) -> Style<BackgroundBaseState<()>> {
+    pub fn initial(self) -> Style<StyleBaseState<()>> {
         self.inner(Size::Initial)
     }
 
-    pub fn auto(self) -> Style<BackgroundBaseState<()>> {
+    pub fn auto(self) -> Style<StyleBaseState<()>> {
         self.inner(Size::Auto)
     }
 
-    pub fn inherit(self) -> Style<BackgroundBaseState<()>> {
+    pub fn inherit(self) -> Style<StyleBaseState<()>> {
         self.inner(Size::Inherit)
     }
 
-    pub fn contain(self) -> Style<BackgroundBaseState<()>> {
+    pub fn contain(self) -> Style<StyleBaseState<()>> {
         self.inner(Size::Contain)
     }
 
-    pub fn cover(self) -> Style<BackgroundBaseState<()>> {
+    pub fn cover(self) -> Style<StyleBaseState<()>> {
         self.inner(Size::Cover)
     }
 
-    pub fn length(self) -> Style<BackgroundBaseState<AttributeGetter<Length>>> {
+    pub fn length(self) -> Style<StyleBaseState<AttributeGetter<Length>>> {
         let Self(style, _) = self;
         Style(
             style,
-            BackgroundBaseState(Box::new(|x| Attribute::BackgroundSize(Size::Length(x)))),
+            StyleBaseState(Box::new(|x| Attribute::BackgroundSize(Size::Length(x)))),
         )
     }
 }
 
-impl Style<BackgroundBaseState<AttributeGetter<PositionX>>> {
-    pub fn left(self) -> Style<BackgroundBaseState<()>> {
+impl Style<StyleBaseState<AttributeGetter<PositionX>>> {
+    pub fn left(self) -> Style<StyleBaseState<()>> {
         self.base(PositionX::Left)
     }
 
-    pub fn right(self) -> Style<BackgroundBaseState<()>> {
+    pub fn right(self) -> Style<StyleBaseState<()>> {
         self.base(PositionX::Right)
     }
 
-    pub fn center(self) -> Style<BackgroundBaseState<()>> {
+    pub fn center(self) -> Style<StyleBaseState<()>> {
         self.base(PositionX::Center)
     }
 }
 
-impl Style<BackgroundBaseState<AttributeGetter<PositionY>>> {
-    pub fn top(self) -> Style<BackgroundBaseState<()>> {
+impl Style<StyleBaseState<AttributeGetter<PositionY>>> {
+    pub fn top(self) -> Style<StyleBaseState<()>> {
         self.base(PositionY::Top)
     }
 
-    pub fn bottom(self) -> Style<BackgroundBaseState<()>> {
+    pub fn bottom(self) -> Style<StyleBaseState<()>> {
         self.base(PositionY::Bottom)
     }
 
-    pub fn center(self) -> Style<BackgroundBaseState<()>> {
+    pub fn center(self) -> Style<StyleBaseState<()>> {
         self.base(PositionY::Center)
     }
 }
@@ -188,21 +163,21 @@ impl Style<BackgroundPreXPosition> {
 }
 
 impl Style<PositionX> {
-    fn inner(self, y: PositionY) -> Style<BackgroundBaseState<()>> {
+    fn inner(self, y: PositionY) -> Style<StyleBaseState<()>> {
         let Self(mut style, x) = self;
         style.insert(attribute::Attribute::BackgroundPosition(XYPosition(x, y)));
-        Style(style, BackgroundBaseState(()))
+        Style(style, StyleBaseState(()))
     }
 
-    pub fn top(self) -> Style<BackgroundBaseState<()>> {
+    pub fn top(self) -> Style<StyleBaseState<()>> {
         self.inner(PositionY::Top)
     }
 
-    pub fn bottom(self) -> Style<BackgroundBaseState<()>> {
+    pub fn bottom(self) -> Style<StyleBaseState<()>> {
         self.inner(PositionY::Bottom)
     }
 
-    pub fn center(self) -> Style<BackgroundBaseState<()>> {
+    pub fn center(self) -> Style<StyleBaseState<()>> {
         self.inner(PositionY::Center)
     }
 }
@@ -228,6 +203,7 @@ impl Display for PositionY {
         write!(f, "{result}")
     }
 }
+
 impl Display for XYPosition {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let XYPosition(x, y) = self;

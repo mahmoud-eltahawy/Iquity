@@ -1,7 +1,4 @@
-use crate::{
-    attribute::Attribute, background::BackgroundBaseState, AttributeGetter, PreBaseState,
-    StyleBaseState,
-};
+use crate::{attribute::Attribute, AttributeGetter, PreBaseState, StyleBaseState};
 
 use super::Style;
 use crate::attribute::ToAttribute;
@@ -37,7 +34,7 @@ macro_rules! define_properties {
 }
 
 macro_rules! simple_property {
-    ($target:ident,$name:ident:$($varient:ident)|+) => {
+    ($name:ident:$($varient:ident)|+) => {
         paste! {
             #[allow(clippy::enum_variant_names)]
             #[derive(Hash, Eq, PartialEq)]
@@ -62,16 +59,16 @@ macro_rules! simple_property {
                 }
             }
 
-            impl Style<$target<()>> {
-                pub fn $name(self) -> Style<$target<AttributeGetter<[<$name:camel>]>>> {
+            impl Style<StyleBaseState<()>> {
+                pub fn $name(self) -> Style<StyleBaseState<AttributeGetter<[<$name:camel>]>>> {
                     self.into_prebase(Box::new(ToAttribute::attribute))
                 }
             }
 
 
-            impl Style<$target<AttributeGetter<[<$name:camel>]>>> {
+            impl Style<StyleBaseState<AttributeGetter<[<$name:camel>]>>> {
                 $(
-                    pub fn $varient(self) -> Style<$target<()>> {
+                    pub fn $varient(self) -> Style<StyleBaseState<()>> {
                         self.base([<$name:camel>]::[<$varient:camel>])
                     }
                 )*
@@ -97,40 +94,28 @@ define_properties!(
 );
 
 simple_property!(
-    StyleBaseState,
     align_content:stretch|center|flex_start|flex_end|space_between|space_around|space_evenly|initial|inherit);
 simple_property!(
-    StyleBaseState,
     align_items:stretch|center|flex_start|flex_end|start|end|baseline|initial|inherit);
 simple_property!(
-    StyleBaseState,
     align_self:auto|stretch|center|flex_start|flex_end|baseline|initial|inherit);
 simple_property!(
-    StyleBaseState,
     all:initial|inherit|unset);
 simple_property!(
-    StyleBaseState,
     position:static_|relative|fixed|absolute|sticky|initial|inherit);
 simple_property!(
-    StyleBaseState,
     box_decoration_break:slice|clone|initial|inherit|unset);
 simple_property!(
-    StyleBaseState,
     box_sizing:content_box|border_box|initial|inherit);
 
 simple_property!(
-    BackgroundBaseState,
     background_repeat:
     repeat_x|repeat_y|no_repeat|space|round|initial|inherit);
 simple_property!(
-    BackgroundBaseState,
     background_origin:padding_box|border_box|content_box|initial|inherit);
 simple_property!(
-    BackgroundBaseState,
     background_clip:padding_box|border_box|content_box|initial|inherit);
 simple_property!(
-    BackgroundBaseState,
     background_blend_mode:normal|multiply|screen|overlay|darken|lighten|color_dodge|saturation|color|luminosity);
 simple_property!(
-    BackgroundBaseState,
     background_attachment:scroll|fixed|local|initial|inherit);
