@@ -34,7 +34,7 @@ impl Style<StyleBaseState<()>> {
         Self(HashSet::with_capacity(capacity), Default::default())
     }
 
-    pub(crate) fn help<T>(
+    pub(crate) fn into_prebase<T>(
         self,
         fun: AttributeGetter<T>,
     ) -> Style<StyleBaseState<AttributeGetter<T>>> {
@@ -47,31 +47,31 @@ impl Style<StyleBaseState<()>> {
     }
 
     pub fn accent_color(self) -> Style<StyleBaseState<AttributeGetter<Color>>> {
-        self.help(Box::new(Attribute::AccentColor))
+        self.into_prebase(Box::new(Attribute::AccentColor))
     }
 
     pub fn fontsize(self) -> Style<StyleBaseState<AttributeGetter<Length>>> {
-        self.help(Box::new(Attribute::FontSize))
+        self.into_prebase(Box::new(Attribute::FontSize))
     }
 
     pub fn margin(self) -> Style<StyleBaseState<AttributeGetter<Length>>> {
-        self.help(Box::new(Attribute::Margin))
+        self.into_prebase(Box::new(Attribute::Margin))
     }
 
     pub fn padding(self) -> Style<StyleBaseState<AttributeGetter<Length>>> {
-        self.help(Box::new(Attribute::Padding))
+        self.into_prebase(Box::new(Attribute::Padding))
     }
 
     pub fn bottom(self) -> Style<StyleBaseState<AttributeGetter<Length>>> {
-        self.help(Box::new(Attribute::Bottom))
+        self.into_prebase(Box::new(Attribute::Bottom))
     }
 
     pub fn height(self) -> Style<StyleBaseState<AttributeGetter<Length>>> {
-        self.help(Box::new(Attribute::Height))
+        self.into_prebase(Box::new(Attribute::Height))
     }
 
     pub fn width(self) -> Style<StyleBaseState<AttributeGetter<Length>>> {
-        self.help(Box::new(Attribute::Width))
+        self.into_prebase(Box::new(Attribute::Width))
     }
 }
 

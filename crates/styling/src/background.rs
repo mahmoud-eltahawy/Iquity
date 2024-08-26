@@ -54,7 +54,7 @@ impl<T> PreBaseState<T, BackgroundBaseState<()>>
 }
 
 impl Style<BackgroundBaseState<()>> {
-    pub(crate) fn pre_base<T>(
+    pub(crate) fn into_prebase<T>(
         self,
         fun: AttributeGetter<T>,
     ) -> Style<BackgroundBaseState<AttributeGetter<T>>> {
@@ -68,7 +68,7 @@ impl Style<BackgroundBaseState<()>> {
     }
 
     pub fn color(self) -> Style<BackgroundBaseState<AttributeGetter<Color>>> {
-        self.pre_base(Box::new(Attribute::BackgroundColor))
+        self.into_prebase(Box::new(Attribute::BackgroundColor))
     }
 
     pub fn size(self) -> Style<BackgroundSizeState> {
