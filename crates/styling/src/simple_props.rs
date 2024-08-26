@@ -69,9 +69,9 @@ macro_rules! simple_property {
             }
 
 
-            impl Style<StyleBaseState<AttributeGetter<[<$name:camel>]>>> {
+            impl Style<$target<AttributeGetter<[<$name:camel>]>>> {
                 $(
-                    pub fn $varient(self) -> Style<StyleBaseState<()>> {
+                    pub fn $varient(self) -> Style<$target<()>> {
                         self.base([<$name:camel>]::[<$varient:camel>])
                     }
                 )*
