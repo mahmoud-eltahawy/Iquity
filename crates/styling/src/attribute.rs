@@ -1,13 +1,12 @@
 use std::{collections::HashSet, fmt::Display};
 
-use crate::{
-    background,
-    color::Color,
-    length::Length,
-    simple_props::{self, ToAttribute},
-};
+use crate::{background, color::Color, length::Length, simple_props::SimpleAttribute};
 
-use super::{AttributeGetter, PreStyleBase, Style, StyleBaseState};
+use super::{AttributeGetter, Style, StyleBaseState};
+
+pub(crate) trait ToAttribute {
+    fn attribute(self) -> Attribute;
+}
 
 #[derive(Hash, Eq, PartialEq)]
 pub enum Attribute {
@@ -27,81 +26,56 @@ pub enum Attribute {
     BackgroundPositionY(background::PositionY),
     BackgroundPosition(background::XYPosition),
     BackgroundSize(background::Size),
-    SimpleAttribute(simple_props::SimpleAttribute),
+    SimpleAttribute(SimpleAttribute),
 }
 
-impl Style<StyleBaseState> {
+impl Style<StyleBaseState<()>> {
     pub fn with_capacity(capacity: usize) -> Self {
         Self(HashSet::with_capacity(capacity), Default::default())
     }
 
-    pub(crate) fn help<T>(self, fun: AttributeGetter<T>) -> Style<PreStyleBase<T>> {
-        Style(self.get_attributes(), PreStyleBase(fun))
+    pub(crate) fn help<T>(
+        self,
+        fun: AttributeGetter<T>,
+    ) -> Style<StyleBaseState<AttributeGetter<T>>> {
+        Style(self.get_attributes(), StyleBaseState(fun))
     }
 
-    pub fn background(self) -> Style<background::BackgroundBaseState> {
+    pub fn background(self) -> Style<background::BackgroundBaseState<()>> {
         let Self(style, _) = self;
-        Style(style, background::BackgroundBaseState)
+        Style(style, background::BackgroundBaseState(()))
     }
 
-    pub fn accent_color(self) -> Style<PreStyleBase<Color>> {
+    pub fn accent_color(self) -> Style<StyleBaseState<AttributeGetter<Color>>> {
         self.help(Box::new(Attribute::AccentColor))
     }
 
-    pub fn fontsize(self) -> Style<PreStyleBase<Length>> {
+    pub fn fontsize(self) -> Style<StyleBaseState<AttributeGetter<Length>>> {
         self.help(Box::new(Attribute::FontSize))
     }
 
-    pub fn margin(self) -> Style<PreStyleBase<Length>> {
+    pub fn margin(self) -> Style<StyleBaseState<AttributeGetter<Length>>> {
         self.help(Box::new(Attribute::Margin))
     }
 
-    pub fn padding(self) -> Style<PreStyleBase<Length>> {
+    pub fn padding(self) -> Style<StyleBaseState<AttributeGetter<Length>>> {
         self.help(Box::new(Attribute::Padding))
     }
 
-    pub fn bottom(self) -> Style<PreStyleBase<Length>> {
+    pub fn bottom(self) -> Style<StyleBaseState<AttributeGetter<Length>>> {
         self.help(Box::new(Attribute::Bottom))
     }
 
-    pub fn height(self) -> Style<PreStyleBase<Length>> {
+    pub fn height(self) -> Style<StyleBaseState<AttributeGetter<Length>>> {
         self.help(Box::new(Attribute::Height))
     }
 
-    pub fn width(self) -> Style<PreStyleBase<Length>> {
+    pub fn width(self) -> Style<StyleBaseState<AttributeGetter<Length>>> {
         self.help(Box::new(Attribute::Width))
-    }
-
-    pub fn align_content(self) -> Style<PreStyleBase<simple_props::AlignContent>> {
-        self.help(Box::new(ToAttribute::attribute))
-    }
-
-    pub fn align_items(self) -> Style<PreStyleBase<simple_props::AlignItems>> {
-        self.help(Box::new(ToAttribute::attribute))
-    }
-
-    pub fn align_self(self) -> Style<PreStyleBase<simple_props::AlignSelf>> {
-        self.help(Box::new(ToAttribute::attribute))
-    }
-
-    pub fn all(self) -> Style<PreStyleBase<simple_props::All>> {
-        self.help(Box::new(ToAttribute::attribute))
-    }
-
-    pub fn position(self) -> Style<PreStyleBase<simple_props::Position>> {
-        self.help(Box::new(ToAttribute::attribute))
-    }
-
-    pub fn box_decoration_break(self) -> Style<PreStyleBase<simple_props::BoxDecorationBreak>> {
-        self.help(Box::new(ToAttribute::attribute))
-    }
-
-    pub fn box_sizing(self) -> Style<PreStyleBase<simple_props::BoxSizing>> {
-        self.help(Box::new(ToAttribute::attribute))
     }
 }
 
-impl Display for Style<StyleBaseState> {
+impl Display for Style<StyleBaseState<()>> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let result = self
             .0

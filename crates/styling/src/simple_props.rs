@@ -1,6 +1,10 @@
-use crate::{attribute::Attribute, PreBaseState, PreStyleBase, StyleBaseState};
+use crate::{
+    attribute::Attribute, background::BackgroundBaseState, AttributeGetter, PreBaseState,
+    StyleBaseState,
+};
 
 use super::Style;
+use crate::attribute::ToAttribute;
 use std::fmt::Display;
 
 use paste::paste;
@@ -10,10 +14,6 @@ use ident_case::RenameRule::KebabCase;
 macro_rules! define_properties {
     ($($name:ident):+) => {
         paste!{
-            pub(crate) trait ToAttribute {
-                fn attribute(self) -> Attribute;
-            }
-
             #[derive(Hash, Eq, PartialEq)]
             pub enum SimpleAttribute {
                 $(
@@ -34,6 +34,60 @@ macro_rules! define_properties {
             }
         }
     };
+}
+
+impl Style<StyleBaseState<()>> {
+    pub fn align_content(self) -> Style<StyleBaseState<AttributeGetter<AlignContent>>> {
+        self.help(Box::new(ToAttribute::attribute))
+    }
+
+    pub fn align_items(self) -> Style<StyleBaseState<AttributeGetter<AlignItems>>> {
+        self.help(Box::new(ToAttribute::attribute))
+    }
+
+    pub fn align_self(self) -> Style<StyleBaseState<AttributeGetter<AlignSelf>>> {
+        self.help(Box::new(ToAttribute::attribute))
+    }
+
+    pub fn all(self) -> Style<StyleBaseState<AttributeGetter<All>>> {
+        self.help(Box::new(ToAttribute::attribute))
+    }
+
+    pub fn position(self) -> Style<StyleBaseState<AttributeGetter<Position>>> {
+        self.help(Box::new(ToAttribute::attribute))
+    }
+
+    pub fn box_decoration_break(
+        self,
+    ) -> Style<StyleBaseState<AttributeGetter<BoxDecorationBreak>>> {
+        self.help(Box::new(ToAttribute::attribute))
+    }
+
+    pub fn box_sizing(self) -> Style<StyleBaseState<AttributeGetter<BoxSizing>>> {
+        self.help(Box::new(ToAttribute::attribute))
+    }
+}
+
+impl Style<BackgroundBaseState<()>> {
+    pub fn repeat(self) -> Style<BackgroundBaseState<AttributeGetter<BackgroundRepeat>>> {
+        self.pre_base(Box::new(ToAttribute::attribute))
+    }
+
+    pub fn origin(self) -> Style<BackgroundBaseState<AttributeGetter<BackgroundOrigin>>> {
+        self.pre_base(Box::new(ToAttribute::attribute))
+    }
+
+    pub fn clip(self) -> Style<BackgroundBaseState<AttributeGetter<BackgroundClip>>> {
+        self.pre_base(Box::new(ToAttribute::attribute))
+    }
+
+    pub fn blend_mode(self) -> Style<BackgroundBaseState<AttributeGetter<BackgroundBlendMode>>> {
+        self.pre_base(Box::new(ToAttribute::attribute))
+    }
+
+    pub fn attachment(self) -> Style<BackgroundBaseState<AttributeGetter<BackgroundAttachment>>> {
+        self.pre_base(Box::new(ToAttribute::attribute))
+    }
 }
 
 macro_rules! simple_property {
@@ -63,9 +117,9 @@ macro_rules! simple_property {
             }
 
 
-            impl Style<PreStyleBase<[<$name:camel>]>> {
+            impl Style<StyleBaseState<AttributeGetter<[<$name:camel>]>>> {
                 $(
-                    pub fn $varient(self) -> Style<StyleBaseState> {
+                    pub fn $varient(self) -> Style<StyleBaseState<()>> {
                         self.base([<$name:camel>]::[<$varient:camel>])
                     }
                 )*
