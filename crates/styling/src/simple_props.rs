@@ -79,7 +79,28 @@ macro_rules! simple_property {
 }
 
 define_properties!(
+    color_scheme:
+    clear:
+    caption_side:
+    break_inside:
+    break_before:
+    break_after:
     box_decoration_break:
+    border_style:
+    border_left_style:
+    border_right_style:
+    border_top_style:
+    border_bottom_style:
+    border_inline_style:
+    border_inline_start_style:
+    border_inline_end_style:
+    border_collapse:
+    border_block_start_style:
+    border_block_end_style:
+    backface_visibility:
+    animation_play_state:
+    animation_fill_mode:
+    animation_direction:
     box_sizing:
     align_content:
     align_items:
@@ -119,3 +140,45 @@ simple_property!(
     background_blend_mode:normal|multiply|screen|overlay|darken|lighten|color_dodge|saturation|color|luminosity);
 simple_property!(
     background_attachment:scroll|fixed|local|initial|inherit);
+simple_property!(
+    animation_direction: normal|reverse|alternate|alternate_reverse|initial|inherit);
+simple_property!(
+    animation_fill_mode: none|forwards|backwards|both|initial|inherit);
+simple_property!(
+    animation_play_state: paused|running|initial|inherit);
+simple_property!(
+    backface_visibility: visible|hidden|initial|inherit);
+simple_property!(
+    border_block_end_style: none|hidden|dotted|dashed|solid|double|groove|ridge|inset|outset|initial|inherit);
+simple_property!(
+    border_block_start_style: none|hidden|dotted|dashed|solid|double|groove|ridge|inset|outset|initial|inherit);
+simple_property!(
+    border_collapse: separate|collapse|initial|inherit);
+simple_property!(
+    border_inline_style: none|hidden|dotted|dashed|solid|double|groove|ridge|inset|outset|initial|inherit);
+simple_property!(
+    border_inline_start_style: none|hidden|dotted|dashed|solid|double|groove|ridge|inset|outset|initial|inherit);
+simple_property!(
+    border_inline_end_style: none|hidden|dotted|dashed|solid|double|groove|ridge|inset|outset|initial|inherit);
+simple_property!(
+    border_style: none|hidden|dotted|dashed|solid|double|groove|ridge|inset|outset|initial|inherit);
+simple_property!(
+    border_left_style: none|hidden|dotted|dashed|solid|double|groove|ridge|inset|outset|initial|inherit);
+simple_property!(
+    border_right_style: none|hidden|dotted|dashed|solid|double|groove|ridge|inset|outset|initial|inherit);
+simple_property!(
+    border_top_style: none|hidden|dotted|dashed|solid|double|groove|ridge|inset|outset|initial|inherit);
+simple_property!(
+    border_bottom_style: none|hidden|dotted|dashed|solid|double|groove|ridge|inset|outset|initial|inherit);
+simple_property!(
+    break_after: auto|all|always|avoid|avoid_column|avoid_page|avoid_region|column|left|page|recto|region|right|verso|initial|inherit);
+simple_property!(
+    break_before: auto|all|always|avoid|avoid_column|avoid_page|avoid_region|column|left|page|recto|region|right|verso|initial|inherit);
+simple_property!(
+    break_inside: auto|all|always|avoid|avoid_column|avoid_page|avoid_region|column|left|page|recto|region|right|verso|initial|inherit);
+simple_property!(
+    caption_side: top|bottom|initial|inherit);
+simple_property!(
+    clear: none|left|right|both|initial|inherit);
+simple_property!(
+    color_scheme: normal|light|dark|only);
