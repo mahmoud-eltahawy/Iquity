@@ -4626,7 +4626,9 @@ checksum = "7da8b5736845d9f2fcb837ea5d9e2628564b3b043a70948a3f0b778838c5fb4f"
 
 [[package]]
 name = "styling"
-version = "0.4.0"
+version = "0.0.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8ca9d8855c555194fc0f5244b3ff8f24225b1232492a9b68164fce6e0a48ad59"
 dependencies = [
  "ident_case",
  "paste",

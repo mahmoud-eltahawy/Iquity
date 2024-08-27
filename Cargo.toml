@@ -22,5 +22,4 @@ thiserror = "1.0.38"
 dirs = "5.0.0"
 markdown = "1.0.0-alpha.20"
 config = { path = "./crates/config" }
-styling = { path = "./crates/styling" }
 tauri-sys = { git = "https://github.com/JonasKruckenberg/tauri-sys", branch = "v2" , features = ["core","event"] }

@@ -25,18 +25,6 @@ pub fn app() -> impl IntoView {
 
     let style = move || {
         Style::default()
-            .background()
-            .position()
-            .right()
-            .top()
-            .origin()
-            .padding_box()
-            .size()
-            .length()
-            .px(255)
-            .color()
-            .red()
-            .base()
             .fontsize()
             .px(conf.font_size.get())
             .margin()

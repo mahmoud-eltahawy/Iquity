@@ -14,7 +14,6 @@ wasm-bindgen-test = "0.3.36"
 [dependencies]
 serde = { workspace = true }
 config = { workspace = true }
-styling = { workspace = true }
 web-sys = { version = "0.3.63", features=["DataTransfer", "Element", "Navigator", "HtmlAnchorElement", "HtmlButtonElement", "HtmlDialogElement", "Navigator", "Clipboard",
 "HtmlDivElement", "HtmlDocument", "HtmlInputElement", "HtmlLabelElement", "HtmlTextAreaElement", "HtmlParagraphElement", "Event", "EventTarget", "MouseEvent", "InputEvent", "KeyEvent", "KeyboardEvent", "KeyboardEventInit",
 "TouchEvent", "TouchList", "Touch", "DomTokenList"]}
@@ -31,3 +30,4 @@ tauri-sys = { workspace = true }
 
 wasm-logger = "0.2.0"
 futures = "0.3.30"
+styling = "0.0.1"
